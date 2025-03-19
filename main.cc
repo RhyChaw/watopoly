@@ -17,6 +17,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Start the game
+    //hi
     gameController.play();
     
     return 0;
