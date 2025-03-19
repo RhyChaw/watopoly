@@ -71,7 +71,7 @@ public:
     void addCup();
     void removeCup();
 
-    // Property Management
+    // Property Management   
     bool checkMonopoly(int block);
     void buyBuilding(Building *building);
     void sellBuilding(Building *building);
