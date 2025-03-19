@@ -56,7 +56,8 @@ public:
     void moveToTimsLine();
     void leaveTimsLine();
     void changeAsset(int c);
-    void changePropertyCount(int residences, int gyms);
+    void changePropertyCount(int residences, int gyms, int Academics);
+    void changeCash(int c);
 
     // Gameplay Functions
     void pay(int amount);
@@ -84,6 +85,7 @@ public:
     void trade(Player *partner, double money, Building *building);
     void trade(Player *partner, Building *building1, Building *building2);
     void trade(Player *partner, Building *building, double money);
+    void trade(Player *partner, double money1, double money2);
 };
 
 #endif //WATOPOLY_PLAYER_H
