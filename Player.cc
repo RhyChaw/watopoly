@@ -5,7 +5,7 @@
 Player::Player(string name, char symbol, int index, int position_initial)
     : name(name), symbol(symbol), index(index), position_initial(position_initial), 
       cash(1500), assets(0), ownedResidence(0), ownedGyms(0), ownedAcademic(0),
-      isInTimsLine(false), turnsInTimsLine(0), doubles_counter(0), isBankrupt(false), cups(0) {
+      isInTimsLine(false), turnsInTimsLine(0), isBankrupt(false), cups(0) {
     for (int i = 0; i < 8; ++i) {
         monopolySet[i] = 0;
     }
@@ -24,7 +24,7 @@ Player::Player(std::string name, char symbol, int ownedCups, double cash, int in
     : name(name), symbol(symbol), index(index), position_initial(position_initial),
     cash(cash), assets(assets), ownedProperties(ownedProperties),
     ownedGyms(ownedGyms), ownedResidence(ownedResidence), ownedAcademic(ownedAcademic),
-    isInTimsLine(isTimLine), turnsInTimsLine(turnsInTimsLine), doubles_counter(0), 
+    isInTimsLine(isTimLine), turnsInTimsLine(turnsInTimsLine), 
     isBankrupt(false), cups(ownedCups) {
 
     // Restore monopoly ownership
@@ -132,16 +132,17 @@ void Player::changeAsset(int c) {
      assets += c; 
 }
 
-void Player::changePropertyCount(int residences, int gyms) {
+void Player::changePropertyCount(int residences, int gyms, int academics) {
     ownedResidence += residences;
     ownedGyms += gyms;
+    ownedAcademic += academics;
 }
 
 // Handle cash transactions
 void Player::pay(int amount) {
-    cash -= amount;
-    if (cash < 0) {
-        isBankrupt = true;
+    changeCash(-amount); 
+    if (checkBankrupt()) {
+        declareBankruptcy(); 
     }
 }
 
@@ -202,6 +203,7 @@ bool Player::checkMonopolyImprove(Building *building) {
     return result;
 }
 
+
 bool Player::checkMonopoly(int block) {
     int getMonopoly[8] = {2, 3, 3, 3, 3, 3, 3, 2};
     if (monopoly[block] == getMonopoly[block]) {
@@ -213,13 +215,13 @@ bool Player::checkMonopoly(int block) {
 
 void Player::buyBuilding(Building *building) {
     if (building->getName() == "PAC" || building->getName() == "CIF") {
-        changeOwnedGyms(0, 1, 0);
+        changePropertyCount(0, 1, 0);
     } else if (building->getName() == "MKV" || building->getName() == "UWP" || building->getName() == "V1" || building->getName() == "REV") {
-        changeOwnedResidences(1, 0, 0);
+        changePropertyCount(1, 0, 0);
     } else {
         AcademicBuilding *ac = dynamic_cast<AcademicBuilding *>(building);
-        ++monopoly[ac->getBlock()];
-        changeOwnedAcademic(0 , 0 ,1);
+        ++monopolySet[ac->getBlock()]; 
+        changePropertyCount(0 , 0 ,1);
 
     }
     int cost = building->getCost();
@@ -237,13 +239,13 @@ void Player::buyBuilding(Building *building) {
 
 void Player::sellBuilding(Building *building) {
     if (building->getName() == "PAC" || building->getName() == "CIF") {
-       changeOwnedGyms(0, -1, 0);
+        changePropertyCount(0, -1, 0);
    } else if (building->getName() == "MKV" || building->getName() == "UWP" || building->getName() == "V1" || building->getName() == "REV") {
-       changeOwnedResidences(-1, 0, 0);
+        changePropertyCount(-1, 0, 0);
    } else {
        AcademicBuilding *ac = dynamic_cast<AcademicBuilding *>(building);
        --monopoly[ac->getBlock()];
-       changeOwnedAcademic(0 , 0 ,-1);
+       changePropertyCount(0 , 0 ,-1);
    }
    changeAsset(-(building->getCost()));
     int cost = building->getCost();
@@ -334,7 +336,7 @@ void Player::sellImprovement(Building *building) {
 void Player::trade(Player *partner, double money, Building *building) {
     if (building->getOwner()->getName() != partner->getName()) {
         // manit dont own this property.
-    } else if (cash < money) {
+    } else if (getCash() < money) {
         // i got no money
     } else if (checkMonopolyImprove(building) == false) {
         // property has improvments
@@ -433,7 +435,29 @@ void Player::printAsset() {
     cout << endl;
 }
 
-// yet to do
-bool doubles();
-void declareBankruptcy();
-bool checkBankrupt() const;
+
+void Player::declareBankruptcy() {
+    isBankrupt = true;
+    cash = 0;
+    assets = 0;
+    ownedProperties.clear();
+    ownedResidence = 0;
+    ownedGyms = 0;
+    ownedAcademic = 0;
+    cups = 0;
+
+    for (int i = 0; i < 8; ++i) {
+        monopolySet[i] = 0;
+    }
+
+    for (int i = 0; i < 28; ++i) {
+        buildings[i] = nullptr;
+    }
+
+    cout << getName() << " has declared bankruptcy!" << endl;
+}
+
+bool Player::checkBankrupt() const {
+    return cash < 0;
+}
+
