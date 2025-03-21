@@ -4,7 +4,6 @@
 
 AcademicBuilding::AcademicBuilding(std::string name, int cost, int improveCost, std::string block)
     : Building(name, cost), improvements(0), improvementCost(improveCost), monopolyBlock(block) {
-    // Initialize tuition rates for different improvement levels
     tuitionRates = {
         cost / 10,             // Base rent
         cost / 5,              // 1 improvement
