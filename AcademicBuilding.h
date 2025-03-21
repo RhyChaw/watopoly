@@ -1,7 +1,7 @@
 #ifndef ACADEMIC_BUILDING_H
 #define ACADEMIC_BUILDING_H
 
-#include "Building.h"
+#include "building.h"
 #include <string>
 #include <vector>
 

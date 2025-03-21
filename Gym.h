@@ -3,10 +3,12 @@
 
 #include "Building.h"
 #include <string>
-
+using namespace std;
 class Gym : public Building {
+private:
+    int roll;
 public:
-    Gym(std::string name);
+    Gym(int ID, std::string name, int price, char owner);
     ~Gym();
 
     // Methods

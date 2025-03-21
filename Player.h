@@ -5,6 +5,7 @@
 #include "GameBoard.h"
 #include <memory>
 
+
 class Building;  
 class Cell; 
 
@@ -36,6 +37,7 @@ public:
 
     // Getters
     std::string getName() const;
+    int getIndex() const;
     char getSymbol() const;
     int getPosition() const;
     int getCash() const;
@@ -44,8 +46,8 @@ public:
     int getOwnedGyms() const;
     int getTurnsInTimsLine() const;
     int getOwnedCups() const;
-    bool isInTimsLine() const;
-    bool isBankrupt() const;
+    bool getisInTimsLine() const;
+    bool getisBankrupt() const;
     std::vector<std::shared_ptr<Cell>> getProperties() const;
     bool checkMonopolyImprove(Building *building);
     Building* findBuilding(const std::string &buildingName);
