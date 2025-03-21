@@ -1,8 +1,9 @@
 #include "Player.h"
-#include "Building.h"
+#include "building.h"
 #include "AcademicBuilding.h"
 #include <string>
 #include <iostream>
+module Player;
 
 using namespace std;
 // Constructor for new game
@@ -46,51 +47,51 @@ Player::Player(std::string name, char symbol, int ownedCups, double cash, int in
 Player::~Player() {}
 
 // Getters
-string Player::getName() { 
+string Player::getName() const{ 
     return name; 
 }
 
-char Player::getSymbol() { 
+char Player::getSymbol() const { 
     return symbol; 
 }
 
-int Player::getIndex() { 
+int Player::getIndex() const { 
     return index; 
 }
 
-int Player::getPosition() { 
+int Player::getPosition() const { 
     return position_initial; 
 }
 
-double Player::getCash() { 
+double Player::getCash() const { 
     return cash; 
 }
 
-double Player::getAsset() { 
+double Player::getAsset() const { 
     return assets; 
 }
 
-int Player::getOwnedResidences() { 
+int Player::getOwnedResidences() const { 
     return ownedResidence; 
 }
 
-int Player::getOwnedGyms() { 
+int Player::getOwnedGyms() const { 
     return ownedGyms; 
 }
 
-int Player::getTurnsInTimsLine() { 
+int Player::getTurnsInTimsLine() const { 
     return turnsInTimsLine; 
 }
 
-int Player::getOwnedCups() { 
+int Player::getOwnedCups() const { 
     return cups; 
 }
 
-bool Player::isInTimsLine() const { 
+bool Player::getisInTimsLine() const { 
     return isInTimsLine; 
 }
 
-bool Player::isBankrupt() const { 
+bool Player::getisBankrupt() const { 
     return isBankrupt; 
 }
 

@@ -51,9 +51,5 @@ void Gym::currentOn(Player* player) {
 }
 
 int Gym::getOwnerGymCount() const {
-    if (getOwner() == nullptr) {
-        return 0;
-    }
-    
     return getOwner()->getOwnedgyms();
 }

@@ -1,22 +1,18 @@
-#ifndef CELL_H
-#define CELL_H
-
+#ifndef SQUARE_H
+#define SQUARE_H
 #include <string>
-#include <memory>
-#include "Player.h"
 
-class Cell {
-protected:
+class cell{
+    int ID;
     std::string name;
+  public:
+    cell(int ID, std::string name);
 
-public:
-    Cell(const std::string &name);
-    virtual ~Cell() = default;
-
-    std::string getName() const;
-    
-    // This function will be overridden in derived classes (properties, OSAP, etc.)
-    virtual void doEvent(std::shared_ptr<Player> player) = 0;
+    int getID();
+    std::string getName();
+    void setID();
+    void setName();
 };
 
-#endif // CELL_H
+#endif
+
