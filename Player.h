@@ -5,6 +5,9 @@
 #include "GameBoard.h"
 #include <memory>
 
+class Building;  
+class Cell; 
+
 class Player {
 private:
     std::string name;  // Name of the player

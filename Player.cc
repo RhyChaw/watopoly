@@ -1,6 +1,10 @@
 #include "Player.h"
+#include "Building.h"
+#include "AcademicBuilding.h"
+#include <string>
 #include <iostream>
 
+using namespace std;
 // Constructor for new game
 Player::Player(string name, char symbol, int index, int position_initial)
     : name(name), symbol(symbol), index(index), position_initial(position_initial), 
