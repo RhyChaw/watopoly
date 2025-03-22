@@ -1,5 +1,5 @@
 #include "GameBoard.h"
-#include "AcademicBuilding.h"
+#include "Academic.h"
 #include "Residence.h"
 #include "Gym.h"
 #include "NeedlesHall.h"
@@ -61,25 +61,25 @@ void GameBoard::initializeBoard()
     boardCells.clear();
 
     boardCells.push_back(new OSAP("Collect OSAP"));
-    boardCells.push_back(new AcademicBuilding("AL", 40, 50));
+    boardCells.push_back(new Academic("AL", 40, 50));
     boardCells.push_back(new SLC("SLC"));
-    boardCells.push_back(new AcademicBuilding("ML", 60, 50));
+    boardCells.push_back(new Academic("ML", 60, 50));
     boardCells.push_back(new Tuition("Tuition"));
     boardCells.push_back(new Residence("MKV"));
-    boardCells.push_back(new AcademicBuilding("ECH", 100, 50));
+    boardCells.push_back(new Academic("ECH", 100, 50));
     boardCells.push_back(new NeedlesHall("Needles Hall"));
-    boardCells.push_back(new AcademicBuilding("PAS", 100, 50));
-    boardCells.push_back(new AcademicBuilding("HH", 120, 50));
+    boardCells.push_back(new Academic("PAS", 100, 50));
+    boardCells.push_back(new Academic("HH", 120, 50));
     boardCells.push_back(new TimsLine("DC Tims Line"));
-    boardCells.push_back(new AcademicBuilding("RCH", 140, 100));
+    boardCells.push_back(new Academic("RCH", 140, 100));
     boardCells.push_back(new Gym("PAC"));
-    boardCells.push_back(new AcademicBuilding("DWE", 140, 100));
-    boardCells.push_back(new AcademicBuilding("CPH", 160, 100));
+    boardCells.push_back(new Academic("DWE", 140, 100));
+    boardCells.push_back(new Academic("CPH", 160, 100));
     boardCells.push_back(new Residence("UWP"));
-    boardCells.push_back(new AcademicBuilding("LHI", 180, 100));
+    boardCells.push_back(new Academic("LHI", 180, 100));
     boardCells.push_back(new SLC("SLC"));
-    boardCells.push_back(new AcademicBuilding("BMH", 180, 100));
-    boardCells.push_back(new AcademicBuilding("OPT", 200, 100));
+    boardCells.push_back(new Academic("BMH", 180, 100));
+    boardCells.push_back(new Academic("OPT", 200, 100));
     boardCells.push_back(new GooseNesting("Goose Nesting"));
     boardCells.push_back(new AcademicBuilding("EV1", 220, 150));
     boardCells.push_back(new NeedlesHall("Needles Hall"));
