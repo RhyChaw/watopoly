@@ -1,13 +1,17 @@
-#ifndef WATOPOLY_PLAYER_H
-#define WATOPOLY_PLAYER_H
+#ifndef PLAYER_H
+#define PLAYER_H
 #include <string>
+#include <map>
 #include <vector>
-#include "GameBoard.h"
 #include <memory>
-
+#include "Cell.h"
+#include "Academic.h"
+#include "building.h"
+#include "TimsLine.h"
 
 class Building;  
 class Cell; 
+class Academic;
 
 class Player {
 private:
@@ -32,7 +36,13 @@ public:
 
     // Constructors & Destructor
     Player(std::string name, char symbol, int index, int position_initial);
-    Player(std::string name, char symbol, int ownedCups, double cash, int index, bool isTimLine, int turnsInTimsLine, int position_initial);
+    
+    // Constructor for loading a saved game
+    Player(std::string name, char symbol, int ownedCups, double cash, int index, 
+        bool isTimLine, int turnsInTimsLine, int position_initial, 
+        double assets, std::vector<std::shared_ptr<Cell>> ownedProperties,
+        int ownedGyms, int ownedResidence, int ownedAcademic);
+    
     ~Player();
 
     // Getters
@@ -40,8 +50,8 @@ public:
     int getIndex() const;
     char getSymbol() const;
     int getPosition() const;
-    int getCash() const;
-    int getAsset() const;
+    double getCash() const;  // Changed from int to double
+    double getAsset() const; // Changed from int to double
     int getOwnedResidences() const;
     int getOwnedGyms() const;
     int getTurnsInTimsLine() const;
@@ -50,7 +60,7 @@ public:
     bool getisBankrupt() const;
     std::vector<std::shared_ptr<Cell>> getProperties() const;
     bool checkMonopolyImprove(Building *building);
-    Building* findBuilding(const std::string &buildingName);
+    Building* findBuilding(std::string buildingName); // Made consistent with implementation
     void printAsset();
 
     // Setters & Modifiers
@@ -61,9 +71,9 @@ public:
     void setCups(int n);
     void moveToTimsLine();
     void leaveTimsLine();
-    void changeAsset(int c);
+    void changeAsset(double c);
     void changePropertyCount(int residences, int gyms, int academics);
-    void changeCash(int c);
+    void changeCash(double c);
 
     // Gameplay Functions
     void pay(int amount);

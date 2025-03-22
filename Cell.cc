@@ -1,20 +1,19 @@
-#include "square.h"
+#include "Cell.h"
 
-cell::cell(int ID, std::string name) : ID{ID}, name{name} {}
+Cell::Cell(int ID, std::string name) : ID{ID}, name{name} {}
 
-
-std::string cell::getName () {
+std::string Cell::getName() {
     return name;
 }
 
-void cell::setName (string name) {
+void Cell::setName(std::string name) {
     this->name = name;
 }
 
-int cell::getID() {
+int Cell::getID() {
     return ID;
 }
 
-void cell::getID(int id) {
-    this->id = id;
+void Cell::setID(int id) {
+    this->ID = id;
 }

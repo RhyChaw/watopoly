@@ -1,18 +1,17 @@
-#ifndef SQUARE_H
-#define SQUARE_H
+#ifndef CELL_H
+#define CELL_H
 #include <string>
 
-class cell{
+class Cell {
     int ID;
     std::string name;
   public:
-    cell(int ID, std::string name);
+    Cell(int ID, std::string name);
 
     int getID();
     std::string getName();
-    void setID();
-    void setName();
+    void setID(int id);
+    void setName(std::string name);
 };
 
 #endif
-

@@ -1,53 +1,60 @@
 #include "Residence.h"
 #include "Player.h"
-#include <iostream>
 
-// Initialize static rent rates
+// Define the static rent array
 const int Residence::RENT_RATES[4] = {25, 50, 100, 200};
 
-Residence::Residence(std::string name) : Building(name, 200) {
-    // Standard price for all residences is 200
-}
+Residence::Residence(int ID, std::string name, int price, char owner)
+    : Building(ID, name, price, owner) {}
 
-Residence::~Residence() {
-    // Nothing to clean up
-}
+Residence::~Residence() {}
 
 int Residence::calculateRent() const {
-    if (getOwner() == nullptr) {
+    char ownerPlayer = getOwner();
+    if (ownerPlayer == ' ') {
         return 0;
     }
-    
-    int residenceCount = getOwnerResidenceCount();
-    // Adjust for 0-based indexing
+
+    int residenceCount = getResLevel();
     return RENT_RATES[residenceCount - 1];
 }
 
 void Residence::currentOn(Player* player) {
-    // Implementation for when a player lands on this residence
-    if (getOwner() == nullptr) {
+    char ownerPlayer = getOwner();
+    
+    if (ownerPlayer == ' ') {
         // No owner, player can purchase
         std::cout << player->getName() << " landed on unowned residence " << getName() << std::endl;
         // Purchase logic would go here
-    } else if (getOwner() != player) {
+    } else if (ownerPlayer != player->getSymbol()) {
         // Another player owns this residence, pay rent
         int rent = calculateRent();
         
         std::cout << player->getName() << " pays " << rent << " to " 
-                  << getOwner()->getName() << " for landing on " << getName() << std::endl;
-        
-        player->removeMoney(rent);
-        getOwner()->addMoney(rent);
+                  << ownerPlayer << " for landing on " << getName() << std::endl;
     } else {
         // Player owns this residence
         std::cout << player->getName() << " landed on their own residence " << getName() << std::endl;
     }
 }
 
-int Residence::getOwnerResidenceCount() const {
-    if (getOwner() == nullptr) {
-        return 0;
+int Residence::costToPayImpr(std::string squareName, int imprLevel) {
+    int result = 0;
+    int levelIndex = 4 + imprLevel; 
+
+    for (int i = 0; i < 28; i++) {
+        if (OWNABLE[i][0] == squareName) {
+            std::stringstream ss(OWNABLE[i][levelIndex]);
+            int cost = 0;
+            ss >> cost;
+            result += cost;
+        }
     }
-    
-    return getOwner()->getOwnedResidences();
+
+    return result;
 }
+
+int Residence::amountToPay() {
+    return costToPayImpr(this->getName(), this->getResLevel());
+}
+
