@@ -2,17 +2,14 @@
 #include "Player.h"
 #include <iostream>
 
-OSAP::OSAP(std::string name) : NonProperty(name) {
-    // Nothing to initialize
+using namespace std;
+
+OSAP::OSAP(int ID, std::string name) : nonbuilding(ID, name){
 }
 
-OSAP::~OSAP() {
-    // Nothing to clean up
-}
+OSAP::~OSAP() {}
 
-void OSAP::doEvent(Player* player) {
-    // Give player money when they land on or pass OSAP
-    player->addMoney(COLLECT_AMOUNT);
-    std::cout << player->getName() << " collects " << COLLECT_AMOUNT 
-              << " from OSAP." << std::endl;
+void OSAP::collectOSAP(std::shared_ptr<Player> p) {
+    player->changeCash(COLLECT_AMOUNT);
+    std::cout << player->getName() << " collects " << COLLECT_AMOUNT << " from OSAP." << std::endl;
 }
