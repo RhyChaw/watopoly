@@ -1,55 +1,58 @@
 #include "Gym.h"
-#include "Player.h"
-#include <iostream>
+using namespace std;
 
-Gym::Gym(std::string name) : Building(name, 150) {
-    // Standard price for all gyms is 150
+Gym::Gym(int ID, string name, int price, char owner)
+	: Building(ID, name, price, owner) {}
+
+Gym::~Gym() {}
+
+void Gym::setRoll(int roll){
+    roll = roll;
 }
 
-Gym::~Gym() {
-    // Nothing to clean up
+int Gym::getRoll() const {
+    return roll;
 }
 
-int Gym::calculateFee(int diceRoll) const {
-    if (getOwner() == nullptr) {
-        return 0;
+int Gym::costToPayImpr(std::string squareName, int imprLevel) {
+    int result = 0;
+    int levelIndex = 4 + imprLevel; 
+
+    for (int i = 0; i < 28; i++) {
+        if (OWNABLE[i][0] == squareName) {
+            std::stringstream ss(OWNABLE[i][levelIndex]);
+            int cost = 0;
+            ss >> cost;
+            result += cost;
+        }
     }
-    
-    int gymCount = getOwnerGymCount();
-    
-    if (gymCount == 1) {
-        return diceRoll * 4; // 4 times the dice roll
-    } else if (gymCount == 2) {
-        return diceRoll * 10; // 10 times the dice roll
-    }
-    
-    return 0; // Should not reach here
+    return result;
+}
+
+int Gym::amountToPay() {
+    return this->getRoll() * costToPayImpr(this->getName(), this->getGymLevel());
 }
 
 void Gym::currentOn(Player* player) {
-    // Implementation for when a player lands on this gym
-    if (getOwner() == nullptr) {
+    Player* ownerPlayer = getOwner();
+    
+    if (!ownerPlayer) {
         // No owner, player can purchase
         std::cout << player->getName() << " landed on unowned gym " << getName() << std::endl;
-        // Purchase logic would go here
-    } else if (getOwner() != player) {
+        // Purchase logic
+    } else if (ownerPlayer != player) {
         // Another player owns this gym, pay fee
-        // For simplicity, we'll use a fixed dice roll of 7
-        // In a real implementation, you'd get the actual dice roll from the game
-        int diceRoll = 7; // Placeholder
+        int diceRoll = roll; // Use the stored roll value
         int fee = calculateFee(diceRoll);
         
         std::cout << player->getName() << " pays " << fee << " to " 
-                  << getOwner()->getName() << " for landing on " << getName() << std::endl;
+                  << ownerPlayer->getName() << " for landing on " << getName() << std::endl;
         
-        player->removeMoney(fee);
-        getOwner()->addMoney(fee);
+        player->changeCash(-fee);
+        ownerPlayer->changeCash(fee);
     } else {
         // Player owns this gym
         std::cout << player->getName() << " landed on their own gym " << getName() << std::endl;
     }
 }
 
-int Gym::getOwnerGymCount() const {
-    return getOwner()->getOwnedgyms();
-}

@@ -1,21 +1,26 @@
 #ifndef RESIDENCE_H
 #define RESIDENCE_H
-
-#include "Building.h"
+#include <iostream>
 #include <string>
+#include "building.h"
+
+class Player;
+class building;
 
 class Residence : public Building {
 private:
-    static const int RENT_RATES[4]; // Rent based on number of residences owned
+    // Rent rates based on number of residences owned
+    static const int RENT_RATES[4];
 
 public:
-    Residence(std::string name);
+    Residence(int ID, std::string name, int price, char owner);
     ~Residence();
 
     // Methods
     int calculateRent() const;
-    void currentOn(Player* player) override;
-    int getOwnerResidenceCount() const;
+    virtual int amountToPay() override;
+    virtual void currentOn(Player* player) override;
+    int costToPayImpr(std::string squareName, int imprLevel);
 };
 
 #endif // RESIDENCE_H

@@ -1,7 +1,7 @@
 #ifndef TIMS_LINE_H
 #define TIMS_LINE_H
 
-#include "NonProperty.h"
+
 #include <string>
 
 class TimsLine : public NonProperty {
