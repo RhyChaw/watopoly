@@ -49,6 +49,7 @@
         "typeinfo": "cpp",
         "cwctype": "cpp",
         "iostream": "cpp",
-        "d2": "cpp"
+        "d2": "cpp",
+        "fstream": "cpp"
     }
 }

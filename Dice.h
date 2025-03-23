@@ -7,6 +7,7 @@ class Dice {
 private:
     static int lastRoll1;
     static int lastRoll2;
+    static int doubles_count = 0;
 
 public:
     // Rolls both dice and stores the results internally

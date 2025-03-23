@@ -146,9 +146,11 @@ void Player::changeAsset(double c) {
 }
 
 void Player::changePropertyCount(int residences, int gyms, int academics) {
-    ownedResidence += residences;
-    ownedGyms += gyms;
-    ownedAcademic += academics;
+    //not doing anything rn....
+}
+    int ownedResidence += residences;
+    int ownedGyms += gyms;
+    int ownedAcademic += academics;
 }
 
 // Handle cash transactions
@@ -190,7 +192,7 @@ void Player::addCup() {
 }
 
 void Player::add_roll_for_jail() {
-    ++add_roll_for_jail;
+    ++roll_for_jail;
 }
 
 void Player::removeCup() {
@@ -239,144 +241,6 @@ bool Player::checkMonopoly(int block) {
     }
 }
 
-void Player::buyBuilding(Building *building) {
-    if (building->getName() == "PAC" || building->getName() == "CIF") {
-        changePropertyCount(0, 1, 0);
-    } else if (building->getName() == "MKV" || building->getName() == "UWP" || building->getName() == "V1" || building->getName() == "REV") {
-        changePropertyCount(1, 0, 0);
-    } else {
-        AcademicBuilding *ac = dynamic_cast<AcademicBuilding *>(building);
-        if (ac) {
-            ++monopolySet[ac->getBlock()]; 
-            changePropertyCount(0, 0, 1);
-        }
-    }
-    int cost = building->getCostToBuy();
-    changeCash(-cost);
-    changeAsset(cost);
-    for (int i = 0; i < 28; ++i) {
-        if (buildings[i] == nullptr) {
-            buildings[i] = building;
-            break;
-        }
-    }
-    building->setOwner(this->symbol); // Changed to match Building class
-    //print statement
-}
-
-void Player::sellBuilding(Building *building) {
-    if (building->getName() == "PAC" || building->getName() == "CIF") {
-        changePropertyCount(0, -1, 0);
-   } else if (building->getName() == "MKV" || building->getName() == "UWP" || building->getName() == "V1" || building->getName() == "REV") {
-        changePropertyCount(-1, 0, 0);
-   } else {
-       AcademicBuilding *ac = dynamic_cast<AcademicBuilding *>(building);
-       if (ac) {
-           --monopolySet[ac->getBlock()];
-           changePropertyCount(0, 0, -1);
-       }
-   }
-   changeAsset(-(building->getCostToBuy()));
-    int cost = building->getCostToBuy();
-    changeCash(cost); 
-   for (int i = 0; i < 28; ++i) {
-       if (buildings[i] && buildings[i]->getName() == building->getName()) {
-           buildings[i] = nullptr;
-           break;
-       }
-   }
-   building->setOwner(' '); // Set to empty ownership
-   //print statement
-}
-
-void Player::mortgage(Building *building) {
-    if (building->getOwner() != this->symbol) {
-        // print statement not the owner
-        return;
-    } 
-    if (building->getMortStatus() == true) {
-        //print statement already mortgaged
-        return;
-    } 
-    
-    // Check if it's not an academic building or has improvements
-    if (building->getName() != "PAC" && building->getName() != "CIF" && 
-        building->getName() != "MKV" && building->getName() != "UWP" && 
-        building->getName() != "V1" && building->getName() != "REV") {
-        
-        AcademicBuilding *acad = dynamic_cast<AcademicBuilding *>(building);
-        if (acad && acad->getImprLevel() != 0) {
-            // print there are still improvements you can sell.
-            return;
-        }
-    }
-    
-    double mortgagedCash = building->getCostToBuy() * 0.5;
-    changeAsset(-(building->getCostToBuy()));
-    changeCash(mortgagedCash);
-    building->setMortStatus(true);
-    //print statement that it worked
-}
-
-void Player::unmortgage(Building *building) {
-    if (building->getOwner() != this->symbol) {
-        //print statement you are not the owner
-        return;
-    } 
-    if (building->getMortStatus() == false) {
-        // is not a mortgaged building
-        return;
-    } 
-    
-    double unmortgageCost = building->getCostToBuy() * 0.6;
-    if (cash < unmortgageCost) {
-        // does not have enough money to unmortgage
-        return;
-    } 
-    
-    changeCash(-unmortgageCost);
-    changeAsset(building->getCostToBuy());
-    building->setMortStatus(false);
-    // print statement that it is successful
-}
-
-void Player::buyImprovement(Building *building) {
-    // Check if it's an academic building
-    if (building->getName() == "PAC" || building->getName() == "CIF" || 
-        building->getName() == "MKV" || building->getName() == "UWP" || 
-        building->getName() == "V1" || building->getName() == "REV") {
-        //print statement cant improve non-academic buildings
-        return;
-    } 
-    
-    AcademicBuilding *acad = dynamic_cast<AcademicBuilding *>(building);
-    if (!acad) {
-        // Not an academic building
-        return;
-    }
-    
-    if (checkMonopoly(acad->getBlock()) == false) {
-        // only monopoly can be improved.
-        return;
-    } 
-    
-    int improveCost = acad->getImprovementCost();
-    if (cash < improveCost) {
-        //dont have enough money
-        return;
-    } 
-    
-    if(acad->getImprLevel() >= 5){
-        //already max 
-        return;
-    }
-    
-    changeCash(-improveCost);
-    changeAsset(improveCost);
-    acad->setImprLevel(acad->getImprLevel() + 1);
-    // successfully printed
-}
-
 bool Player::ownThisProp(std::string name) {
     int size = ownedProperties.size();
 
@@ -387,273 +251,6 @@ bool Player::ownThisProp(std::string name) {
     }
 
     return false;
-}
-
-void Player::sellImprovement(Building *building) {
-    // Check if it's an academic building
-    if (building->getName() == "PAC" || building->getName() == "CIF" || 
-        building->getName() == "MKV" || building->getName() == "UWP" || 
-        building->getName() == "V1" || building->getName() == "REV") {
-        // not academic building
-        return;
-    } 
-    
-    AcademicBuilding *acad = dynamic_cast<AcademicBuilding *>(building);
-    if (!acad) {
-        // Not an academic building
-        return;
-    }
-    
-    if (acad->getImprLevel() == 0) {
-        //no improvements to remove
-        return;
-    } 
-    
-    int sellImproveFee = acad->getImprovementCost() / 2;
-    changeCash(sellImproveFee);
-    changeAsset(-(acad->getImprovementCost()));
-    acad->setImprLevel(acad->getImprLevel() - 1);
-    // successfully sold parameter.
-}
-
-void Player::trade(Player *partner, double money, Building *building) {
-    if (building->getOwner() != partner->symbol) {
-        // partner doesn't own this property
-        return;
-    } 
-    if (getCash() < money) {
-        // not enough money
-        return;
-    } 
-    
-    // Check for improvements on academic buildings
-    AcademicBuilding *acad = dynamic_cast<AcademicBuilding *>(building);
-    if (acad && acad->getImprLevel() != 0) {
-        // property has improvements
-        return;
-    } 
-    
-    // print to ask if partner wants this offer
-    string choice;
-    cout << partner->getName() << ", do you accept this trade offer? (yes/no): ";
-    cin >> choice;
-    if (choice == "accept" || choice == "y" || choice == "yes") {
-        //trade accepted initiating trade
-        changeCash(-money);
-        partner->changeCash(money);
-        
-        // Update the property ownership
-        for (int i = 0; i < 28; ++i) {
-            if (partner->buildings[i] && partner->buildings[i] == building) {
-                partner->buildings[i] = nullptr;
-                break;
-            }
-        }
-        
-        for (int i = 0; i < 28; ++i) {
-            if (buildings[i] == nullptr) {
-                buildings[i] = building;
-                break;
-            }
-        }
-        
-        // Update property counts and assets
-        if (building->getName() == "PAC" || building->getName() == "CIF") {
-            changePropertyCount(0, 1, 0);
-            partner->changePropertyCount(0, -1, 0);
-        } else if (building->getName() == "MKV" || building->getName() == "UWP" || 
-                   building->getName() == "V1" || building->getName() == "REV") {
-            changePropertyCount(1, 0, 0);
-            partner->changePropertyCount(-1, 0, 0);
-        } else {
-            AcademicBuilding *acad = dynamic_cast<AcademicBuilding *>(building);
-            if (acad) {
-                ++monopolySet[acad->getBlock()];
-                --partner->monopolySet[acad->getBlock()];
-                changePropertyCount(0, 0, 1);
-                partner->changePropertyCount(0, 0, -1);
-            }
-        }
-        
-        changeAsset(building->getCostToBuy());
-        partner->changeAsset(-(building->getCostToBuy()));
-        building->setOwner(this->symbol);
-        
-        cout << "Trade successful!" << endl;
-    } else {
-        cout << "Trade rejected." << endl;
-    }
-}
-
-void Player::trade(Player *partner, Building *building1, Building *building2) {
-    if (building1->getOwner() != this->symbol) {
-        // I don't own the first building
-        return;
-    } 
-    if (building2->getOwner() != partner->symbol) {
-        // Partner doesn't own the second building
-        return;
-    } 
-    
-    // Check for improvements on academic buildings
-    AcademicBuilding *acad1 = dynamic_cast<AcademicBuilding *>(building1);
-    AcademicBuilding *acad2 = dynamic_cast<AcademicBuilding *>(building2);
-    
-    if (acad1 && acad1->getImprLevel() != 0) {
-        // I have improvements on my building
-        return;
-    } 
-    if (acad2 && acad2->getImprLevel() != 0) {
-        // Partner has improvements on their building
-        return;
-    } 
-    
-    // print to ask if partner wants this offer
-    string choice;
-    cout << partner->getName() << ", do you accept this trade offer? (yes/no): ";
-    cin >> choice;
-    if (choice == "accept" || choice == "y" || choice == "yes") {
-        // Update property ownerships in the buildings array
-        Building *temp = nullptr;
-        
-        for (int i = 0; i < 28; ++i) {
-            if (buildings[i] && buildings[i] == building1) {
-                buildings[i] = nullptr;
-                break;
-            }
-        }
-        
-        for (int i = 0; i < 28; ++i) {
-            if (partner->buildings[i] && partner->buildings[i] == building2) {
-                partner->buildings[i] = nullptr;
-                break;
-            }
-        }
-        
-        for (int i = 0; i < 28; ++i) {
-            if (buildings[i] == nullptr) {
-                buildings[i] = building2;
-                break;
-            }
-        }
-        
-        for (int i = 0; i < 28; ++i) {
-            if (partner->buildings[i] == nullptr) {
-                partner->buildings[i] = building1;
-                break;
-            }
-        }
-        
-        // Update property counts
-        if (building1->getName() == "PAC" || building1->getName() == "CIF") {
-            changePropertyCount(0, -1, 0);
-            partner->changePropertyCount(0, 1, 0);
-        } else if (building1->getName() == "MKV" || building1->getName() == "UWP" || 
-                   building1->getName() == "V1" || building1->getName() == "REV") {
-            changePropertyCount(-1, 0, 0);
-            partner->changePropertyCount(1, 0, 0);
-        } else if (acad1) {
-            --monopolySet[acad1->getBlock()];
-            ++partner->monopolySet[acad1->getBlock()];
-            changePropertyCount(0, 0, -1);
-            partner->changePropertyCount(0, 0, 1);
-        }
-        
-        if (building2->getName() == "PAC" || building2->getName() == "CIF") {
-            changePropertyCount(0, 1, 0);
-            partner->changePropertyCount(0, -1, 0);
-        } else if (building2->getName() == "MKV" || building2->getName() == "UWP" || 
-                   building2->getName() == "V1" || building2->getName() == "REV") {
-            changePropertyCount(1, 0, 0);
-            partner->changePropertyCount(-1, 0, 0);
-        } else if (acad2) {
-            ++monopolySet[acad2->getBlock()];
-            --partner->monopolySet[acad2->getBlock()];
-            changePropertyCount(0, 0, 1);
-            partner->changePropertyCount(0, 0, -1);
-        }
-        
-        // Update assets and ownership
-        building1->setOwner(partner->symbol);
-        building2->setOwner(this->symbol);
-        
-        changeAsset(building2->getCostToBuy() - building1->getCostToBuy());
-        partner->changeAsset(building1->getCostToBuy() - building2->getCostToBuy());
-        
-        cout << "Trade successful!" << endl;
-    } else {
-        cout << "Trade rejected." << endl;
-    }
-}
-
-void Player::trade(Player *partner, Building *building, double money) {
-    if (building->getOwner() != this->symbol) {
-        // I don't own the building
-        return;
-    } 
-    if (partner->getCash() < money) {
-        // Partner doesn't have enough money
-        return;
-    } 
-    
-    // Check for improvements on academic buildings
-    AcademicBuilding *acad = dynamic_cast<AcademicBuilding *>(building);
-    if (acad && acad->getImprLevel() != 0) {
-        // I have improvements on the building
-        return;
-    } 
-    
-    // print to ask if partner wants this offer
-    string choice;
-    cout << partner->getName() << ", do you accept this trade offer? (yes/no): ";
-    cin >> choice;
-    if (choice == "accept" || choice == "y" || choice == "yes") {
-        //trade accepted initiating trade
-        changeCash(money);
-        partner->changeCash(-money);
-        
-        // Update the property ownership
-        for (int i = 0; i < 28; ++i) {
-            if (buildings[i] && buildings[i] == building) {
-                buildings[i] = nullptr;
-                break;
-            }
-        }
-        
-        for (int i = 0; i < 28; ++i) {
-            if (partner->buildings[i] == nullptr) {
-                partner->buildings[i] = building;
-                break;
-            }
-        }
-        
-        // Update property counts
-        if (building->getName() == "PAC" || building->getName() == "CIF") {
-            changePropertyCount(0, -1, 0);
-            partner->changePropertyCount(0, 1, 0);
-        } else if (building->getName() == "MKV" || building->getName() == "UWP" || 
-                   building->getName() == "V1" || building->getName() == "REV") {
-            changePropertyCount(-1, 0, 0);
-            partner->changePropertyCount(1, 0, 0);
-        } else if (acad) {
-            --monopolySet[acad->getBlock()];
-            ++partner->monopolySet[acad->getBlock()];
-            changePropertyCount(0, 0, -1);
-            partner->changePropertyCount(0, 0, 1);
-        }
-        
-        changeAsset(-(building->getCostToBuy()));
-        partner->changeAsset(building->getCostToBuy());
-        building->setOwner(partner->symbol);
-        
-        cout << "Trade successful!" << endl;
-    } else {
-        cout << "Trade rejected." << endl;
-    }
-}
-
-void Player::trade(Player *partner, double money1, double money2) {
-    cout << "This trade doesn't involve any property exchange. Are you sure?" << endl;
 }
 
 void Player::printAsset() {
@@ -700,7 +297,6 @@ bool Player::checkBankrupt() const {
 }
 
 
-
 bool Player::isGym(std::string squareName){
     for (int i = 22; i < 24; i++){
         if (OWNABLE[i][0] == squareName) {
@@ -720,7 +316,7 @@ bool Player::isResidence(std::string squareName){
     return false;
 }
 
-void Player::removeProp(std::shared_ptr<building> property_name) {
+void Player::removeProp(std::shared_ptr<Building> property_name) {
     // check if property is owned
     if (!this->ownThisProp(property_name->getName())) {
         std::cout << "this props is not owned" << std::endl;
@@ -736,9 +332,9 @@ void Player::removeProp(std::shared_ptr<building> property_name) {
 }
 
 
-void Player::addProp(std::shared_ptr<building> property_name) {
+void Player::addProp(std::shared_ptr<Building> property_name) {
     if (this->ownThisProp(property_name->getName())) {
-        std::cout << "(testing) this props is owned" << std::endl;
+        std::cout << "this props is owned" << std::endl;
         return;
     }
 
@@ -764,9 +360,9 @@ void Player::updateMonopolyBlock() {
     for (int i = 0; i < 28; i++) {
         std::string propName = ownedProperties[i]->getName();
         if (isGym(propName)){
-            numGymOwned++;
+            ownedGyms++;
         } else if (isResidence(propName)){
-            numResOwned++;
+            ownedResidence++;
         }
 	    eachBlock = ownedProperties[i]->getMonoBlock();
 	    arr[eachBlock] += 1;

@@ -1,5 +1,5 @@
-#ifndef TRANSACTIONS_H
-#define TRANSACTIONS_H
+#ifndef TRANSACTION_H
+#define TRANSACTION_H
 #include <iostream>
 #include <vector>
 #include "Player.h"
@@ -22,26 +22,26 @@ static std::vector<std::shared_ptr<Building>> ownedProperties;
 
 class Transactions{
     public:
-    bool isGym(std::string squareName);
-    int  getPropertyCost(const std::string &property_name);
-    bool isResidence(std::string squareName);
-    bool isAcademic(std::string squareName);
-    bool isOwned(std::string nameSquare);
-    void transferProperty(std::shared_ptr<Building> building, std::shared_ptr<Player> from, std::shared_ptr<Player> to);
-    bool checkFund(std::shared_ptr<Player> p1, int amt);
-    void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money, std::shared_ptr<Building> building);
-    void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Building> building1, std::shared_ptr<Building> building2);
-    void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Building> building, double money);
-    void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money1, double money2);
-    void payRent(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, int rent); 
-    void payBank(std::shared_ptr<Player> p1, int rent);
-    void buyBuilding(std::string property_name, std::shared_ptr<Player> owner);
-    void sellBuilding(std::string property_name, std::shared_ptr<Player> owner);
-    void buyImprovement(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner);
-    void sellImprovement(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner);
-    void mortgage(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner);
-    void unmortgage(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner);
-    std::shared_ptr<Building> listProp(std::string property_name);
+    static bool isGym(std::string squareName);
+    static int  getPropertyCost(const std::string &property_name);
+    static bool isResidence(std::string squareName);
+    static bool isAcademic(std::string squareName);
+    static bool isOwned(std::string nameSquare);
+    static void transferProperty(std::shared_ptr<Building> building, std::shared_ptr<Player> from, std::shared_ptr<Player> to);
+    static bool checkFund(std::shared_ptr<Player> p1, int amt);
+    static void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money, std::shared_ptr<Building> building);
+    static void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Building> building1, std::shared_ptr<Building> building2);
+    static void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Building> building, double money);
+    static void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money1, double money2);
+    static void payRent(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, int rent); 
+    static void payBank(std::shared_ptr<Player> p1, int rent);
+    static void buyBuilding(std::string property_name, std::shared_ptr<Player> owner);
+    static void sellBuilding(std::string property_name, std::shared_ptr<Player> owner);
+    static void buyImprovement(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner);
+    static void sellImprovement(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner);
+    static void mortgage(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner);
+    static void unmortgage(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner);
+    static std::shared_ptr<Building> listProp(std::string property_name);
 };
 
 #endif
