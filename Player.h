@@ -1,17 +1,26 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <string>
-#include <map>
-#include <vector>
 #include <memory>
+#include <iostream>
+#include <vector>
 #include "Cell.h"
-#include "Academic.h"
 #include "building.h"
+#include "auction.h"
+#include "Academic.h"
+#include "Gym.h"
+#include "Residence.h"
+#include "nonbuilding.h"
 #include "TimsLine.h"
 
-class Building;  
-class Cell; 
+class Cell;
+class Building;
+class nonbuilding;
+class Auction;
 class Academic;
+class Gym;
+class Residence;
+class TimsLine;
 
 class Player {
 private:
@@ -21,7 +30,7 @@ private:
     int position_initial; // Dice rolling position
     double cash; // Player's money
     double assets; // Player's total assets
-    std::vector<std::shared_ptr<Cell>> ownedProperties; // List of owned properties
+    std::vector<std::shared_ptr<Building>> ownedProperties; // List of owned properties
     int ownedGyms;
     int ownedResidence;
     int ownedAcademic;
@@ -92,18 +101,26 @@ public:
 
     // Property Management
     bool checkMonopoly(int block);
-    void buyBuilding(Building *building);
     void sellBuilding(Building *building);
     void mortgage(Building *building);
-    void unmortgage(Building *building);
-    void buyImprovement(Building *building);
-    void sellImprovement(Building *building);
 
-    // Trading
-    void trade(Player *partner, double money, Building *building);
-    void trade(Player *partner, Building *building1, Building *building2);
-    void trade(Player *partner, Building *building, double money);
-    void trade(Player *partner, double money1, double money2);
+    //transactions
+    bool isOwned(std::string nameSquare);
+    void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money, std::shared_ptr<Ownable> *building);
+    void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Ownable> *building1, std::shared_ptr<Ownable> *building2);
+    void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Ownable> building, double money);
+    void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money1, double money2);
+    void payRent(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, int rent); 
+    void payBank(std::shared_ptr<Player> p1, int rent);
+    void buyBuilding(std::string property_name, std::shared_ptr<Player> owner);
+    void buyImprovement(std::shared_ptr<Ownable> property_name, std::shared_ptr<Player> owner);
+    void sellImprovement(std::shared_ptr<Ownable> property_name, std::shared_ptr<Player> owner);
+    void mortgage(std::shared_ptr<Ownable> property_name, std::shared_ptr<Player> owner);
+    void unmortgage(std::shared_ptr<Ownable> property_name, std::shared_ptr<Player> owner);
+
+    static std::shared_ptr<Ownable> pointerOfProp(std::string ownableName);
+    static void addPropByAuction(std::string ownableName, std::shared_ptr<Player> buyer, int price);
+
 };
 
 #endif // WATOPOLY_PLAYER_H
