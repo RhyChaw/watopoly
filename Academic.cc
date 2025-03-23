@@ -5,11 +5,11 @@
 
 
 Academic::Academic(int ID, std::string name, int price, char owner) : Building(ID, name, price, owner) {
-    rentatata = costToPaysin(name);  
+    rentatata = costTogen(name);  
     block = monoBlockOfProp(this->getName());  
 }
 
-int Academic::costToPaysin(std::string squareName) {
+int Academic::costTogen(std::string squareName) {
     int result = 0;
 
     for (int i = 0; i < 28; i++) {
@@ -24,7 +24,7 @@ int Academic::costToPaysin(std::string squareName) {
     return result;
 }
 
-int Academic::costToPayDou(std::string squareName, int imprLevel) {
+int Academic::costToimp(std::string squareName, int imprLevel) {
     int result = 0;
     int levelIndex = 4 + imprLevel; 
 
@@ -87,7 +87,7 @@ void Academic::currentOn(Player* player) {
 //change this yes sirrrrrrrr
 int Academic::amountToPay() {
     if (owned) {
-        return 2 * costToPaysin(this->getName());
+        return 2 * costTogen(this->getName());
     }
-    return costToPayDou(this->getName(), this->getImprLevel());
+    return costToimp(this->getName(), this->getImprLevel());
 }

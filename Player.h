@@ -30,6 +30,7 @@ private:
     bool isBankrupt; // Whether the player is bankrupt
     int monopolySet[8]; // Tracks if a player owns a full monopoly set
     int cups; // Number of "Get Out of Jail Free" cards
+    int roll_for_jail = 0; //you jut added this, its used in timeline
 
 public:
     Building *buildings[28];
@@ -62,6 +63,7 @@ public:
     bool checkMonopolyImprove(Building *building);
     Building* findBuilding(std::string buildingName); // Made consistent with implementation
     void printAsset();
+    int getadd_roll_for_jail() const;
 
     // Setters & Modifiers
     void setPosition(int newPosition);
@@ -86,6 +88,7 @@ public:
     // Dice & Tims Line Management
     void addCup();
     void removeCup();
+    void add_roll_for_jail();
 
     // Property Management
     bool checkMonopoly(int block);

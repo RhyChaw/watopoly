@@ -99,7 +99,12 @@ std::vector<std::shared_ptr<Cell>> Player::getProperties() const {
     return ownedProperties;
 }
 
+int Player::getadd_roll_for_jail() const {
+    return roll_for_jail;
+}
+
 // Setters
+//i this you might need to set postiotn like actually with numbers
 void Player::setPosition(int p) { 
     position_initial = p; 
 }
@@ -111,6 +116,7 @@ void Player::setCash(int amount) {
 void Player::setTurnsInTimsLine(int turns) { 
     turnsInTimsLine = turns; 
 }
+
 
 void Player::setBankrupt(bool b) { 
     isBankrupt = b; 
@@ -173,6 +179,10 @@ void Player::removeProperty(std::shared_ptr<Cell> property) {
 
 void Player::addCup() {
     ++cups;
+}
+
+void Player::add_roll_for_jail() {
+    ++add_roll_for_jail;
 }
 
 void Player::removeCup() {

@@ -14,7 +14,7 @@ int Gym::getRoll() const {
     return roll;
 }
 
-int Gym::costToPayImpr(std::string squareName, int imprLevel) {
+int Gym::costToimp(std::string squareName, int imprLevel) {
     int result = 0;
     int levelIndex = 4 + imprLevel; 
 
@@ -30,7 +30,7 @@ int Gym::costToPayImpr(std::string squareName, int imprLevel) {
 }
 
 int Gym::amountToPay() {
-    return this->getRoll() * costToPayImpr(this->getName(), this->getGymLevel());
+    return this->getRoll() * costToimp(this->getName(), this->getGymLevel());
 }
 
 void Gym::currentOn(Player* player) {

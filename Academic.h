@@ -19,8 +19,8 @@ public:
     ~Academic();
 
     // Getters
-    int costToPayDou(std::string squareName, int imprLevel);
-    int costToPaysin(std::string squareName);
+    int costToimp(std::string squareName, int imprLevel);
+    int costTogen(std::string squareName);
     std::string getBlock() const;
     void setBlock(string block);
     int getOwned() const;
