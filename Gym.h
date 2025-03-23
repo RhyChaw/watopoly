@@ -20,7 +20,7 @@ public:
     int getRoll() const;
 
     // Methods
-    int costToPayImpr(std::string squareName, int imprLevel);
+    int costToimp(std::string squareName, int imprLevel);
     virtual int amountToPay() override;
     void currentOn(Player* player) override;
 };

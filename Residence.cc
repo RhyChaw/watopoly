@@ -38,7 +38,7 @@ void Residence::currentOn(Player* player) {
     }
 }
 
-int Residence::costToPayImpr(std::string squareName, int imprLevel) {
+int Residence::costToimp(std::string squareName, int imprLevel) {
     int result = 0;
     int levelIndex = 4 + imprLevel; 
 
@@ -55,6 +55,6 @@ int Residence::costToPayImpr(std::string squareName, int imprLevel) {
 }
 
 int Residence::amountToPay() {
-    return costToPayImpr(this->getName(), this->getResLevel());
+    return costToimp(this->getName(), this->getResLevel());
 }
 

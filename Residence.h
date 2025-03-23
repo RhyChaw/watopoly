@@ -20,7 +20,7 @@ public:
     int calculateRent() const;
     virtual int amountToPay() override;
     virtual void currentOn(Player* player) override;
-    int costToPayImpr(std::string squareName, int imprLevel);
+    int costToimp(std::string squareName, int imprLevel);
 };
 
 #endif // RESIDENCE_H
