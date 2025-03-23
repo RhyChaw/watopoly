@@ -130,7 +130,9 @@ void Player::leaveTimsLine() {
 
 // Modify assets and properties
 void Player::changeCash(double c) {
+    //check for bankcruptcy;
     cash += c;
+    changeAsset(c);
 }
 
 void Player::changeAsset(double c) {
