@@ -152,11 +152,19 @@ void Player::changePropertyCount(int residences, int gyms, int academics) {
 }
 
 // Handle cash transactions
+//pay fund
 void Player::pay(int amount) {
-    changeCash(-amount); 
-    if (checkBankrupt()) {
-        declareBankruptcy(); 
+    if (isBankrupt) {
+        std::cout << "this player is bankrupted" << std::endl;
+        return;
     }
+
+    if (cash < amount) {
+        std::cout << " insufficient fund to pay" << std::endl;
+        return;
+    }
+
+    changeCash(-amount);
 }
 
 void Player::receive(int amount) {
@@ -359,7 +367,7 @@ void Player::buyImprovement(Building *building) {
     } 
     
     if(acad->getImprLevel() >= 5){
-        //already max level
+        //already max 
         return;
     }
     
@@ -367,6 +375,18 @@ void Player::buyImprovement(Building *building) {
     changeAsset(improveCost);
     acad->setImprLevel(acad->getImprLevel() + 1);
     // successfully printed
+}
+
+bool Player::ownThisProp(std::string name) {
+    int size = ownedProperties.size();
+
+    for (int i = 0; i < size; i++) {
+        if (ownedProperties[i]->getName() == name) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void Player::sellImprovement(Building *building) {
@@ -677,4 +697,111 @@ void Player::declareBankruptcy() {
 
 bool Player::checkBankrupt() const {
     return cash < 0;
+}
+
+
+
+bool Player::isGym(std::string squareName){
+    for (int i = 22; i < 24; i++){
+        if (OWNABLE[i][0] == squareName) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+bool Player::isResidence(std::string squareName){
+    for (int i = 24; i < 28; i++){
+        if (OWNABLE[i][0] == squareName){
+	    return true;
+	}
+    }
+    return false;
+}
+
+void Player::removeProp(std::shared_ptr<building> property_name) {
+    // check if property is owned
+    if (!this->ownThisProp(property_name->getName())) {
+        std::cout << "this props is not owned" << std::endl;
+        return;
+    }
+
+    for (unsigned int i = 0; i < ownedProperties.size(); i++) {
+        if (property_name == ownedProperties[i]) {
+            ownedProperties.erase(ownedProperties.begin() + i);
+            break;
+        }
+    }
+}
+
+
+void Player::addProp(std::shared_ptr<building> property_name) {
+    if (this->ownThisProp(property_name->getName())) {
+        std::cout << "(testing) this props is owned" << std::endl;
+        return;
+    }
+
+    for (int i = 22; i < 24; i++){
+        if (OWNABLE[i][0] == property_name->getName()) {
+            ownedGyms++;
+        }
+    }
+    for (int i = 24; i < 28; i++){
+        if (OWNABLE[i][0] == property_name->getName()) {
+            ownedResidence++;
+        }
+    }
+    ownedProperties.emplace_back(propperty_name);
+}
+
+void Player::updateMonopolyBlock() {
+    std::map<std::string, int> tracking; 
+    std::string eachBlock;
+
+    ownedGyms = 0;
+    ownedResidence = 0;
+    for (int i = 0; i < 28; i++) {
+        std::string propName = ownedProperties[i]->getName();
+        if (isGym(propName)){
+            numGymOwned++;
+        } else if (isResidence(propName)){
+            numResOwned++;
+        }
+	    eachBlock = ownedProperties[i]->getMonoBlock();
+	    arr[eachBlock] += 1;
+    }
+
+    for (auto &block: trackingBuilding) {
+        if (block.second == 2 && (block.first == "Math" || block.first == "Arts1")) {
+            monopolyBlocks.push_back(block.first);
+        } else if (block.second == 3) {
+            monopolyBlocks.push_back(block.first);
+        }
+    }
+}
+
+std::string Player::monoBlockOfProp(std::string name) {
+    std::string result = "";
+
+    for (int i = 0; i < 28; i++) {
+        if (OWNABLE[i][0] == squareName) {
+            result = OWNABLE[i][1];
+        }
+    }
+
+    return result;
+}
+
+bool Player::checkIfInMonopolyBlock(std::string name) {
+    std::string monoBlockOfSquare = monoBlockOfProp(squareName);
+    int size = monopolyBlocks.size();
+
+    for (int i = 0; i < size; i++) {
+        if (monopolyBlocks[i] == monoBlockOfSquare) {
+            return true;
+        }
+    }
+
+    return false;
 }

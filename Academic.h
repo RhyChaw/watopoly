@@ -23,7 +23,7 @@ public:
     int costTogen(std::string squareName);
     std::string getBlock() const;
     void setBlock(string block);
-    int getOwned() const;
+    bool getOwned() const;
     void setOwned(bool flag);
     virtual int amountToPay() override;
     void currentOn(Player* player);
