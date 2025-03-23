@@ -1,5 +1,5 @@
 #include "GameBoard.h"
-#include "AcademicBuilding.h"
+#include "building.h"
 #include "Residence.h"
 #include "Gym.h"
 #include "NeedlesHall.h"
@@ -9,6 +9,7 @@
 #include "OSAP.h"
 #include "GooseNesting.h"
 #include "TimsLine.h"
+#include "Dice.h"
 #include <iostream>
 
 
@@ -104,10 +105,11 @@ void GameBoard::roll(Player* player)
         int turnsInTims = player->getTurnsInTimsLine();
         std::cout << player->getName() << " is in DC Tims Line for " << turnsInTims << " turn(s)." << std::endl;
 
-        int roll1 = rand() % 6 + 1;
-        int roll2 = rand() % 6 + 1;
+        Dice::roll();
+        int roll1 = Dice::getFirstDie();
+        int roll2 = Dice::getSecondDie();
 
-        if (roll1 == roll2) {  // Rolled doubles -> Free to leave
+        if (Dice::isDoubles()) {  // Rolled doubles -> Free to leave
             std::cout << player->getName() << " rolled doubles (" << roll1 << " and " << roll2 << ") and is leaving DC Tims Line!" << std::endl;
             player->leaveTimsLine();
         } 
@@ -129,7 +131,7 @@ void GameBoard::roll(Player* player)
         }
 
         // Move after leaving Tims Line
-        int moveSpaces = roll1 + roll2;
+        int moveSpaces = Dice::getSum();
         std::cout << player->getName() << " moves " << moveSpaces << " spaces." << std::endl;
         int newPos = (player->getIndex() + moveSpaces) % boardCells.size();
         player->setIndex(newPos);
@@ -138,9 +140,11 @@ void GameBoard::roll(Player* player)
     }
 
     // Normal rolling process if not in DC Tims Line
-    int roll1 = rand() % 6 + 1;
-    int roll2 = rand() % 6 + 1;
-    int moveSpaces = roll1 + roll2;
+    Dice::roll();
+    int roll1 = Dice::getFirstDie();
+    int roll2 = Dice::getSecondDie();
+    int moveSpaces = Dice::getSum();
+    
     std::cout << player->getName() << " rolled " << roll1 << " and " << roll2 << ". Moving " << moveSpaces << " spaces." << std::endl;
     int newPos = (player->getIndex() + moveSpaces) % boardCells.size();
     player->setIndex(newPos);
