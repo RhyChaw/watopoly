@@ -7,6 +7,7 @@ class Dice {
 private:
     static int lastRoll1;
     static int lastRoll2;
+    static int doubles_count = 0;
 
 public:
     // Rolls both dice and stores the results internally
@@ -23,6 +24,7 @@ public:
     
     // Checks if the last roll was doubles
     static bool isDoubles();
+    static int changeDouble();
 };
 
 #endif // DICE_H
