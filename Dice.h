@@ -24,6 +24,7 @@ public:
     
     // Checks if the last roll was doubles
     static bool isDoubles();
+    static int changeDouble();
 };
 
 #endif // DICE_H

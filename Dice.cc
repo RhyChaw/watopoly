@@ -19,6 +19,9 @@ int Dice::getSum() {
 }
 
 bool Dice::isDoubles() {
-    doubles_count++;
     return lastRoll1 == lastRoll2;
+}
+
+int Dice::changeDouble() {
+    doubles_count++;
 }
