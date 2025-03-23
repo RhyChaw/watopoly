@@ -52,46 +52,51 @@ bool GameBoard::isWon() const
 void GameBoard::initializeBoard()
 {
     boardCells.clear();
-    boardCells.push_back({"OSAP","0","0","0","0","0","0","0","0","0"});
+
+    // Buildings with all costs (Full cost entries)
     boardCells.push_back({"AL", "Arts1", "40", "50", "2", "10", "30", "90", "160", "250"});
-    boardCells.push_back({"SLC","0","0","0","0","0","0","0","0","0"});
     boardCells.push_back({"ML", "Arts1", "60", "50", "4", "20", "60", "180", "320", "450"});
-    boardCells.push_back({"Tuition","0","0","0","0","0","0","0","0","0"});
-    boardCells.push_back({"MKV", "Residence", "200"});
     boardCells.push_back({"ECH", "Arts2", "100", "50", "6", "30", "90", "270", "400", "550"});
-    boardCells.push_back({"NeedlesHall","0","0","0","0","0","0","0","0","0"});
     boardCells.push_back({"PAS", "Arts2", "100", "50", "6", "30", "90", "270", "400", "550"});
     boardCells.push_back({"HH", "Arts2", "120", "50", "8", "40", "100", "300", "450", "600"});
-    boardCells.push_back({"TimsLine","0","0","0","0","0","0","0","0","0"});
     boardCells.push_back({"RCH", "Eng", "140", "100", "10", "50", "150", "450", "625", "750"});
-    boardCells.push_back({"PAC", "Gym","150","0","0","0","0","0","0","0"});
     boardCells.push_back({"DWE", "Eng", "140", "100", "10", "50", "150", "450", "625", "750"});
     boardCells.push_back({"CPH", "Eng", "160", "100", "12", "60", "180", "500", "700", "900"});
-    boardCells.push_back({"UWP", "Residence", "200"});
     boardCells.push_back({"LHI", "Health", "180", "100", "14", "70", "200", "550", "750", "950"});
-    boardCells.push_back({"SLC","0","0","0","0","0","0","0","0","0"});
     boardCells.push_back({"BMH", "Health", "180", "100", "14", "70", "200", "550", "750", "950"});
     boardCells.push_back({"OPT", "Health", "200", "100", "16", "80", "220", "600", "800", "1000"});
-    boardCells.push_back({"GooseNesting","0","0","0","0","0","0","0","0","0"});
     boardCells.push_back({"EV1", "Env", "220", "150", "18", "90", "250", "700", "875", "1050"});
-    boardCells.push_back({"NeedlesHall","0","0","0","0","0","0","0","0","0"});
     boardCells.push_back({"EV2", "Env", "220", "150", "18", "90", "250", "700", "875", "1050"});
     boardCells.push_back({"EV3", "Env", "240", "150", "20", "100", "300", "750", "925", "1100"});
-    boardCells.push_back({"V1", "Residence","200"});
     boardCells.push_back({"PHYS", "Sci1", "260", "150", "22", "110", "330", "800", "975", "1150"});
     boardCells.push_back({"B1", "Sci1", "260", "150", "22", "110", "330", "800", "975", "1150"});
-    boardCells.push_back({"CIF", "Gym","150","0","0","0","0","0","0","0"});
     boardCells.push_back({"B2", "Sci1", "280", "150", "24", "120", "360", "850", "1025", "1200"});
-    boardCells.push_back({"TimsLine", "GO TO TIMS"});
     boardCells.push_back({"EIT", "Sci2", "300", "200", "26", "130", "390", "900", "1100", "1275"});
     boardCells.push_back({"ESC", "Sci2", "300", "200", "26", "130", "390", "900", "1100", "1275"});
-    boardCells.push_back({"SLC","0","0","0","0","0","0","0","0","0"});
     boardCells.push_back({"C2", "Sci2", "320", "200", "28", "150", "450", "1000", "1200", "1400"});
-    boardCells.push_back({"REV", "Residence","200"});
-    boardCells.push_back({"NeedlesHall","0","0","0","0","0","0","0","0","0"});
     boardCells.push_back({"MC", "Math", "350", "200", "35", "175", "500", "1100", "1300", "1500"});
-    boardCells.push_back({"CoopFee", "COOP FEE"});
     boardCells.push_back({"DC", "Math", "400", "200", "50", "200", "600", "1400", "1700", "2000"});
+
+    // Gyms
+    boardCells.push_back({"PAC", "Gym", "150", "0", "0", "0", "0", "0", "0", "0"});
+    boardCells.push_back({"CIF", "Gym", "150", "0", "0", "0", "0", "0", "0", "0"});
+
+    // Residence
+    boardCells.push_back({"MKV", "Residence", "200"});
+    boardCells.push_back({"UWP", "Residence", "200"});
+    boardCells.push_back({"V1", "Residence", "200"});
+    boardCells.push_back({"REV", "Residence", "200"});
+
+    // Other cells
+    boardCells.push_back({"OSAP", "0", "0", "0", "0", "0", "0", "0", "0", "0"});
+    boardCells.push_back({"SLC", "0", "0", "0", "0", "0", "0", "0", "0", "0"});
+    boardCells.push_back({"NeedlesHall", "0", "0", "0", "0", "0", "0", "0", "0", "0"});
+    boardCells.push_back({"TimsLine", "0", "0", "0", "0", "0", "0", "0", "0", "0"});
+    boardCells.push_back({"GooseNesting", "0", "0", "0", "0", "0", "0", "0", "0", "0"});
+    boardCells.push_back({"NeedlesHall", "0", "0", "0", "0", "0", "0", "0", "0", "0"});
+    boardCells.push_back({"TimsLine", "GO TO TIMS"});
+    boardCells.push_back({"NeedlesHall", "0", "0", "0", "0", "0", "0", "0", "0", "0"});
+    boardCells.push_back({"CoopFee", "COOP FEE"});
 }
 
 void GameBoard::roll(Player* player)
