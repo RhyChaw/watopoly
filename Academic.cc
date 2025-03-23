@@ -52,8 +52,8 @@ void Academic::setBlock(string Block) {
     block = Block;
 }
 
-void Academic::setOwned(bool own) {
-    owned = own;
+void Academic::setOwned(bool flag) {
+    owned = flag;
 }
 
 bool Academic::getOwned() const {

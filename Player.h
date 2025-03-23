@@ -30,7 +30,6 @@ private:
     int position_initial; // Dice rolling position
     double cash; // Player's money
     double assets; // Player's total assets
-    std::vector<std::shared_ptr<Building>> ownedProperties; // List of owned properties
     int ownedGyms;
     int ownedResidence;
     int ownedAcademic;
@@ -38,8 +37,10 @@ private:
     int turnsInTimsLine; // Number of turns player must wait in Tims Line
     bool isBankrupt; // Whether the player is bankrupt
     int monopolySet[8]; // Tracks if a player owns a full monopoly set
+    std::vector<std::string> monopolyBlocks; // ie: {"Sci1", "Math", "Eng"}
     int cups; // Number of "Get Out of Jail Free" cards
     int roll_for_jail = 0; //you jut added this, its used in timeline
+    std::vector<std::shared_ptr<Ownable>> ownedProperties;
 
 public:
     Building *buildings[28];
@@ -100,26 +101,13 @@ public:
     void add_roll_for_jail();
 
     // Property Management
+    std::string monoBlockOfProp(std::string name);
     bool checkMonopoly(int block);
-    void sellBuilding(Building *building);
-    void mortgage(Building *building);
-
-    //transactions
-    bool isOwned(std::string nameSquare);
-    void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money, std::shared_ptr<Ownable> *building);
-    void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Ownable> *building1, std::shared_ptr<Ownable> *building2);
-    void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Ownable> building, double money);
-    void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money1, double money2);
-    void payRent(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, int rent); 
-    void payBank(std::shared_ptr<Player> p1, int rent);
-    void buyBuilding(std::string property_name, std::shared_ptr<Player> owner);
-    void buyImprovement(std::shared_ptr<Ownable> property_name, std::shared_ptr<Player> owner);
-    void sellImprovement(std::shared_ptr<Ownable> property_name, std::shared_ptr<Player> owner);
-    void mortgage(std::shared_ptr<Ownable> property_name, std::shared_ptr<Player> owner);
-    void unmortgage(std::shared_ptr<Ownable> property_name, std::shared_ptr<Player> owner);
-
-    static std::shared_ptr<Ownable> pointerOfProp(std::string ownableName);
-    static void addPropByAuction(std::string ownableName, std::shared_ptr<Player> buyer, int price);
+    bool ownThisProp(std::string name);
+    void removeProp(std::shared_ptr<Building> prop);
+    void addProp(std::shared_ptr<Building> property_name);
+    void updateMonopolyBlock();
+    bool checkIfInMonopolyBlock(std::string name) ;
 
 };
 
