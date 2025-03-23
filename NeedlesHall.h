@@ -1,21 +1,21 @@
 #ifndef NEEDLES_HALL_H
 #define NEEDLES_HALL_H
 
-#include "NonProperty.h"
 #include <string>
-#include <vector>
+#include <memory>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+#include "nonbuilding.h"
+#include "Player.h"
+class Player;
 
-class NeedlesHall : public NonProperty {
-private:
-    std::vector<int> outcomes;
-    
-    int getRandomOutcome() const;
-
-public:
-    NeedlesHall(std::string name);
-    ~NeedlesHall();
-
-    void doEvent(Player* player) override;
+class NeedlesHall: public nonbuilding {
+    public:
+        NeedlesHall(int ID, std::string name);
+        int getRandomMovement(int n);
+        void moveeee(std::shared_ptr<Player> p);
+        ~NeedlesHall();
 };
 
 #endif // NEEDLES_HALL_H
