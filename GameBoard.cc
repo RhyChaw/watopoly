@@ -10,7 +10,7 @@
 #include "GooseNesting.h"
 #include "TimsLine.h"
 #include <iostream>
-using namespace std;
+
 
 GameBoard::GameBoard() : totalCups(0), gameWon(false), winner(nullptr)
 {
@@ -59,33 +59,49 @@ bool GameBoard::isWon() const
 // Initialize the board
 void GameBoard::initializeBoard()
 {
-    boardCells.clear();
+    boardCells.clear(); // Clear the previous board data
 
-    // AcademicBuildings
-    boardCells.push_back(new AcademicBuilding("AL", 40, 50, "Arts1", {2, 10, 30, 90, 160, 250}));
-    boardCells.push_back(new AcademicBuilding("ML", 60, 50, "Arts1", {4, 20, 60, 180, 320, 450}));
-    boardCells.push_back(new AcademicBuilding("ECH", 100, 50, "Arts2", {6, 30, 90, 270, 400, 550}));
-    boardCells.push_back(new AcademicBuilding("PAS", 100, 50, "Arts2", {6, 30, 90, 270, 400, 550}));
-    boardCells.push_back(new AcademicBuilding("HH", 120, 50, "Arts2", {8, 40, 100, 300, 450, 600}));
-    boardCells.push_back(new AcademicBuilding("RCH", 140, 100, "Eng", {10, 50, 150, 450, 625, 750}));
-    boardCells.push_back(new AcademicBuilding("DWE", 140, 100, "Eng", {10, 50, 150, 450, 625, 750}));
-    boardCells.push_back(new AcademicBuilding("CPH", 160, 100, "Eng", {12, 60, 180, 500, 700, 900}));
-    boardCells.push_back(new AcademicBuilding("LHI", 180, 100, "Health", {14, 70, 200, 550, 750, 950}));
-    boardCells.push_back(new AcademicBuilding("BMH", 180, 100, "Health", {14, 70, 200, 550, 750, 950}));
-    boardCells.push_back(new AcademicBuilding("OPT", 200, 100, "Health", {16, 80, 220, 600, 800, 1000}));
-    boardCells.push_back(new AcademicBuilding("EV1", 220, 150, "Env", {18, 90, 250, 700, 875, 1050}));
-    boardCells.push_back(new AcademicBuilding("EV2", 220, 150, "Env", {18, 90, 250, 700, 875, 1050}));
-    boardCells.push_back(new AcademicBuilding("EV3", 240, 150, "Env", {20, 100, 300, 750, 925, 1100}));
-    boardCells.push_back(new AcademicBuilding("PHYS", 260, 150, "Sci1", {22, 110, 330, 800, 975, 1150}));
-    boardCells.push_back(new AcademicBuilding("B1", 260, 150, "Sci1", {22, 110, 330, 800, 975, 1150}));
-    boardCells.push_back(new AcademicBuilding("B2", 280, 150, "Sci1", {24, 120, 360, 850, 1025, 1200}));
-    boardCells.push_back(new AcademicBuilding("EIT", 300, 200, "Sci2", {26, 130, 390, 900, 1100, 1275}));
-    boardCells.push_back(new AcademicBuilding("ESC", 300, 200, "Sci2", {26, 130, 390, 900, 1100, 1275}));
-    boardCells.push_back(new AcademicBuilding("C2", 320, 200, "Sci2", {28, 150, 450, 1000, 1200, 1400}));
-    boardCells.push_back(new AcademicBuilding("MC", 350, 200, "Math", {35, 175, 500, 1100, 1300, 1500}));
-    boardCells.push_back(new AcademicBuilding("DC", 400, 200, "Math", {50, 200, 600, 1400, 1700, 2000}));
-
-    std::cout << "Game board initialized!" << std::endl;
+    // Adding the provided data
+    boardCells.push_back({"OSAP","0","0","0","0","0","0","0","0","0"});
+    boardCells.push_back({"AL", "Arts1", "40", "50", "2", "10", "30", "90", "160", "250"});
+    boardCells.push_back({"SLC","0","0","0","0","0","0","0","0","0"});
+    boardCells.push_back({"ML", "Arts1", "60", "50", "4", "20", "60", "180", "320", "450"});
+    boardCells.push_back({"Tuition","0","0","0","0","0","0","0","0","0"});
+    boardCells.push_back({"MKV", "Residence", "200"});
+    boardCells.push_back({"ECH", "Arts2", "100", "50", "6", "30", "90", "270", "400", "550"});
+    boardCells.push_back({"NeedlesHall","0","0","0","0","0","0","0","0","0"});
+    boardCells.push_back({"PAS", "Arts2", "100", "50", "6", "30", "90", "270", "400", "550"});
+    boardCells.push_back({"HH", "Arts2", "120", "50", "8", "40", "100", "300", "450", "600"});
+    boardCells.push_back({"TimsLine","0","0","0","0","0","0","0","0","0"});
+    boardCells.push_back({"RCH", "Eng", "140", "100", "10", "50", "150", "450", "625", "750"});
+    boardCells.push_back({"PAC", "Gym","150","0","0","0","0","0","0","0"});
+    boardCells.push_back({"DWE", "Eng", "140", "100", "10", "50", "150", "450", "625", "750"});
+    boardCells.push_back({"CPH", "Eng", "160", "100", "12", "60", "180", "500", "700", "900"});
+    boardCells.push_back({"UWP", "Residence", "200"});
+    boardCells.push_back({"LHI", "Health", "180", "100", "14", "70", "200", "550", "750", "950"});
+    boardCells.push_back({"SLC","0","0","0","0","0","0","0","0","0"});
+    boardCells.push_back({"BMH", "Health", "180", "100", "14", "70", "200", "550", "750", "950"});
+    boardCells.push_back({"OPT", "Health", "200", "100", "16", "80", "220", "600", "800", "1000"});
+    boardCells.push_back({"GooseNesting","0","0","0","0","0","0","0","0","0"});
+    boardCells.push_back({"EV1", "Env", "220", "150", "18", "90", "250", "700", "875", "1050"});
+    boardCells.push_back({"NeedlesHall","0","0","0","0","0","0","0","0","0"});
+    boardCells.push_back({"EV2", "Env", "220", "150", "18", "90", "250", "700", "875", "1050"});
+    boardCells.push_back({"EV3", "Env", "240", "150", "20", "100", "300", "750", "925", "1100"});
+    boardCells.push_back({"V1", "Residence","200"});
+    boardCells.push_back({"PHYS", "Sci1", "260", "150", "22", "110", "330", "800", "975", "1150"});
+    boardCells.push_back({"B1", "Sci1", "260", "150", "22", "110", "330", "800", "975", "1150"});
+    boardCells.push_back({"CIF", "Gym","150","0","0","0","0","0","0","0"});
+    boardCells.push_back({"B2", "Sci1", "280", "150", "24", "120", "360", "850", "1025", "1200"});
+    boardCells.push_back({"TimsLine", "GO TO TIMS"});
+    boardCells.push_back({"EIT", "Sci2", "300", "200", "26", "130", "390", "900", "1100", "1275"});
+    boardCells.push_back({"ESC", "Sci2", "300", "200", "26", "130", "390", "900", "1100", "1275"});
+    boardCells.push_back({"SLC","0","0","0","0","0","0","0","0","0"});
+    boardCells.push_back({"C2", "Sci2", "320", "200", "28", "150", "450", "1000", "1200", "1400"});
+    boardCells.push_back({"REV", "Residence","200"});
+    boardCells.push_back({"NeedlesHall","0","0","0","0","0","0","0","0","0"});
+    boardCells.push_back({"MC", "Math", "350", "200", "35", "175", "500", "1100", "1300", "1500"});
+    boardCells.push_back({"CoopFee", "COOP FEE"});
+    boardCells.push_back({"DC", "Math", "400", "200", "50", "200", "600", "1400", "1700", "2000"});
 }
 
 // Rolling dice and moving
@@ -283,7 +299,7 @@ void GameBoard::trade(Player *currentPlayer, string partnerName, string give, st
     cout << partner->getName() << ", do you accept the trade? (yes/no): ";
     cin >> choice;
 
-    if (choice == "yes" || choice == "y" || choice == "accept") {
+    if (choice == "yes") {
         // Execute the trade based on what is being exchanged
         if (b1 && b2) currentPlayer->trade(partner, b1, b2);
         else if (b1) currentPlayer->trade(partner, b1, money2);

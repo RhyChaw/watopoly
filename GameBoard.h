@@ -1,7 +1,7 @@
 // GameBoard.h
 class GameBoard {
 private:
-    std::vector<Cell*> boardCells;
+    std::vector<std::vector<std::string>> boardCells;
     std::vector<Player*> players;
     int totalCups;
     bool gameWon;
