@@ -1,21 +1,20 @@
 #ifndef SLC_H
 #define SLC_H
 
-#include "NonProperty.h"
 #include <string>
-#include <vector>
+#include <memory>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+#include "nonbuilding.h"
+#include "Player.h"
+class Player;
 
-class SLC : public NonProperty {
-private:
-    std::vector<int> movements;
-    
-    int getRandomMovement() const;
-
-public:
-    SLC(std::string name);
-    ~SLC();
-
-    void doEvent(Player* player) override;
+class SLC: public nonbuilding {
+    public:
+        SLC(int ID, std::string name);
+        int getRandomMovement(int n);
+        void moveeee(std::shared_ptr<Player> p);
+        ~SLC();
 };
-
 #endif // SLC_H

@@ -2,18 +2,14 @@
 #include "Player.h"
 #include <iostream>
 
-CoopFee::CoopFee(std::string name) : NonProperty(name) {
-    // Nothing to initialize
+CoopFee::CoopFee(int ID, std::string name) : nonbuilding(ID, name) {
 }
 
-CoopFee::~CoopFee() {
-    // Nothing to clean up
-}
+CoopFee::~CoopFee() {}
 
-void CoopFee::doEvent(Player* player) {
-    // Player must pay the co-op fee
-    std::cout << player->getName() << " landed on Co-op Fee and must pay $" 
-              << FEE_AMOUNT << "." << std::endl;
+void CoopFee::pay(std::shared_ptr<Player> p) {
+    std::cout << p->getName() << " landed on Co-op Fee and must pay $" 
+              << "150" << "." << std::endl;
     
-    player->removeMoney(FEE_AMOUNT);
+    p->changeCash(-150);
 }

@@ -1,7 +1,15 @@
 // GameBoard.h
+#ifndef GAMEBOARD_H
+#define GAMEBOARD_H
+
+#include <vector>
+#include <string>
+#include "Cell.h"
+#include "Player.h"
+
 class GameBoard {
 private:
-    std::vector<Cell*> boardCells;
+    std::vector<std::vector<std::string>> boardCells;
     std::vector<Player*> players;
     int totalCups;
     bool gameWon;
@@ -11,25 +19,27 @@ private:
 
 public:
     GameBoard();
-    ~GameBoard(); // Need a proper destructor to clean up pointers
-    
+    ~GameBoard();
+
     // Getters
-    Player* getPlayer(int index) const;
-    Cell* getCell(int index) const;
-    int getTotalCups() const;
-    Player* getWinner() const;
-    bool isWon() const;
-    
+    Player* getPlayer(int index) const;//done
+    Cell* getCell(int index) const;//done
+    int getTotalCups() const;//done
+    Player* getWinner() const;//done
+    bool isWon() const;//done
+
     // Game actions
-    void roll(Player* player);
-    void next();
-    void trade(Player* p1, Player* p2, std::string give, std::string receive);
-    void improve(Player* player, std::string property, bool buy);
-    void mortgage(Player* player, std::string property);
-    void unmortgage(Player* player, std::string property);
+    void roll(Player* player);//done
+    void next();//done
+    void trade(Player* p1, Player* p2, const std::string& give, const std::string& receive);//done
+    void improve(Player* player, const std::string& property, bool buy);
+    void mortgage(Player* player, const std::string& property);//done
+    void unmortgage(Player* player, const std::string& property);//done
     void bankrupt(Player* player);
     void auction(Cell* property);
-    void addCup();
-    void removeCup();
-    void checkWinCondition();
+    void addCup();//done
+    void removeCup();//done
+    void checkWinCondition();//done
 };
+
+#endif // GAMEBOARD_H

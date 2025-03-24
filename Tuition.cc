@@ -1,28 +1,33 @@
 #include "Tuition.h"
 #include "Player.h"
 #include <iostream>
-#include <algorithm> // for std::min
 
-Tuition::Tuition(std::string name) : NonProperty(name) {
-    // Nothing to initialize
+
+Tuition::Tuition(int ID, std::string name) : nonbuilding(ID, name) {
+
 }
 
 Tuition::~Tuition() {
     // Nothing to clean up
 }
 
-void Tuition::doEvent(Player* player) {
-    std::cout << player->getName() << " landed on Tuition." << std::endl;
-    std::cout << "Options: 1) Pay $300 or 2) Pay 10% of total worth" << std::endl;
-    
-    // Calculate 10% of total worth
-    int totalWorth = player->getCash() + player->getAsset();
-    int tenPercent = totalWorth / 10;
-    
-    // For simplicity, we'll automatically choose the lower amount
-    // In a real implementation, you'd let the player choose
-    int payment = std::min(300, tenPercent);
-    
-    std::cout << player->getName() << " pays $" << payment << " for tuition." << std::endl;
-    player->removeMoney(payment);
+void Tuition::pay(std::shared_ptr<Player> p) {
+    char option;
+    int money;
+    while (true) {
+        std::cout << p->getName() << " landed on Tuition." << std::endl;
+        std::cout << "Options: A) Pay $300 or B) Pay 10% of total worth :)" << std::endl;
+    }
+    cin >> option;
+    if (option == 'A') {
+        p->changeCash(-300);
+        money = 300;
+    } else if (option == 'B') {
+        money = p->getAsset() * 0.1;
+        p->changeAsset(p->getAsset() * 0.1);
+    }
+
+    std::cout << p->getName() << " pays $" << money << " for tuition." << std::endl;
 }
+
+

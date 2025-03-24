@@ -1,11 +1,27 @@
 #include "Dice.h"
-#include <cstdlib>
+#include <cstdlib> // For rand()
 
-// haha
+void Dice::roll() {
+    lastRoll1 = rand() % 6 + 1;
+    lastRoll2 = rand() % 6 + 1;
+}
 
-std::pair<int, int> Dice::rollDice() {
-    int die1 = rand() % 6 + 1;
-    int die2 = rand() % 6 + 1;
-    return {die1, die2};
-    //helloo
+int Dice::getFirstDie() {
+    return lastRoll1;
+}
+
+int Dice::getSecondDie() {
+    return lastRoll2;
+}
+
+int Dice::getSum() {
+    return lastRoll1 + lastRoll2;
+}
+
+bool Dice::isDoubles() {
+    return lastRoll1 == lastRoll2;
+}
+
+int Dice::changeDouble() {
+    doubles_count++;
 }
