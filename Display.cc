@@ -1,65 +1,57 @@
-#include "Display.h"
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <iostream>
 #include <vector>
-#include "GameBoard.h"
+#include <cstring>
 
-Display::Display() {}
+const int CELL_SIZE = 50; // Size of each cell
+const int GRID_WIDTH = 10;  // Adjust based on board size
+const int GRID_HEIGHT = 10; // Adjust based on board size
 
-void Display::showBoard(const GameBoard& gameBoard) const {
-    Display* d = XOpenDisplay(NULL);
-    if (d == NULL) {
-        std::cerr << "Cannot open display" << std::endl;
-        return;
+void drawText(Display* display, Window window, GC gc, int x, int y, const char* text) {
+    XDrawString(display, window, gc, x, y, text, std::strlen(text));
+}
+
+void drawGrid(Display* display, Window window, GC gc) {
+    for (int i = 0; i <= GRID_WIDTH; ++i) {
+        XDrawLine(display, window, gc, i * CELL_SIZE, 0, i * CELL_SIZE, GRID_HEIGHT * CELL_SIZE);
+    }
+    for (int i = 0; i <= GRID_HEIGHT; ++i) {
+        XDrawLine(display, window, gc, 0, i * CELL_SIZE, GRID_WIDTH * CELL_SIZE, i * CELL_SIZE);
+    }
+}
+
+int main() {
+    Display* display = XOpenDisplay(nullptr);
+    if (!display) {
+        std::cerr << "Failed to open X display\n";
+        return 1;
     }
 
-    int s = DefaultScreen(d);
-    Window w = XCreateSimpleWindow(d, RootWindow(d, s), 10, 10, 800, 800, 1,
-                                   BlackPixel(d, s), WhitePixel(d, s));
-    XSelectInput(d, w, ExposureMask | KeyPressMask);
-    XMapWindow(d, w);
+    int screen = DefaultScreen(display);
+    Window window = XCreateSimpleWindow(display, RootWindow(display, screen), 
+                                        100, 100, GRID_WIDTH * CELL_SIZE, GRID_HEIGHT * CELL_SIZE, 
+                                        1, BlackPixel(display, screen), WhitePixel(display, screen));
 
-    GC gc = XCreateGC(d, w, 0, NULL);
-    XSetForeground(d, gc, BlackPixel(d, s));
-    
-    XEvent e;
-    while (1) {
-        XNextEvent(d, &e);
-        if (e.type == Expose) {
-            // Draw the board
-            XDrawRectangle(d, w, gc, 50, 50, 700, 700);
-            XDrawString(d, w, gc, 100, 100, "WATOPOLY BOARD", 14);
+    XSelectInput(display, window, ExposureMask | KeyPressMask);
+    XMapWindow(display, window);
+
+    GC gc = XCreateGC(display, window, 0, nullptr);
+    XSetForeground(display, gc, BlackPixel(display, screen));
+
+    XEvent event;
+    while (true) {
+        XNextEvent(display, &event);
+        if (event.type == Expose) {
+            drawGrid(display, window, gc);
+            drawText(display, window, gc, 20, 30, "Goose Nesting");
+        } else if (event.type == KeyPress) {
+            break;
         }
-        if (e.type == KeyPress) break;
     }
 
-    XFreeGC(d, gc);
-    XCloseDisplay(d);
-}
-
-void Display::showPlayerAssets(const Player* player) const {
-    std::cout << "Player: " << player->getName() << " (Symbol: " << player->getSymbol() << ")\n";
-    std::cout << "Position: " << player->getPosition() << "\n";
-    std::cout << "Money: $" << player->getCash() << "\n";
-    std::cout << "Assets Value: $" << player->getAsset() << "\n";
-    std::cout << "Owned Residences: " << player->getOwnedResidences() << "\n";
-    std::cout << "Owned Gyms: " << player->getOwnedGyms() << "\n";
-    std::cout << "Cups: " << player->getOwnedCups() << "\n";
-    std::cout << "Properties: ";
-    for (const auto& property : player->getProperties()) {
-        std::cout << property->getName() << " ";
-    }
-    std::cout << "\n";
-}
-
-void Display::showAllPlayers(const std::vector<Player*>& players) const {
-    for (const auto& player : players) {
-        showPlayerAssets(player);
-        std::cout << "------------------------------------\n";
-    }
-}
-
-void Display::showMessage(const std::string& message) const {
-    std::cout << message << std::endl;
+    XFreeGC(display, gc);
+    XDestroyWindow(display, window);
+    XCloseDisplay(display);
+    return 0;
 }
