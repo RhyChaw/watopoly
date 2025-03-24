@@ -4,10 +4,11 @@
 
 Controller::Controller() : gameBoard(std::make_shared<GameBoard>()), currentPlayerIndex(0) {}
 
-// Load game from file (not implemented yet)
+// Load game from file
 bool Controller::loadGame(const std::string &filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
+        std::cerr << "Error: Unable to open file." << std::endl;
         return false;
     }
     // TODO: Implement file loading logic
@@ -29,7 +30,38 @@ void Controller::play() {
         if (command == "roll") {
             gameBoard->roll(currentPlayer);
         } else if (command == "next") {
-            currentPlayerIndex = (currentPlayerIndex + 1) % 6;
+            gameBoard->next();
+            currentPlayerIndex = (currentPlayerIndex + 1) % gameBoard->getPlayers().size();
+        } else if (command == "trade") {
+            std::string p2Name, give, receive;
+            std::cin >> p2Name >> give >> receive;
+            Player* p2 = nullptr;
+            for (auto* player : gameBoard->getPlayers()) {
+                if (player->getName() == p2Name) {
+                    p2 = player;
+                    break;
+                }
+            }
+            if (p2) {
+                gameBoard->trade(currentPlayer, p2, give, receive);
+            } else {
+                std::cout << "Invalid trade partner!" << std::endl;
+            }
+        } else if (command == "improve") {
+            std::string property;
+            std::string action;
+            std::cin >> property >> action;
+            gameBoard->improve(currentPlayer, property, action == "buy");
+        } else if (command == "mortgage") {
+            std::string property;
+            std::cin >> property;
+            gameBoard->mortgage(currentPlayer, property);
+        } else if (command == "unmortgage") {
+            std::string property;
+            std::cin >> property;
+            gameBoard->unmortgage(currentPlayer, property);
+        } else if (command == "bankrupt") {
+            gameBoard->bankrupt(currentPlayer);
         } else if (command == "assets") {
             displayAssets();
         } else if (command == "all") {
@@ -43,7 +75,7 @@ void Controller::play() {
         }
 
         // Print the board after every turn
-        display.printGameBoard(gameBoard->getBoardCells(), gameBoard->getPlayers());
+        display.showBoard(*gameBoard);
 
         gameBoard->checkWinCondition();
     }
@@ -51,11 +83,11 @@ void Controller::play() {
     std::cout << "Game Over! The winner is " << gameBoard->getWinner()->getName() << "!" << std::endl;
 }
 
-// Save game to file (not implemented yet)
+// Save game to file
 void Controller::saveGame(const std::string &filename) {
     std::ofstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Error saving game." << std::endl;
+        std::cerr << "Error: Unable to save game." << std::endl;
         return;
     }
     // TODO: Implement saving logic
@@ -65,18 +97,10 @@ void Controller::saveGame(const std::string &filename) {
 // Display player assets
 void Controller::displayAssets() {
     auto player = gameBoard->getPlayer(currentPlayerIndex);
-    std::cout << player->getName() << " has $" << player->getCash() << " and owns: ";
-    
-    for (auto &property : player->getProperties()) {
-        std::cout << property->getName() << " ";
-    }
-    std::cout << std::endl;
+    display.showPlayerAssets(player);
 }
 
 // Display all player assets
 void Controller::displayAll() {
-    std::cout << "Displaying assets for all players..." << std::endl;
-    for (int i = 0; i < 6; i++) {
-        displayAssets();
-    }
+    display.showAllPlayers(gameBoard->getPlayers());
 }

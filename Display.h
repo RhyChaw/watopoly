@@ -1,14 +1,28 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include <vector>
-#include <memory>
+#include "GameBoard.h"
 #include "Player.h"
-#include "Cell.h"
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <iostream>
+#include <vector>
 
 class Display {
 public:
-    void printGameBoard(const std::vector<std::shared_ptr<Cell>> &board, const std::vector<std::shared_ptr<Player>> &players);
+    Display();
+    
+    // Displays the current game board
+    void showBoard(const GameBoard& gameBoard) const;
+    
+    // Displays assets of a specific player
+    void showPlayerAssets(const Player* player) const;
+    
+    // Displays assets of all players
+    void showAllPlayers(const std::vector<Player*>& players) const;
+    
+    // Displays a message to the console (general purpose output)
+    void showMessage(const std::string& message) const;
 };
 
 #endif // DISPLAY_H

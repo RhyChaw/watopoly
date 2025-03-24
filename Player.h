@@ -40,7 +40,7 @@ private:
     std::vector<std::string> monopolyBlocks; // ie: {"Sci1", "Math", "Eng"}
     int cups; // Number of "Get Out of Jail Free" cards
     int roll_for_jail = 0; //you jut added this, its used in timeline
-    std::vector<std::shared_ptr<Ownable>> ownedProperties;
+    std::vector<std::shared_ptr<Building>> ownedProperties;
 
 public:
     Building *buildings[28];
