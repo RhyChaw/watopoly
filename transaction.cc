@@ -489,3 +489,51 @@ std::shared_ptr<Building> Transactions::listProp(std::string property_name) {
 
     return result;
 }
+
+void Transactions::addPropByAuction(std::string build, std::shared_ptr<Player> p, int amount) {
+    int indexResult = 0;
+
+    for (int i = 0; i < 40; i++) {
+        if (build == BOARD[i]) {
+            indexResult = i;
+            break;
+        }
+    }
+    char owner = p->getSymbol();
+    int buycost = 0;
+    for (int i = 0; i < 28; i++){
+        if (OWNABLE[i][0] == build) {
+            buycost = OWNABLE[i][2];
+        }
+    }
+    std::shared_ptr<Building> ownable;
+    if (isGym(build)){
+        auto production = std::make_shared<Gym>(indexResult, build, buycost, owner);
+        ownable = std::dynamic_pointer_cast<Building>(production);
+    }
+    else if (isResidence(build)){
+        auto production = std::make_shared<Residence>(indexResult, build, buycost, owner);
+        ownable = std::dynamic_pointer_cast<Building>(production);
+    }
+    else if (isAcademic(build)){
+        auto production = std::make_shared<Academic>(indexResult, build, buycost, owner);
+        ownable = std::dynamic_pointer_cast<Building>(production);
+    }
+
+    p->addProp(ownable);
+    p->updateMonopolyBlock();
+    ownedProperties.push_back(ownable);
+    p->pay(amount);
+
+    if (isGym(build)){
+        ownable->setGymLevel(p->getOwnedGyms() - 1);
+    } else if (isResidence(build)){
+        ownable->setResLevel(p->getOwnedResidences() - 1);
+    } else if (isAcademic(build)){
+        auto acad = std::dynamic_pointer_cast<Academic>(ownable);
+        if (p->checkIfInMonopolyBlock(build)){
+            acad->setOwned(true);
+        }
+    }
+    std::cout << "The transaction is completed!" << std::endl;
+}

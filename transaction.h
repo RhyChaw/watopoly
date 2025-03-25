@@ -43,6 +43,8 @@ class Transactions{
     static void mortgage(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner);
     static void unmortgage(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner);
     static std::shared_ptr<Building> listProp(std::string property_name);
+    static void addPropByAuction(std::string build, std::shared_ptr<Player> p, int amount);
+
 };
 
 #endif
