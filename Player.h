@@ -49,7 +49,7 @@ public:
     Player(std::string name, char symbol, int Cash);
     Player(std::string name, char symbol, int ownedCups, double cash, int index, 
         bool isTimLine, int turnsInTimsLine, int position_initial, 
-        double assets, std::vector<std::shared_ptr<Cell>> ownedProperties,
+        double assets, std::vector<std::shared_ptr<Building>> ownedProperties,
         int ownedGyms, int ownedResidence, int ownedAcademic);
     ~Player();
 
@@ -104,19 +104,15 @@ public:
     void setRollForJail(int n);
 
     //additional functions
-    void moveToTimsLine();
     void leaveTimsLine();
     void changeAsset(double c);
     void changePropertyCount(int residences, int gyms, int academics);
     void receive(int amount);
     void addProperty(std::shared_ptr<Cell> property);
     void removeProperty(std::shared_ptr<Cell> property);
-    void declareBankruptcy();
-    bool checkBankrupt() const;
     void removeCup();
     void add_roll_for_jail();
     std::string monoBlockOfProp(std::string name);
-    bool checkMonopoly(int block);
 };
 
 #endif 
