@@ -2,6 +2,7 @@
 #define PLAYER_H
 #include <string>
 #include <memory>
+#include <map>
 #include <iostream>
 #include <vector>
 #include "Cell.h"
@@ -12,6 +13,7 @@
 #include "Residence.h"
 #include "nonbuilding.h"
 #include "TimsLine.h"
+#include "getInTim.h"
 
 class Cell;
 class Building;
@@ -26,89 +28,95 @@ class Player {
 private:
     std::string name;  // Name of the player
     char symbol; // Symbol of the player
-    int index; // Index on the board [0-39]
-    int position_initial; // Dice rolling position
     double cash; // Player's money
-    double assets; // Player's total assets
-    int ownedGyms;
-    int ownedResidence;
-    int ownedAcademic;
-    bool isInTimsLine; // If player is in Tims Line
-    int turnsInTimsLine; // Number of turns player must wait in Tims Line
-    bool isBankrupt; // Whether the player is bankrupt
-    int monopolySet[8]; // Tracks if a player owns a full monopoly set
-    std::vector<std::string> monopolyBlocks; // ie: {"Sci1", "Math", "Eng"}
-    int cups; // Number of "Get Out of Jail Free" cards
-    int roll_for_jail = 0; //you jut added this, its used in timeline
+    int position = 0; // Dice rolling position
+    int cups = 0; // Number of "Get Out of Jail Free" cards
+    bool isBankrupt = false; // Whether the player is bankrupt
+    int ownedGyms = 0;
+    int ownedResidence = 0;
+    int ownedAcademic = 0;
     std::vector<std::shared_ptr<Building>> ownedProperties;
+    std::vector<std::string> monopolyBlocks; // ie: {"Sci1", "Math", "Eng"}
+    
+    int index = 0; // Index on the board [0-39]
+    double assets = 0; // Player's total assets
+    bool isInTimsLine = false; // If player is in Tims Line
+    int turnsInTimsLine = 0; // Number of turns player must wait in Tims Line
+    int roll_for_jail = 0; //you jut added this, its used in timeline
 
 public:
-    Building *buildings[28];
-
-    // Constructors & Destructor
-    Player(std::string name, char symbol, int index, int position_initial);
-    
-    // Constructor for loading a saved game
+    //big five
+    Player(std::string name, char symbol, int Cash);
     Player(std::string name, char symbol, int ownedCups, double cash, int index, 
         bool isTimLine, int turnsInTimsLine, int position_initial, 
         double assets, std::vector<std::shared_ptr<Cell>> ownedProperties,
         int ownedGyms, int ownedResidence, int ownedAcademic);
-    
     ~Player();
 
-    // Getters
-    std::string getName() const;
-    int getIndex() const;
+    //basic functions
+    bool checkIfInMonopolyBlock(std::string name) ;
+    bool ownThisProp(std::string name);
+    void pay(int amount);
+    void changeCash(double c);
+    void removeProp(std::shared_ptr<Building> prop);
+    void addProp(std::shared_ptr<Building> property_name);
+    bool mortageProp(std::shared_ptr<Building> prop); 
+    bool unmortageProp(std::shared_ptr<Building> prop);
+    void updateMonopolyBlock();
+    void movePlayer(int roll);
+    void moveToDCTims();
+    void addTimsCup();
+    void loadUpdateAmountToPay();
+    void printAsset();
+    void printOwnedProp();
+
+    //getters
     char getSymbol() const;
+    std::string getName() const;
+    double getCash() const;  
     int getPosition() const;
-    double getCash() const;  // Changed from int to double
-    double getAsset() const; // Changed from int to double
+    std::string getSquareAtCurrPos();
+    int getCups() const;
+    bool getisBankrupt() const;
     int getOwnedResidences() const;
     int getOwnedGyms() const;
-    int getTurnsInTimsLine() const;
-    int getOwnedCups() const;
+    int getOwnedAcademic() const;
+    std::vector<std::shared_ptr<Building>> getOwnedPropList();
+
+    std::vector<std::string> getMonopolyBlocks(); 
+    int getIndex() const;
+    double getAsset() const; 
     bool getisInTimsLine() const;
-    bool getisBankrupt() const;
-    std::vector<std::shared_ptr<Cell>> getProperties() const;
-    bool checkMonopolyImprove(Building *building);
-    Building* findBuilding(std::string buildingName); // Made consistent with implementation
-    void printAsset();
+    int getTurnsInTimsLine() const;
     int getadd_roll_for_jail() const;
 
-    // Setters & Modifiers
-    void setPosition(int newPosition);
-    void setCash(int amount);
-    void setTurnsInTimsLine(int turns);
+    //setters
+    void setCups(int cups);  
+    void setPos(int pos);
     void setBankrupt(bool b);
-    void setCups(int n);
+
+    void ownedGyms(int n);
+    void ownedResidnece(int n);
+    void ownedAcademic(int n);
+    void setIndex(int n);
+    void setIsInTimsLine(bool b);
+    void setTurnsInTimsLine(int turns);
+    void setRollForJail(int n);
+
+    //additional functions
     void moveToTimsLine();
     void leaveTimsLine();
     void changeAsset(double c);
     void changePropertyCount(int residences, int gyms, int academics);
-    void changeCash(double c);
-
-    // Gameplay Functions
-    void pay(int amount);
     void receive(int amount);
     void addProperty(std::shared_ptr<Cell> property);
     void removeProperty(std::shared_ptr<Cell> property);
     void declareBankruptcy();
     bool checkBankrupt() const;
-
-    // Dice & Tims Line Management
-    void addCup();
     void removeCup();
     void add_roll_for_jail();
-
-    // Property Management
     std::string monoBlockOfProp(std::string name);
     bool checkMonopoly(int block);
-    bool ownThisProp(std::string name);
-    void removeProp(std::shared_ptr<Building> prop);
-    void addProp(std::shared_ptr<Building> property_name);
-    void updateMonopolyBlock();
-    bool checkIfInMonopolyBlock(std::string name) ;
-
 };
 
-#endif // WATOPOLY_PLAYER_H
+#endif 
