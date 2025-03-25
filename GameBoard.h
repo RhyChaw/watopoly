@@ -6,6 +6,7 @@
 #include <string>
 #include "Cell.h"
 #include "Player.h"
+#include "propertyArray.h"
 
 class GameBoard {
 private:

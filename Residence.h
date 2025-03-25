@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include "building.h"
+#include "propertyArray.h"
 
 class Player;
 class building;

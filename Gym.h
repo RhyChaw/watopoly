@@ -5,6 +5,7 @@
 #include <ctime>
 #include <iostream>
 #include "building.h"
+#include "propertyArray.h"
 using namespace std;
 
 class building;
