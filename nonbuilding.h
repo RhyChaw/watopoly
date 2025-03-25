@@ -2,6 +2,7 @@
 #define nonbuilding_H
 #include <string>
 #include "Cell.h"
+#include "propertyArray.h"
 
 class Cell;
 

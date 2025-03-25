@@ -4,13 +4,13 @@
 #include <sstream>
 using namespace std;
 
-Player::Player(std::string name, char symbol, int Cash) : name{name}, symbol{symbol}, cash{cash} {};
+Player::Player(std::string name, char symbol, int Cash) : name{name}, symbol{symbol}, cash{Cash} {};
 
 Player::Player(std::string name, char symbol, int ownedCups, double cash, int index, 
     bool isTimLine, int turnsInTimsLine, int position_initial, 
     double assets, std::vector<std::shared_ptr<Building>> ownedProperties,
     int ownedGyms, int ownedResidence, int ownedAcademic)
-    : name(name), symbol(symbol), index(index), position_initial(position_initial),
+    : name(name), symbol(symbol), index(index), position(position),
     cash(cash), assets(assets), ownedProperties(ownedProperties),
     ownedGyms(ownedGyms), ownedResidence(ownedResidence), ownedAcademic(ownedAcademic),
     isInTimsLine(isTimLine), turnsInTimsLine(turnsInTimsLine), 
@@ -18,12 +18,7 @@ Player::Player(std::string name, char symbol, int ownedCups, double cash, int in
 
     // Initialize monopoly ownership
     for (int i = 0; i < 8; ++i) {
-        monopolySet[i] = 0;
-    }
-
-    // Initialize buildings array
-    for (int i = 0; i < 28; ++i) {
-        buildings[i] = nullptr;
+        monopolyBlocks[i] = 0;
     }
 }
 
@@ -90,9 +85,9 @@ double Player::getAsset() const {
                 int cost;
                 std::stringstream ss(OWNABLE[i][2]);
                 ss >> cost;
+                result += cost;
             }
         }
-        result += cost;
 	    int imprLevel = ownedProperties[i]->getImprLevel();
 	    if (imprLevel > 0){
             int cost = 0;
@@ -101,9 +96,9 @@ double Player::getAsset() const {
                     int cost;
                     std::stringstream ss(OWNABLE[i][3]);
                     ss >> cost;
+                    result += cost;
                 }
             }
-	        result += cost;
 	    }
     }
     return result; 
@@ -300,7 +295,7 @@ void Player::movePlayer(int roll) {
     position += roll;
     if (position >= 40) {
         std::cout << "***You receive OSAP SALARY for landing or passing it!***" << std::endl;
-        position = 40 - position;
+        position %= 40;
         this->changeCash(200);
     }
 }
@@ -430,7 +425,7 @@ void Player::addProp(std::shared_ptr<Building> property_name) {
             ownedResidence++;
         }
     }
-    ownedProperties.emplace_back(propperty_name);
+    ownedProperties.emplace_back(property_name);
 }
 
 void Player::leaveTimsLine() { 
@@ -474,7 +469,7 @@ std::string Player::monoBlockOfProp(std::string name) {
 
 bool Player::checkMonopoly(int block) {
     int getMonopoly[8] = {2, 3, 3, 3, 3, 3, 3, 2};
-    if (monopolySet[block] == getMonopoly[block]) {
+    if (monopolyBlocks[block] == getMonopoly[block]) {
         return true;
     } else {
         return false;
@@ -493,7 +488,7 @@ void Player::declareBankruptcy() {
     cups = 0;
 
     for (int i = 0; i < 8; ++i) {
-        monopolyBlocks[i] = 0;
+        monopolyBlocks.clear();
     }
 
 

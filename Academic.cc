@@ -3,7 +3,6 @@
 #include <iostream>
 #include <sstream>
 
-
 Academic::Academic(int ID, std::string name, int price, char owner) : Building(ID, name, price, owner) {
     rentatata = costTogen(name);  
     block = monoBlockOfProp(this->getName());  

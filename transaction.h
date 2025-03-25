@@ -9,6 +9,7 @@
 #include "Academic.h"
 #include "Gym.h"
 #include "Residence.h"
+#include "propertyArray.h"
 
 class Cell;
 class Player;

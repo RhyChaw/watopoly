@@ -3,6 +3,8 @@
 #include <string>
 #include "building.h"
 #include "Player.h"
+#include "propertyArray.h"
+
 
 using namespace std;
 

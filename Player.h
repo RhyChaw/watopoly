@@ -14,6 +14,7 @@
 #include "nonbuilding.h"
 #include "TimsLine.h"
 #include "getInTim.h"
+#include "propertyArray.h"
 
 class Cell;
 class Building;
