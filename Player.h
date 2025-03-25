@@ -54,14 +54,17 @@ public:
     ~Player();
 
     //basic functions
+    bool isResidence(std::string squareName);
+    bool isGym(std::string squareName);
+    bool isAcademic(std::string squareName);
     bool checkIfInMonopolyBlock(std::string name) ;
     bool ownThisProp(std::string name);
     void pay(int amount);
     void changeCash(double c);
     void removeProp(std::shared_ptr<Building> prop);
     void addProp(std::shared_ptr<Building> property_name);
-    bool mortageProp(std::shared_ptr<Building> prop); 
-    bool unmortageProp(std::shared_ptr<Building> prop);
+    bool mortgageProp(std::shared_ptr<Building> prop); 
+    bool unmortgageProp(std::shared_ptr<Building> prop);
     void updateMonopolyBlock();
     void movePlayer(int roll);
     void moveToDCTims();
@@ -83,7 +86,6 @@ public:
     int getOwnedAcademic() const;
     std::vector<std::shared_ptr<Building>> getOwnedPropList();
 
-    std::vector<std::string> getMonopolyBlocks(); 
     int getIndex() const;
     double getAsset() const; 
     bool getisInTimsLine() const;
@@ -91,15 +93,14 @@ public:
     int getadd_roll_for_jail() const;
 
     //setters
-    void setCups(int cups);  
+    void setCups(int n);  
     void setPos(int pos);
     void setBankrupt(bool b);
 
-    void ownedGyms(int n);
-    void ownedResidnece(int n);
-    void ownedAcademic(int n);
+    void setownedGyms(int n);
+    void setownedResidence(int n);
+    void setownedAcademic(int n);
     void setIndex(int n);
-    void setIsInTimsLine(bool b);
     void setTurnsInTimsLine(int turns);
     void setRollForJail(int n);
 
@@ -113,6 +114,9 @@ public:
     void removeCup();
     void add_roll_for_jail();
     std::string monoBlockOfProp(std::string name);
+    bool checkMonopoly(int block);
+    void declareBankruptcy();
+    bool checkBankrupt() const;
 };
 
 #endif 
