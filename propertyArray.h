@@ -3,6 +3,9 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <map>
+
+
 
 const std::vector<std::vector<std::string>> OWNABLE = {
     {"AL", "Arts1", "40", "50", "2", "10", "30", "90", "160", "250"},
@@ -53,6 +56,13 @@ const std::vector<std::string> BOARD =
     "DC Tims Line", "RCH", "PAC", "DWE", "CPH", "UWP", "LHI", "SLC", "BMH", "OPT",
     "Goose Nesting", "EV1", "NEEDLES HALL", "EV2", "EV3", "V1", "PHYS", "B1", "CIF", "B2",
     "GO TO TIMS", "EIT", "ESC", "SLC", "C2", "REV", "NEEDLES HALL", "MC", "COOP FEE", "DC",
+};
+
+const std::map<std::string, int> IMPR = {
+    {"AL", 0}, {"ML", 0}, {"ECH", 0}, {"PAS", 0}, {"HH", 0}, {"RCH", 0},
+    {"DWE", 0}, {"CPH", 0}, {"LHI", 0}, {"BMH", 0}, {"OPT", 0}, {"EV1", 0},
+    {"EV2", 0}, {"EV3", 0}, {"PHYS", 0}, {"B1", 0}, {"B2", 0}, {"EIT", 0},
+    {"ESC", 0}, {"C2", 0}, {"MC", 0}, {"DC", 0}
 };
 
 

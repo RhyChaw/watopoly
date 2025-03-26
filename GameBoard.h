@@ -1,49 +1,41 @@
-// GameBoard.h
 #ifndef GAMEBOARD_H
 #define GAMEBOARD_H
 
+#include "building.h"
+#include "nonbuilding.h"
+#include "Dice.h"
+#include <iostream>
+#include <map>
 #include <vector>
 #include <string>
-#include "Cell.h"
-#include "Player.h"
+#include <memory>
+#include <vector>
+#include "watopoly-display.h"
 #include "propertyArray.h"
+
+using namespace std;
 
 class GameBoard {
 private:
-    std::vector<std::vector<std::string>> boardCells;
-    std::vector<Player*> players;
-    int totalCups;
-    bool gameWon;
-    Player* winner;
-    
-    void initializeBoard();
+    std::unique_ptr<Display> board = nullptr;
+    map<char, int> playerAndSqr;
+    map<string, int> sqrAndImp = IMPR; 
 
 public:
     GameBoard();
     ~GameBoard();
-
-    // Getters
-    Player* getPlayer(int index) const;//done
-    Cell* getCell(int index) const;//done
-    int getTotalCups() const;//done
-    Player* getWinner() const;//done
-    bool isWon() const;//done
-
-    // Game actions
-    void roll(Player* player);//done
-    void improve(Player* player, const std::string& property, bool buy);
-    void mortgage(Player* player, const std::string& property);//done
-    void unmortgage(Player* player, const std::string& property);//done
-    void bankrupt(Player* player);
-    void auction(Cell* property);
-
-    // drawBoard
-    // addPlayer
-    // removePlayer
-    // addImprovements
-    // removeImprovements
-    // movePlayer
-    // update
+    void update();
+    void drawBoard();
+    void addPlayer(char symbol);
+    void removePlayer(char symbol);
+    void addImpr(std::string square);
+    void removeImpr(std::string square);
+    void move(char symbol, int position);
+    int getPlayerPosition(char symbol) const;
+    int getSquareImprovements(const std::string& square) const;
+    std::shared_ptr<Display> getBoard() const;
+    void loadGame(std::string filename);
+    void saveGame(std::string filename);
 };
 
 #endif // GAMEBOARD_H
