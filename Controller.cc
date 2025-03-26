@@ -1,106 +1,143 @@
 #include "Controller.h"
+#include "load.h"
+#include <memory>
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <stdexcept>
+#include "propertyArray.h" // For building type checks
 
-Controller::Controller() : gameBoard(std::make_shared<GameBoard>()), currentPlayerIndex(0) {}
+using namespace std;
 
-// Load game from file
-bool Controller::loadGame(const std::string &filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Error: Unable to open file." << std::endl;
-        return false;
-    }
-    // TODO: Implement file loading logic
-    file.close();
-    return true;
+// Helper functions to determine building types
+bool isGym(const string& name) {
+    return name == "PAC" || name == "MKV";
 }
 
-// Main game loop
-void Controller::play() {
-    std::cout << "Starting the game..." << std::endl;
+bool isResidence(const string& name) {
+    return name == "MKV" || name == "ECH" || name == "PAS" || name == "HH" || name == "RCH";
+}
 
-    while (!gameBoard->isWon()) {
-        auto currentPlayer = gameBoard->getPlayer(currentPlayerIndex);
-        std::cout << "It's " << currentPlayer->getName() << "'s turn!" << std::endl;
+bool isAcademic(const string& name) {
+    return !isGym(name) && !isResidence(name) && name != "DC" && name != "COLLECT OSAP";
+}
 
-        std::string command;
-        std::cin >> command;
+Controller::Controller() : gameBoard(make_shared<GameBoard>()), currentPlayerIndex(0) {}
 
-        if (command == "roll") {
-            gameBoard->roll(currentPlayer);
-        } else if (command == "next") {
-            gameBoard->next();
-            currentPlayerIndex = (currentPlayerIndex + 1) % gameBoard->getPlayers().size();
-        } else if (command == "trade") {
-            std::string p2Name, give, receive;
-            std::cin >> p2Name >> give >> receive;
-            Player* p2 = nullptr;
-            for (auto* player : gameBoard->getPlayers()) {
-                if (player->getName() == p2Name) {
-                    p2 = player;
+bool Controller::loadGame(const string &filename) {
+    try {
+        loadedState = Load::loadGame(filename);
+        initializeFromLoadedState();
+        return true;
+    } catch (const exception& e) {
+        cerr << "Load error: " << e.what() << endl;
+        return false;
+    }
+}
+
+void Controller::initializeFromLoadedState() {
+    for (auto playerInfo : loadedState.players) {
+        Player* player = make_shared<playerInfo>;
+            player->getName();
+            player->getSymbol();
+            player->getCups();
+            player->getCash();
+            player->getPosition();
+            player->inDC;
+            player->turnsInDC;
+            0;
+            vector<shared_ptr<Building>>{};// Removed incorrect assets reference
+
+        if (playerInfo.inDC) {
+            player->moveToDCTims();
+            player->setTurnsInTimsLine(playerInfo.turnsInDC);
+        }
+        
+        gameBoard->addNewPlayer(player); // Changed to the correct method name
+    }
+
+    for (const auto& buildingInfo : loadedState.buildings) {
+        Cell* cell = gameBoard->getCell(buildingInfo.cellPosition); // Fixed incorrect member name
+        Building* building = dynamic_cast<Building*>(cell);
+        
+        if (!building) continue;
+
+        building->setMortStatus(buildingInfo.improvements == -1);
+
+        if (buildingInfo.owner != "BANK") {
+            char ownerChar = buildingInfo.owner[0];
+            for (auto* player : gameBoard->getAllPlayers()) { // Changed to correct method
+                if (player->getSymbol() == ownerChar) {
+                    building->setOwner(ownerChar);
+                    player->addProperty(shared_ptr<Building>(building)); // Updated to correct function
+                    
+                    if (isGym(buildingInfo.name)) {
+                        player->incrementGymsOwned(); // Corrected function
+                    } else if (isResidence(buildingInfo.name)) {
+                        player->incrementResidencesOwned(); // Corrected function
+                    } else if (isAcademic(buildingInfo.name)) {
+                        building->setImprLevel(buildingInfo.improvements);
+                        player->incrementAcademicsOwned(); // Corrected function
+                    }
                     break;
                 }
             }
-            if (p2) {
-                gameBoard->trade(currentPlayer, p2, give, receive);
-            } else {
-                std::cout << "Invalid trade partner!" << std::endl;
-            }
-        } else if (command == "improve") {
-            std::string property;
-            std::string action;
-            std::cin >> property >> action;
-            gameBoard->improve(currentPlayer, property, action == "buy");
-        } else if (command == "mortgage") {
-            std::string property;
-            std::cin >> property;
-            gameBoard->mortgage(currentPlayer, property);
-        } else if (command == "unmortgage") {
-            std::string property;
-            std::cin >> property;
-            gameBoard->unmortgage(currentPlayer, property);
-        } else if (command == "bankrupt") {
-            gameBoard->bankrupt(currentPlayer);
-        } else if (command == "assets") {
-            displayAssets();
-        } else if (command == "all") {
-            displayAll();
-        } else if (command == "save") {
-            std::string filename;
-            std::cin >> filename;
-            saveGame(filename);
-        } else {
-            std::cout << "Unknown command!" << std::endl;
         }
+    }
+    
+    cout << "=== LOAD SUMMARY ===" << endl;
+    cout << "Players loaded: " << loadedState.players.size() << endl;
+    cout << "Buildings initialized: " << loadedState.buildings.size() << endl;
+}
 
-        // Print the board after every turn
-        display.showBoard(*gameBoard);
-
-        gameBoard->checkWinCondition();
+void Controller::play() {
+    if (loadedState.players.empty()) {
+        cout << "Starting new game..." << endl;
     }
 
-    std::cout << "Game Over! The winner is " << gameBoard->getWinner()->getName() << "!" << std::endl;
-}
+    while (!gameBoard->isWon()) { // Changed method name
+        auto* currentPlayer = gameBoard->getCurrentPlayer(currentPlayerIndex); // Changed method name
+        cout << "\n" << currentPlayer->getName() << "'s turn." << endl;
 
-// Save game to file
-void Controller::saveGame(const std::string &filename) {
-    std::ofstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Error: Unable to save game." << std::endl;
-        return;
+        if (currentPlayer->isInTimsLine()) { // Fixed incorrect method name
+            cout << "You are in DC Tims Line. Choose to roll, pay $50, or use a Get Out of Jail Free card." << endl;
+            if (currentPlayer->hasTimsCup()) { // Fixed incorrect method name
+                cout << "Using a Get Out of Jail Free card." << endl;
+                currentPlayer->leaveTimsLine();
+            } else {
+                cout << "Rolling to get out..." << endl;
+                if (currentPlayer->leaveTimsLine()) { // Changed method name
+                    cout << "You rolled doubles and are free!" << endl;
+                    currentPlayer->leaveTimsLine();
+                } else {
+                    cout << "Failed to roll doubles. Remaining in jail." << endl;
+                }
+            }
+        } else {
+            gameBoard->roll(currentPlayer); 
+            Cell* landedCell = gameBoard->getCell(currentPlayer->getPosition());
+            cout << "You landed on " << landedCell->getName() << endl;
+            
+            Building* building = dynamic_cast<Building*>(landedCell);
+            if (building) {
+                if (building->getOwner() == ' ') {
+                    cout << "This property is available for purchase." << endl;
+                    // Implement buy logic
+                } else if (building->getOwner() != currentPlayer->getSymbol()) {
+                    cout << "This property is owned by another player. Paying rent." << endl;
+                    currentPlayer->payRent(building->getCostToBuy()); // Changed method name
+                }
+            }
+        }
+        
+        if (currentPlayer->isBankrupt()) { // Changed method name
+            cout << currentPlayer->getName() << " is bankrupt! Removing from game." << endl;
+            gameBoard->removeExistingPlayer(currentPlayer); // Changed method name
+        }
+        
+        cout << "End of " << currentPlayer->getName() << "'s turn." << endl;
+        currentPlayerIndex = (currentPlayerIndex + 1) % gameBoard->getAllPlayers().size(); // Changed method name
     }
-    // TODO: Implement saving logic
-    file.close();
-}
-
-// Display player assets
-void Controller::displayAssets() {
-    auto player = gameBoard->getPlayer(currentPlayerIndex);
-    display.showPlayerAssets(player);
-}
-
-// Display all player assets
-void Controller::displayAll() {
-    display.showAllPlayers(gameBoard->getPlayers());
+    
+    cout << "Game over! The winner is " << gameBoard->getWinner()->getName() << "!" << endl;
 }

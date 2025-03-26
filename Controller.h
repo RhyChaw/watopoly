@@ -2,15 +2,21 @@
 #define CONTROLLER_H
 
 #include <memory>
+#include <string>
 #include "GameBoard.h"
-//#include "watapoly-display.h"
+#include "load.h"
+#include "Player.h"
+#include <memory>
 
 
 class Controller {
 private:
     std::shared_ptr<GameBoard> gameBoard;
-    Display display;
+    // Display display;
     int currentPlayerIndex;
+    GameState loadedState;
+
+    void initializeFromLoadedState();
 
 public:
     Controller();
