@@ -28,7 +28,6 @@ public:
     bool getOwned() const;
     void setOwned(bool flag);
     virtual int amountToPay() override;
-    void currentOn(Player* player);
 };
 
 #endif // ACADEMIC_BUILDING_H

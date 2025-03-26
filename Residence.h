@@ -20,7 +20,6 @@ public:
     // Methods
     int calculateRent() const;
     virtual int amountToPay() override;
-    virtual void currentOn(Player* player) override;
     int costToimp(std::string squareName, int imprLevel);
 };
 

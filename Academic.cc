@@ -59,31 +59,6 @@ bool Academic::getOwned() const {
     return owned;
 }
 
-void Academic::currentOn(Player* player) {
-    // Implementation for when a player lands on this building
-    if (getOwner() == nullptr) {
-        // No owner, player can purchase
-        std::cout << player->getName() << " landed on unowned property " << getName() << std::endl;
-        // Purchase logic would go here
-    } else if (getOwner() != player) {
-        // Another player owns this property, pay rent
-        int rent = getTuition();
-        if (hasMonopoly() && improvements == 0) {
-            rent *= 2; // Double rent for monopoly with no improvements
-        }
-        
-        std::cout << player->getName() << " pays " << rent << " to " 
-                  << getOwner()->getName() << " for landing on " << getName() << std::endl;
-        
-        player->removeMoney(rent);
-        getOwner()->addMoney(rent);
-    } else {
-        // Player owns this property
-        std::cout << player->getName() << " landed on their own property " << getName() << std::endl;
-    }
-}
-
-//change this yes sirrrrrrrr
 int Academic::amountToPay() {
     if (owned) {
         return 2 * costTogen(this->getName());

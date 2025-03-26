@@ -3,7 +3,7 @@
 #include <string>
 #include "Cell.h"
 #include "propertyArray.h"
-
+#include "Player.h"
 
 class Cell;
 
