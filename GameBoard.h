@@ -31,16 +31,19 @@ public:
 
     // Game actions
     void roll(Player* player);//done
-    void next();//done
-    void trade(Player* p1, Player* p2, const std::string& give, const std::string& receive);//done
     void improve(Player* player, const std::string& property, bool buy);
     void mortgage(Player* player, const std::string& property);//done
     void unmortgage(Player* player, const std::string& property);//done
     void bankrupt(Player* player);
     void auction(Cell* property);
-    void addCup();//done
-    void removeCup();//done
-    void checkWinCondition();//done
+
+    // drawBoard
+    // addPlayer
+    // removePlayer
+    // addImprovements
+    // removeImprovements
+    // movePlayer
+    // update
 };
 
 #endif // GAMEBOARD_H
