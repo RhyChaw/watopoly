@@ -22,7 +22,7 @@ public:
 
     // Methods
     int costToimp(std::string squareName, int imprLevel);
-    virtual int amountToPay() override;
+    int amountToPay() override;
 };
 
 #endif // GYM_H
