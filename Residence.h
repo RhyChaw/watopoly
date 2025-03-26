@@ -5,9 +5,6 @@
 #include "building.h"
 #include "propertyArray.h"
 
-class Player;
-class building;
-
 class Residence : public Building {
 private:
     // Rent rates based on number of residences owned
