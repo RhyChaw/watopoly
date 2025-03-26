@@ -6,9 +6,9 @@
 #include <iostream>
 #include "building.h"
 #include "propertyArray.h"
+
 using namespace std;
 
-class building;
 class Gym : public Building {
 private:
     int roll;
@@ -23,7 +23,6 @@ public:
     // Methods
     int costToimp(std::string squareName, int imprLevel);
     virtual int amountToPay() override;
-    void currentOn(Player* player) override;
 };
 
 #endif // GYM_H

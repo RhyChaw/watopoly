@@ -7,7 +7,7 @@ Gym::Gym(int ID, string name, int price, char owner)
 Gym::~Gym() {}
 
 void Gym::setRoll(int roll){
-    roll = roll;
+    this->roll = roll;
 }
 
 int Gym::getRoll() const {
@@ -33,26 +33,5 @@ int Gym::amountToPay() {
     return this->getRoll() * costToimp(this->getName(), this->getGymLevel());
 }
 
-void Gym::currentOn(Player* player) {
-    Player* ownerPlayer = getOwner();
-    
-    if (!ownerPlayer) {
-        // No owner, player can purchase
-        std::cout << player->getName() << " landed on unowned gym " << getName() << std::endl;
-        // Purchase logic
-    } else if (ownerPlayer != player) {
-        // Another player owns this gym, pay fee
-        int diceRoll = roll; // Use the stored roll value
-        int fee = calculateFee(diceRoll);
-        
-        std::cout << player->getName() << " pays " << fee << " to " 
-                  << ownerPlayer->getName() << " for landing on " << getName() << std::endl;
-        
-        player->changeCash(-fee);
-        ownerPlayer->changeCash(fee);
-    } else {
-        // Player owns this gym
-        std::cout << player->getName() << " landed on their own gym " << getName() << std::endl;
-    }
-}
+
 
