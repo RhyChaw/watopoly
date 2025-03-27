@@ -27,15 +27,12 @@ struct GameState {
 
 class Load {
 public:
-    // Load game state from file
     static GameState loadGame(const std::string& filename);
-    
+
 private:
-    // Parse a player line from the save file
     static PlayerInfo parsePlayerLine(const std::string& line);
-    
-    // Parse a building line from the save file
     static BuildingInfo parseBuildingLine(const std::string& line);
+    static void validateGameState(const GameState& state);
 };
 
 #endif // LOAD_H

@@ -1,6 +1,7 @@
 #include "load.h"
 #include <sstream>
 #include <stdexcept>
+#include <iostream>
 
 using namespace std;
 
@@ -14,12 +15,22 @@ GameState Load::loadGame(const string& filename) {
     string line;
     
     // Read number of players
-    getline(file, line);
-    int numPlayers = stoi(line);
+    if (!getline(file, line)) {
+        throw runtime_error("Save file is empty or missing player count.");
+    }
     
+    int numPlayers;
+    try {
+        numPlayers = stoi(line);
+    } catch (exception& e) {
+        throw invalid_argument("Invalid number of players.");
+    }
+
     // Read player data
     for (int i = 0; i < numPlayers; ++i) {
-        getline(file, line);
+        if (!getline(file, line)) {
+            throw runtime_error("Unexpected end of file while reading players.");
+        }
         state.players.push_back(parsePlayerLine(line));
     }
     
@@ -27,21 +38,24 @@ GameState Load::loadGame(const string& filename) {
     while (getline(file, line)) {
         state.buildings.push_back(parseBuildingLine(line));
     }
-    
+
+    // Validate game state
+    validateGameState(state);
+
     return state;
 }
 
 PlayerInfo Load::parsePlayerLine(const string& line) {
     istringstream iss(line);
-    string token;
     vector<string> tokens;
+    string token;
     
     while (iss >> token) {
         tokens.push_back(token);
     }
     
     if (tokens.size() < 5 || tokens[0] != "player") {
-        throw invalid_argument("Invalid player line format");
+        throw invalid_argument("Invalid player line format: " + line);
     }
     
     PlayerInfo info;
@@ -52,14 +66,19 @@ PlayerInfo Load::parsePlayerLine(const string& line) {
     info.inDC = false;
     info.turnsInDC = 0;
     
-    // Handle DC Tims Line cases
-    if (info.position == 10) {
-        if (tokens.size() >= 6 && tokens[5] == "1") {
-            info.inDC = true;
-            info.turnsInDC = stoi(tokens[6]);
+    if (info.position == 10 && tokens.size() == 7) {
+        if (tokens[5] != "1") {
+            throw invalid_argument("Invalid DC Tims Line flag: " + tokens[5]);
         }
+        info.inDC = true;
+        info.turnsInDC = stoi(tokens[6]);
+        if (info.turnsInDC < 0 || info.turnsInDC > 2) {
+            throw invalid_argument("Invalid turns in DC Tims Line: " + tokens[6]);
+        }
+    } else if (info.position == 10 && tokens.size() != 5) {
+        throw invalid_argument("Malformed DC Tims Line player entry: " + line);
     }
-    
+
     return info;
 }
 
@@ -67,13 +86,24 @@ BuildingInfo Load::parseBuildingLine(const string& line) {
     istringstream iss(line);
     string name, owner;
     int improvements;
-    
-    iss >> name >> owner >> improvements;
-    
-    // Validate improvements
-    if (improvements < -1 || improvements > 5) {
-        throw invalid_argument("Invalid improvement value for " + name);
+
+    if (!(iss >> name >> owner >> improvements)) {
+        throw invalid_argument("Invalid building line format: " + line);
     }
-    
+
+    if (improvements < -1 || improvements > 5) {
+        throw invalid_argument("Invalid improvement value for " + name + ": " + to_string(improvements));
+    }
+
     return {name, owner, improvements};
+}
+
+void Load::validateGameState(const GameState& state) {
+    int totalTimsCups = 0;
+    for (const auto& player : state.players) {
+        totalTimsCups += player.timsCups;
+    }
+    if (totalTimsCups > 4) {
+        throw runtime_error("Invalid game state: Exceeded max Tims Cups.");
+    }
 }

@@ -4,6 +4,7 @@
 #include "building.h"
 #include "nonbuilding.h"
 #include "Dice.h"
+#include "load.h"
 #include <iostream>
 #include <map>
 #include <vector>
