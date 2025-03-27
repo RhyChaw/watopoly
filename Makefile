@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -std=c++20 -Wall -g
 EXEC = display
-SOURCES = watopoly-display.cc
+SOURCES = watopoly-display.cc 
 OBJECTS = $(SOURCES:.cc=.o)
 DEPENDS = $(SOURCES:.cc=.d)
 

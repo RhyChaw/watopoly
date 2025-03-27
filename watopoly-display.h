@@ -2,7 +2,8 @@
 #define WATOPOLY_DISPLAY_H
 
 #include <X11/Xlib.h>
-#include <string>
+#include <X11/Xutil.h>
+#include <map>
 #include <vector>
 
 class WatopolyDisplay {
@@ -10,31 +11,43 @@ public:
     WatopolyDisplay();
     ~WatopolyDisplay();
     
-    void initializeWindow();
+    void initialize();
     void drawBoard();
-    void addPlayer(const std::string& playerName, char symbol, int position);
-    void addImprovement(const std::string& propertyName, int level);
-    void updateDisplay();
-    
+    void drawPlayers(const std::map<char, int>& playerPositions);
+    void drawImprovements(const std::map<int, int>& positionImprovements);
+    void handleEvents();
+    bool isWindowOpen() const;
+
+    // Positions that can have improvements (1-based index)
+    static const std::vector<int> IMPROVABLE_POSITIONS;
+
 private:
     Display* display;
     Window window;
     GC gc;
     int screen;
-    
-    const int WIN_WIDTH = 900;
-    const int WIN_HEIGHT = 400;
-    const int TEXT_X = 20;
-    const int TEXT_Y = 20;
-    const int LINE_HEIGHT = 15;
-    
-    std::vector<std::string> board;
-    std::vector<std::pair<int, char>> playerPositions; // position, symbol
-    std::vector<std::pair<std::string, int>> improvements; // property name, level
-    
-    void initializeBoard();
-    void drawPlayers();
-    void drawImprovements();
+    Font font;
+    bool windowOpen;
+
+    // Board dimensions and constants
+    static const int WIN_WIDTH = 900;
+    static const int WIN_HEIGHT = 700;
+    static const int TEXT_X = 20;
+    static const int TEXT_Y = 20;
+    static const int LINE_HEIGHT = 15;
+    static const int PLAYER_OFFSET = 6;
+    static const int IMPROVEMENT_SIZE = 6;
+    static const int IMPROVEMENT_SPACING = 8;
+
+    // Board layout
+    static const char *board[];
+
+    // Base coordinates for each board position (0-39)
+    static const std::pair<int, int> BOARD_COORDS[40];
+
+    // Helper methods
+    void drawBoardBase();
+    bool canHaveImprovements(int position) const;
 };
 
-#endif
+#endif // WATOPOLY_DISPLAY_H
