@@ -48,6 +48,7 @@ private:
 public:
     //big five
     Player(std::string name, char symbol, int Cash);
+    
     Player(std::string name, char symbol, int ownedCups, double cash, int index, 
         bool isTimLine, int turnsInTimsLine, int position_initial, 
         double assets, std::vector<std::shared_ptr<Building>> ownedProperties,

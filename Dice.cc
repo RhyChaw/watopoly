@@ -18,10 +18,14 @@ int Dice::getSum() {
     return lastRoll1 + lastRoll2;
 }
 
+int Dice::getDoubles() {
+    return doubles_count;
+}
+
 bool Dice::isDoubles() {
     return lastRoll1 == lastRoll2;
 }
 
-int Dice::changeDouble() {
-    doubles_count++;
+void Dice::changeDouble() {
+    doubles_count--;
 }

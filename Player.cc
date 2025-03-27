@@ -6,6 +6,7 @@ using namespace std;
 
 Player::Player(std::string name, char symbol, int Cash) : name{name}, symbol{symbol}, cash{Cash} {};
 
+
 Player::Player(std::string name, char symbol, int ownedCups, double cash, int index, 
     bool isTimLine, int turnsInTimsLine, int position_initial, 
     double assets, std::vector<std::shared_ptr<Building>> ownedProperties,
