@@ -5,9 +5,6 @@
 #include "building.h"
 #include "propertyArray.h"
 
-class Player;
-class building;
-
 class Residence : public Building {
 private:
     // Rent rates based on number of residences owned
@@ -20,7 +17,6 @@ public:
     // Methods
     int calculateRent() const;
     virtual int amountToPay() override;
-    virtual void currentOn(Player* player) override;
     int costToimp(std::string squareName, int imprLevel);
 };
 

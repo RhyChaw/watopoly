@@ -4,9 +4,6 @@
 #include "Cell.h"
 #include "propertyArray.h"
 
-
-class Cell;
-
 class Building : public Cell {
     char owner;
     int price;
@@ -40,9 +37,7 @@ class Building : public Cell {
 
 
     //other functions needed for the bottom classes
-    virtual void currentOn(Player* player) = 0; 
-    virtual int amountToPay() = 0;
-    virtual void doEvent(Player *p) = 0; 
+    virtual int amountToPay() = 0; 
 
 };
 

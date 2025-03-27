@@ -13,7 +13,7 @@
 
 class Cell;
 class Player;
-class building;
+class Building;
 class Auction;
 class Academic;
 class Gym;

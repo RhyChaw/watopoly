@@ -19,24 +19,6 @@ int Residence::calculateRent() const {
     return RENT_RATES[residenceCount - 1];
 }
 
-void Residence::currentOn(Player* player) {
-    char ownerPlayer = getOwner();
-    
-    if (ownerPlayer == ' ') {
-        // No owner, player can purchase
-        std::cout << player->getName() << " landed on unowned residence " << getName() << std::endl;
-        // Purchase logic would go here
-    } else if (ownerPlayer != player->getSymbol()) {
-        // Another player owns this residence, pay rent
-        int rent = calculateRent();
-        
-        std::cout << player->getName() << " pays " << rent << " to " 
-                  << ownerPlayer << " for landing on " << getName() << std::endl;
-    } else {
-        // Player owns this residence
-        std::cout << player->getName() << " landed on their own residence " << getName() << std::endl;
-    }
-}
 
 int Residence::costToimp(std::string squareName, int imprLevel) {
     int result = 0;
