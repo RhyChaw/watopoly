@@ -1,11 +1,10 @@
-CXX=g++ 
-CXXFLAGS=-std=c++20 -Wall -O -g -MMD -Werror=vla # use -MMD to generate dependencies
-SOURCES=$(wildcard *.cc)   # list of all .cc files in the current directory
-OBJECTS=${SOURCES:.cc=.o}  # .o files depend upon .cc files with same names
-DEPENDS=${OBJECTS:.o=.d}   # .d file is list of dependencies for corresponding .cc file
-EXEC=a4q2
+CXX = g++
+CXXFLAGS = -std=c++20 -Wall -g
+EXEC = display
+SOURCES = player.cc
+OBJECTS = $(SOURCES:.cc=.o)
+DEPENDS = $(SOURCES:.cc=.d)
 
-# First target in the makefile is the default target.
 $(EXEC): $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $(OBJECTS) -o $(EXEC)
 
