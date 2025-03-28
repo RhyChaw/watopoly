@@ -50,6 +50,8 @@
         "cwctype": "cpp",
         "iostream": "cpp",
         "d2": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "cstring": "cpp",
+        "ctime": "cpp"
     }
 }

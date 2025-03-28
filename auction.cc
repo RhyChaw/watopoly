@@ -1,4 +1,4 @@
-#include "auction.h";
+#include "auction.h"
 #include <algorithm>
 using namespace std;
 
@@ -49,6 +49,10 @@ void Auction::withdraw(std::shared_ptr<Player> p) {
     }
 }
 
+// getter 
 
+int Auction::getMaxBid() const {
+    return maxBid;
+}
 
 
