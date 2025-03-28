@@ -282,7 +282,7 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
         if (sq == "SLC"){
             cout << "You are at SLC" << endl;
             SLC::moveeee(currActingPlayer);
-            b->movePlayer(currActingPlayer->getSymbol(), currActingPlayer->getPosition());
+            b->move(currActingPlayer->getSymbol(), currActingPlayer->getPosition());
             b->drawBoard();
         } 
         else if (sq == "DC Tims Line"){
@@ -295,7 +295,7 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
             currActingPlayer->setPosition(10);
             currActingPlayer->setIsInTimsLine(true);
             currActingPlayer->resetTurnsInTims();
-            b->movePlayer(currActingPlayer->getSymbol(), 10);
+            b->move(currActingPlayer->getSymbol(), 10);
             b->drawBoard();
         } else if (sq == "NEEDLES HALL") {
             cout << "You are at Needles Hall." << endl;
@@ -419,17 +419,14 @@ void Controller::letTheGameBegin(int argc, char *argv) {
                     char owner_symbol = group[i]->getSymbol();
                     std::shared_ptr<Building> build;
                     if (isGym(property_name)){
-                        group[i]->changePropertyCount(0, 1, 0);
                         auto production = std::make_shared<Gym>(indexResult, property_name, buycost, owner_symbol);	
                         build = std::dynamic_pointer_cast<Building>(production);
                     }
                     else if (isResidence(property_name)){
-                        group[i]->changePropertyCount(1, 0, 0);
                         auto production = std::make_shared<Residence>(indexResult, property_name, buycost, owner_symbol);
                         build = std::dynamic_pointer_cast<Building>(production);
                     }
                     else if (isAcademic(property_name)){
-                        group[i]->changePropertyCount(0, 0, 1);
                         auto production = std::make_shared<Academic>(indexResult, property_name, buycost, owner_symbol);
                         build = std::dynamic_pointer_cast<Building>(production);
                     }
@@ -439,6 +436,7 @@ void Controller::letTheGameBegin(int argc, char *argv) {
                     } else {
                         build->setImprLevel(imp + 1); 
                     }
+                    b->addImpr(property_name, imp);
                 }
                 for (int i = 0; i < num; i++) {}
                     group[i]->updateMonopolyBlock();
@@ -563,7 +561,7 @@ void Controller::letTheGameBegin(int argc, char *argv) {
                     }
                     hasRolled = true;
                     currActingPlayer->movePlayer(rollValue);
-                    b->movePlayer(currActingPlayer->getSymbol(),
+                    b->move(currActingPlayer->getSymbol(),
                                   currActingPlayer->getPosition());
                     b->drawBoard();
                     CommandRoll(group, currActingPlayer, testMode, b);
@@ -578,7 +576,7 @@ void Controller::letTheGameBegin(int argc, char *argv) {
                         rollValue = twoDices->diceSum();
                     }
                     currActingPlayer->movePlayer(rollValue);
-                    b->movePlayer(currActingPlayer->getGamePiece(),
+                    b->move(currActingPlayer->getGamePiece(),
                                   currActingPlayer->getCurrPos());
                     b->drawBoard();
                     CommandRoll(group, currActingPlayer, testMode, b);
@@ -620,6 +618,7 @@ void Controller::letTheGameBegin(int argc, char *argv) {
             }
             currIndex = currIndex % group.size();
             cout << "Moving to the next player!" << endl;
+            b->removeplayer(currActingPlayer->getSymbol());
         } else if (command == "assets" || command == "ASSETS") {
             if (currActingPlayer->getPosition() != 4)
             {
@@ -688,7 +687,7 @@ void Controller::letTheGameBegin(int argc, char *argv) {
                 {
                     f << "BANK" << " ";
                 }
-                f << b->getImprLevel(OWNABLE[i][0]) << endl;
+                f << b->getImpr(OWNABLE[i][0]) << endl;
             }
         } else {
             cout << "Command not found, Please check again" << endl;
