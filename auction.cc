@@ -1,4 +1,5 @@
 #include "auction.h";
+#include <algorithm>
 using namespace std;
 
 Auction::Auction(std::vector<std::shared_ptr<Player>> people, std::shared_ptr<Player> maxBidder, std::string build) : people{people}, maxBidder{maxBidder}, build{build} {
@@ -27,7 +28,13 @@ void Auction::withdraw(std::shared_ptr<Player> p) {
     bidders -= 1;
     
     // Remove the player from the bidders
-    auto it = std::find(people.begin(), people.end(), p);
+    // added change here
+    auto it = std::find_if(people.begin(), people.end(),
+    [&p](const std::shared_ptr<Player>& player) {
+        return player == p;
+    });
+
+
     if (it != people.end()) {
         people.erase(it);
     }

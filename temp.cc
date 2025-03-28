@@ -3,7 +3,7 @@ using namespace std;
 #include <sstream>
 
 Gym::Gym(int ID, string name, int price, char owner)
-	: Building(ID, name, price, owner) {}
+    : Building(ID, name, price, owner) {}
 
 Gym::~Gym() {}
 
@@ -33,6 +33,3 @@ int Gym::costToimp(std::string squareName, int imprLevel) {
 int Gym::amountToPay() {
     return this->getRoll() * costToimp(this->getName(), this->getGymLevel());
 }
-
-
-
