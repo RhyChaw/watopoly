@@ -74,8 +74,6 @@ void Transactions::trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2,
         std::cout << "The player " << p2->getName() << " doesn't own this property" << std::endl;
         return;
     }
-
-   
     if (build->getImprLevel() != 0) {
         std::cout << "there are improvments on this property." << std::endl;
         return;
@@ -224,25 +222,27 @@ void Transactions::trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2,
     std::cout << "This trade doesn't involve any property exchange. Cant do this" << endl;
 }
 
-void Transactions::payRent(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, int rent) {
+bool Transactions::payRent(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, int rent) {
     if(!checkFund(p1, rent)) {
-        return;
+        return false;
     }
 
     p1->pay(rent);
     p2->changeCash(rent);
     std::cout << "The transaction is completed!" << std::endl;
+    return true;
 }
 
-void Transactions::payBank(std::shared_ptr<Player> p1, int rent) {
+bool Transactions::payBank(std::shared_ptr<Player> p1, int rent) {
     if(!checkFund(p1, rent)) {
         std::cout << "doesnt have money" << std::endl;
 
-        return;
+        return false;
     }
 
     p1->pay(rent);
     std::cout << "The transaction is completed!" << std::endl;
+    return true;
 }
 
 void Transactions::buyBuilding(std::string property_name, std::shared_ptr<Player> owner) {
