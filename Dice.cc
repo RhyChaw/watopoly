@@ -1,5 +1,10 @@
 #include "Dice.h"
-#include <cstdlib> // For rand()
+
+// Define the static members (REQUIRED for linking)
+int Dice::lastRoll1 = 0;    // <--- ADD THIS
+int Dice::lastRoll2 = 0;    // <--- ADD THIS
+
+Dice::Dice() { srand(time(0)); }
 
 void Dice::roll() {
     lastRoll1 = rand() % 6 + 1;
@@ -27,5 +32,7 @@ bool Dice::isDoubles() {
 }
 
 void Dice::changeDouble() {
-    doubles_count--;
+    if (doubles_count > 0) {
+        doubles_count--;
+    }
 }

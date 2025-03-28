@@ -114,8 +114,6 @@ public:
     void changeAsset(double c);
     void changePropertyCount(int residences, int gyms, int academics);
     void receive(int amount);
-    void addProperty(std::shared_ptr<Cell> property);
-    void removeProperty(std::shared_ptr<Cell> property);
     void removeCup();
     void add_roll_for_jail();
     std::string monoBlockOfProp(std::string name);

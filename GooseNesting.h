@@ -11,7 +11,7 @@
 class GooseNesting: public nonbuilding {
     public:
         GooseNesting(int ID, std::string name);
-        void nesting(std::shared_ptr<Player> p);
+        static void nesting(std::shared_ptr<Player> p);
         ~GooseNesting();
 };
 

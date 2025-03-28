@@ -210,19 +210,6 @@ void Player::changeCash(double c) {
 }
 
 
-void Player::addProperty(std::shared_ptr<Cell> property) {
-    ownedProperties.emplace_back(property);
-}
-
-void Player::removeProperty(std::shared_ptr<Cell> property) {
-    for (auto it = ownedProperties.begin(); it != ownedProperties.end(); ++it) {
-        if (*it == property) {
-            ownedProperties.erase(it);
-            break;
-        }
-    }
-}
-
 void Player::updateMonopolyBlock() {
     std::map<std::string, int> tracking; 
     std::string eachBlock;

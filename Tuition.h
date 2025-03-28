@@ -12,7 +12,7 @@
 class Tuition: public nonbuilding {
     public:
         Tuition(int ID, std::string name);
-        void pay(std::shared_ptr<Player> p);
+        static void pay(std::shared_ptr<Player> p);
         ~Tuition();
 };
 

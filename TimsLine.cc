@@ -33,7 +33,7 @@ void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> d
 
     p->changeTurnsInTimsLine();
 
-    if (p->getTurnsInTimsLine() == 3) { 
+    if (p->getTurnsInTimsLine() == 0) { 
         cout << "This is your third turn. You must leave DC Tims Line." << endl;
         cout << "you have to pay 50 now" << endl;
         p->changeCash(-50);
@@ -63,6 +63,7 @@ void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> d
             cout << "You paid $50 and are free to move" << endl;
             p->setIsInTimsLine(false);
             p->resetTurnsInTims();
+
         } else {
             cout << "You don't have enough money to pay. You must stay in jail. try to sell something in your next turn" << endl;
         }
