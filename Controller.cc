@@ -9,73 +9,81 @@ using namespace std;
 void Controller::commandTrade(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer) {
     string offerStr, wantStr;
     char piece;
-            int size = group.size();
-            std::cout << "available players to trade with. ";
-            for (int i = 0; i < size; i++) {
-                if (group[i] == currActingPlayer) continue;
-                std::cout << "name: " << group[i]->getName() << " piece: " << group[i]->getSymbol() << endl;
-            }
-            shared_ptr<Player> p;
-            while (true) {
-                std::cout << "Enter the symbol of the player: ";
-                std::cin >> piece;
-                
-                int i = 0;
-                while (i < size) {
-                    if (group[i]->getSymbol() == piece) {
-                        p = group[i];  // Found the player with the matching symbol
-                        break;  // Exit the loop once the player is found
-                    }
-                    i++;  // Increment i to check the next player
-                }
-                
-                // If i == size, no player was found with that symbol
-                if (i == size) {
-                    std::cout << "Invalid player symbol" << std::endl;
-                } else {
-                    break;  // Exit the outer loop when a valid player is found
-                }
-            }
-            std::cout << "initiating trading with: " << p->getSymbol() << std::endl;
+    
+    int groupSize = group.size();  // Renamed variable to avoid redeclaration
+    std::cout << "available players to trade with. ";
+    for (int i = 0; i < groupSize; i++) {
+        if (group[i] == currActingPlayer) continue;
+        std::cout << "name: " << group[i]->getName() << " piece: " << group[i]->getSymbol() << endl;
+    }
 
-            // Get what user is offering
-            std::cout << "Enter what you want to offer (money or property name): " << std::endl;
-            for (const auto &prop : currActingPlayer->getOwnedPropList()) {
-                std::cout << prop->getName() << " ";
+    std::shared_ptr<Player> p;
+    while (true) {
+        std::cout << "Enter the symbol of the player: ";
+        std::cin >> piece;
+        
+        int i = 0;
+        while (i < groupSize) {
+            if (group[i]->getSymbol() == piece) {
+                p = group[i];  // Found the player with the matching symbol
+                break;  // Exit the loop once the player is found
             }
-            std::cout << std::endl;
-            std::cin >> offerStr;
-            
-            // Get what user wants
-            std::cout << "Enter what you want in return (money or property name): " << std::endl;
-            for (const auto &prop : p->getOwnedPropList()) {
-                std::cout << prop->getName() << " ";
-            }
-            std::cout << std::endl;
-            std::cin >> wantStr;
-            
-            // Convert strings to property objects if possible
-            std::shared_ptr<Building> offerProp = Transactions::listProp(offerStr);
-            std::shared_ptr<Building> wantProp = Transactions::listProp(wantStr);
-            
-            // Debugging the property conversion
-            cout << "initiating trading with: " << p->getSymbol() << endl;
-            cout << "Enter what you want to offer" << endl;
-            int size = currActingPlayer->getOwnedPropList().size();
-            for (int i = 0; i < size; i++) {
-                cout << currActingPlayer->getOwnedPropList()[i]->getName(); 
-                cout << " ";
-            }
-            cin >> offerStr;
-            cout << "Enter what you want" << endl;
-            int size = p->getOwnedPropList().size();
-            for (int i = 0; i < size; i++) {
-                cout << p->getOwnedPropList()[i]->getName(); 
-                cout << " ";
-            }
-            cin >> wantStr;
-            Transactions::trade(currActingPlayer, p, offerStr, wantStr);
+            i++;  // Increment i to check the next player
+        }
+        
+        if (i == groupSize) {
+            std::cout << "Invalid player symbol" << std::endl;
+        } else {
+            break;  // Exit the outer loop when a valid player is found
+        }
+    }
+
+    std::cout << "initiating trading with: " << p->getSymbol() << std::endl;
+
+    // Get what user is offering
+    std::cout << "Enter what you want to offer (money or property name): " << std::endl;
+    for (const auto &prop : currActingPlayer->getOwnedPropList()) {
+        std::cout << prop->getName() << " ";
+    }
+    std::cout << std::endl;
+    std::cin >> offerStr;
+    
+    // Get what user wants
+    std::cout << "Enter what you want in return (money or property name): " << std::endl;
+    for (const auto &prop : p->getOwnedPropList()) {
+        std::cout << prop->getName() << " ";
+    }
+    std::cout << std::endl;
+    std::cin >> wantStr;
+    bool b1= false;
+    bool b2 = false;
+    for (int i = 0;i < 28;i++) {
+        if (OWNABLE[i][0] == offerStr) {
+            b1 = true;
+        }
+        if (OWNABLE[i][0] == wantStr) {
+            b2 = true;
+        }
+    }
+
+    if (b1 && b2) {
+        std::shared_ptr<Building> offerProp = Transactions::listProp(offerStr);
+        std::shared_ptr<Building> wantProp = Transactions::listProp(wantStr);
+        Transactions::trade1(currActingPlayer, p, offerProp, wantProp);
+    }
+    else if (b1) {
+        std::shared_ptr<Building> offerProp = Transactions::listProp(offerStr);
+        Transactions::trade2(currActingPlayer, p, offerProp, std::stod(wantStr));
+    }
+    else if (b2) {
+        std::shared_ptr<Building> wantProp = Transactions::listProp(wantStr);
+        Transactions::trade3(currActingPlayer, p, std::stod(offerStr), wantProp);
+    }
+    else {
+        Transactions::trade4(currActingPlayer, p, std::stod(offerStr), std::stod(wantStr));
+    }
 }
+
 
 //handle when in these code segments the input is invalid.
 void Controller::commandAuction(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, std::string prop) {
