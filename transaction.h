@@ -31,10 +31,10 @@ class Transactions{
     static bool isOwned(std::string nameSquare);
     static void transferProperty(std::shared_ptr<Building> building, std::shared_ptr<Player> from, std::shared_ptr<Player> to);
     static bool checkFund(std::shared_ptr<Player> p1, int amt);
-    static void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money, std::shared_ptr<Building> building);
-    static void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Building> building1, std::shared_ptr<Building> building2);
-    static void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Building> building, double money);
-    static void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money1, double money2);
+    static void trade3(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money, std::shared_ptr<Building> building);
+    static void trade1(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Building> building1, std::shared_ptr<Building> building2);
+    static void trade2(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Building> building, double money);
+    static void trade4(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money1, double money2);
     static bool payRent(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, int rent); 
     static bool payBank(std::shared_ptr<Player> p1, int rent);
     static void buyBuilding(std::string property_name, std::shared_ptr<Player> owner);

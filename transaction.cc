@@ -66,7 +66,7 @@ bool Transactions::isOwned(std::string nameSquare) {
     return false;
 }
 
-void Transactions::trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money, std::shared_ptr<Building> build) {
+void Transactions::trade3(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money, std::shared_ptr<Building> build) {
     if (p1->getCash() < money) {
         std::cout << "The player " << p1->getName() << " doesnt got money" << std::endl;
         return;
@@ -125,7 +125,7 @@ void Transactions::trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2,
     }
 }
 
-void Transactions::trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Building> building1, std::shared_ptr<Building> building2) {
+void Transactions::trade1(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Building> building1, std::shared_ptr<Building> building2) {
     if (!(p2->ownThisProp(building2->getName()))) {
         std::cout << "The player " << p2->getName() << " doesn't own this property" << std::endl;
         return;
@@ -215,11 +215,11 @@ void Transactions::trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2,
     }
 }
 
-void Transactions::trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Building> building, double money) {
-    Transactions::trade(p2, p1, money, building); 
+void Transactions::trade2(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Building> building, double money) {
+    Transactions::trade3(p2, p1, money, building); 
 }
 
-void Transactions::trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money1, double money2) {
+void Transactions::trade4(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money1, double money2) {
     std::cout << "This trade doesn't involve any property exchange. Cant do this" << endl;
 }
 
