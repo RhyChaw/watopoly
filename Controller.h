@@ -19,6 +19,9 @@
 #include "propertyArray.h"
 #include "SLC.h"
 #include "NeedlesHall.h"
+#include "Tuition.h"
+#include "CoopFee.h"
+#include "GooseNesting.h"
 
 using namespace std;
 

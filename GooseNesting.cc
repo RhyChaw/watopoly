@@ -8,6 +8,6 @@ GooseNesting::~GooseNesting() {
 }
 
 void GooseNesting::nesting(std::shared_ptr<Player> p) {
-    cout << "You are currently on " << this->getName() << "." << endl;
+    cout << "You are currently on " << p->getPosition() << "." << endl;
     std::cout << p->getName() << " landed on Goose Nesting and is taking a break." << std::endl;
 }

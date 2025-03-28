@@ -13,8 +13,8 @@ class Player;
 class NeedlesHall: public nonbuilding {
     public:
         NeedlesHall(int ID, std::string name);
-        int getRandomMovement(int n);
-        void moveeee(std::shared_ptr<Player> p);
+        static int getRandomMovement(int n);
+        static void moveeee(std::shared_ptr<Player> p);
         ~NeedlesHall();
 };
 

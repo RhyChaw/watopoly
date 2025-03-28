@@ -12,7 +12,7 @@
 class CoopFee: public nonbuilding {
     public:
         CoopFee(int ID, std::string name);
-        void pay(std::shared_ptr<Player> p);
+        static void pay(std::shared_ptr<Player> p);
         ~CoopFee();
 };
 

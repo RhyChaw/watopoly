@@ -13,8 +13,8 @@ class Player;
 class SLC: public nonbuilding {
     public:
         SLC(int ID, std::string name);
-        int getRandomMovement(int n);
-        void moveeee(std::shared_ptr<Player> p);
+        static int getRandomMovement(int n);
+        static void moveeee(std::shared_ptr<Player> p);
         ~SLC();
 };
 #endif // SLC_H

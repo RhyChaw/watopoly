@@ -2,6 +2,7 @@
 #define DICE_H
 
 #include <cstdlib>
+#include <ctime> 
 
 class Dice {
 private:
@@ -11,6 +12,7 @@ private:
 
 public:
     // Rolls both dice and stores the results internally
+    Dice();
     static void roll();
     
     // Returns the value of the first die from the last roll
