@@ -159,10 +159,10 @@ void WatopolyDisplay::removePlayer(char symbol) {
     draw();
 }
 
-void WatopolyDisplay::movePlayer(char symbol, int position) {
+void WatopolyDisplay::movePlayer(char symbol, int absolutePosition) {
     if (players.find(symbol) != players.end()) {
-        players[symbol] = position;
-        draw();
+        players[symbol] = absolutePosition % 40; // Ensure valid position
+        draw(); // Trigger redraw
     }
 }
 

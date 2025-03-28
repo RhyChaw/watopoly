@@ -15,7 +15,7 @@ class WatopolyDisplay {
     Font font;
     
     // Board dimensions
-    static const int WIN_WIDTH = 1000;
+    static const int WIN_WIDTH = 700;
     static const int WIN_HEIGHT = 1500;
     static const int TEXT_X = 20;
     static const int TEXT_Y = 20;
@@ -51,7 +51,7 @@ public:
     void reset();
     void addPlayer(char symbol, int position = 0);
     void removePlayer(char symbol);
-    void movePlayer(char symbol, int position);
+    void movePlayer(char symbol, int absolutePosition); // Update declaration
     void addImprovement(int position);
     void removeImprovement(int position);
     void setImprovements(int position, int count);

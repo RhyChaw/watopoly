@@ -12,6 +12,7 @@ class GameBoard {
     std::map<char, int> playerPositions;  // symbol to board position (0-39)
     std::map<std::string, int> squareImprovements; // square name to improvement count
     std::map<std::string, int> squareToPosition; // maps square names to board positions
+    std::map<char, int> totalSteps;
 
     void initializeSquareMap();
 
@@ -26,14 +27,14 @@ public:
     // Player management
     void addPlayer(char symbol);
     void removePlayer(char symbol);
-    void movePlayer(char symbol, int steps);
+    void movePlayer(char symbol, int absolutePosition); // Change parameter name to be clear
     int getPlayerPosition(char symbol) const;
 
     // Improvement management
     void addImpr(const std::string& square, int count = 1);
     void removeImpr(const std::string& square);
     int getSquareImprovements(const std::string& square) const;
-
+    int getTotalSteps(char symbol) const;
     // Game state
     void loadGame(const std::string& filename);
     void saveGame(const std::string& filename) const;
