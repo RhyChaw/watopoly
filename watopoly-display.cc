@@ -101,6 +101,29 @@ WatopolyDisplay::WatopolyDisplay() {
         XNextEvent(display, &event);
     }
 
+    // Initialize color groups
+    colorGroups = {
+        {"Arts1", {1, 3}},       // AL, ML
+        {"Arts2", {6, 8, 9}},    // ECH, PAS, HH
+        {"Eng", {11, 13, 14}},   // RCH, DWE, CPH
+        {"Health", {16, 18, 19}},// LHI, BMH, OPT
+        {"Env", {21, 23, 24}},   // EV1, EV2, EV3
+        {"Sci1", {26, 27, 29}},  // PHYS, B1, B2
+        {"Sci2", {31, 32, 34}},  // EIT, ESC, C2
+        {"Math", {37, 39}}       // MC, DC
+    };
+
+    colorNames = {
+        {"Arts1", "navy blue"},
+        {"Arts2", "teal"},
+        {"Eng", "maroon"},
+        {"Health", "dark goldenrod"},
+        {"Env", "firebrick"},
+        {"Sci1", "dark khaki"},
+        {"Sci2", "forest green"},
+        {"Math", "gold3"}
+    };
+
     // Load font
     font = XLoadFont(display, "6x13");
     if (!font) font = XLoadFont(display, "fixed");
@@ -222,6 +245,28 @@ void WatopolyDisplay::drawImprovements() {
         }
     }
 }
+void WatopolyDisplay::drawColorBlocks() {
+    for (const auto& group : colorGroups) {
+        // Get color
+        XColor xcolor, exact;
+        Colormap cmap = DefaultColormap(display, 0);
+        XAllocNamedColor(display, cmap, colorNames[group.first].c_str(), &xcolor, &exact);
+        
+        XSetForeground(display, gc, xcolor.pixel);
+        
+        // Draw blocks for each position in group
+        for (int pos : group.second) {
+            if (pos < 0 || pos >= 40) continue;
+            
+            int x = BOARD_COORDS[pos].first ;
+            int y = BOARD_COORDS[pos].second -68;
+            
+            XFillRectangle(display, window, gc, 
+                         x, y,
+                         COLOR_BLOCK_WIDTH, COLOR_BLOCK_HEIGHT);
+        }
+    }
+}
 
 void WatopolyDisplay::drawBoard() {
     XClearWindow(display, window);
@@ -238,7 +283,10 @@ void WatopolyDisplay::drawBoard() {
                    strlen(board[i]));
     }
     
-    // Draw game elements
+    // Draw color blocks first (underneath other elements)
+    drawColorBlocks();
+    
+    // Then draw other elements
     drawPlayers();
     drawImprovements();
     

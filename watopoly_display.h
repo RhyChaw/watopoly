@@ -23,10 +23,14 @@ class WatopolyDisplay {
     static const int PLAYER_OFFSET = 6;
     static const int IMPROVEMENT_SIZE = 6;
     static const int IMPROVEMENT_SPACING = 8;
+    static const int COLOR_BLOCK_HEIGHT = 15;
+    static const int COLOR_BLOCK_WIDTH = 40;
     
     // Game state
     std::map<char, int> players; // symbol to position
     std::map<int, int> improvements; // position to count
+    std::map<std::string, std::vector<int>> colorGroups;
+    std::map<std::string, std::string> colorNames;
     
     // Board layout
     static const char *board[];
@@ -35,6 +39,7 @@ class WatopolyDisplay {
     // Drawing methods
     void drawPlayers();
     void drawImprovements();
+    void drawColorBlocks();
     void drawBoard();
 
 public:
