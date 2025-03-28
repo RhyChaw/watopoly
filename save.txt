@@ -4,7 +4,7 @@ vansh G 0 1500 0
 AL manit 5 
 ML BANK 0 
 MKV BANK 0 
-ECH BANK 0
+ECH manit 0
 PAS BANK 0
 HH BANK 0
 RCH BANK 0

@@ -82,6 +82,9 @@ int GameBoard::getPlayerPosition(char symbol) const {
 
 void GameBoard::addImpr(const std::string& square, int count) {
     // Validate input count
+    if (count==0){
+        return;
+    }
     if (count < 1) count = 1;          // Minimum 1 improvement
     else if (count > 5) count = 5;     // Maximum 5 improvements
     
