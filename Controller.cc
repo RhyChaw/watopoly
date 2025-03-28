@@ -225,12 +225,11 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
             }
         }
         std::cout << "why trackingPiece is not in this player group? hmmm..." << endl;
-        // this will return empty share_ptr of player
         return result;
     };
 
     string sq = currActingPlayer->getSquareAtCurrPos();
-    bool flag;
+    bool flag = false;
     int cost;
 
     for (int i = 0; i < 28; i++) {
@@ -324,6 +323,7 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                 }
             }
             if (input == "buy"){
+                std::cout << "hello ji" << endl;
                 if(currActingPlayer->getCash() < cost) {
                     while (true) {
                         std::cout << "you must auction, trade, mortgage, improve one of your properties, you cant afford it, you cant continue without choosing" << endl;
@@ -429,8 +429,9 @@ void Controller::letTheGameBegin(int argc, char **argv) {
     auto b = std::make_shared<GameBoard>();
     bool testMode = false;
     vector<shared_ptr<Player>> group;
-
+    std::cout << argv[1];
     if (argc > 1) {
+
         if(argv[1] == "LOAD") {
             std::cout << "loading a saved game " << endl;
             std::ifstream f{argv[2]};
@@ -531,7 +532,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                 }
                 b->drawBoard();
             }
-        } else if (argv[1] == "TEST"){
+        } else if (argv[1] == "TEST" || argv[1] == "test"){
             testMode = true;
             std::cout << "currently playing in test mode" << endl;
         } 
@@ -552,16 +553,16 @@ void Controller::letTheGameBegin(int argc, char **argv) {
         std::vector<char> arr = {'G', 'B', 'D', 'P', 'S', '$', 'L', 'T'};
         int i = 0;
         char piece;
-        while (i <= num) {
-            std::cout << "Player " << i + 1 << "enter your name";
+        while (i < num) {
+            std::cout << "Player " << i + 1 << " enter your name: ";
             string name;
             std::cin >> name;
             while (name == "BANK" && name == "bank") {
                 std::cout << "this name is not valid, select a different one" << endl;
                 std::cin >> name;
             }
-            std::cout << "Player " << i + 1 << "enter your symbol";
-            std::cout << "Please choose one from the available piece char to represent yourself on board ";
+            std::cout << "Player " << i + 1 << " enter your symbol: " << endl;
+            std::cout << "Please choose one from the available piece char to represent yourself on board " << endl;
             for (char ch : arr) {
                 std::cout << ch << " ";
             }
@@ -579,15 +580,18 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             }
             auto p = make_shared<Player>(name , piece, 1500);
             group.push_back(p);
+            b->addPlayer(piece);
         }
     }
 
     std::cout << "++++++++++++  GAME START  ++++++++++++" << endl;
     int currIndex = 0;
+    
     shared_ptr<Player> currActingPlayer = group[currIndex];
     int numberOfPlayer = group.size();
     auto dicee = make_shared<Dice>();
     bool hasRolled = false;
+    b->drawBoard();
 
     while (true) {
         currActingPlayer = group[currIndex];
@@ -618,6 +622,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
         if (command == "roll" || command == "ROLL") {
             if (hasRolled) {
                 std::cout << "you have already rolled once, cant roll again"<< endl;
+                hasRolled = false;
                 continue;
             }
             int rollValue = 0;
@@ -625,6 +630,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             while (dicee->getDoubles() > 0)
             {
                 bool overload = false;
+                cout << testMode << endl;
                 if (testMode) {
                     std::string d1;
                     std::string d2;
@@ -646,6 +652,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     }
                     hasRolled = true;
                     currActingPlayer->movePlayer(rollValue);
+                    b->drawBoard();
                     b->movePlayer(currActingPlayer->getSymbol(),
                                   currActingPlayer->getPosition());
                     b->drawBoard();
@@ -663,7 +670,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     currActingPlayer->movePlayer(rollValue);
                     b->movePlayer(currActingPlayer->getSymbol(),
                                   currActingPlayer->getPosition());
-                    b->drawBoard();
+                    b->update();
                     CommandRoll(group, currActingPlayer, testMode, b);
                     std::cout << "you rolled doubles! you can roll again" << endl;
                     dicee->changeDouble();

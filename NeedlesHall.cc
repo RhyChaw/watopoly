@@ -16,7 +16,7 @@ void NeedlesHall::moveeee(std::shared_ptr<Player> p) {
     srand(time(NULL));
     std::cout << "we will determine first if you are the lucky winner to earn a TIMS CUP " << endl;
     std::cout << "WHOAAAA EXCITING" << endl;
-    std::cout << " if you spin a "<< "48" << "then you win" << endl;
+    std::cout << " if you spin a "<< "48 " << "then you win" << endl;
     int timsRoll = getRandomMovement(100);
     cout << "Your Tims Roll is " << timsRoll << "." << endl;
     if (timsRoll == 48) {
