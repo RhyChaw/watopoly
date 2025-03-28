@@ -106,7 +106,7 @@ public:
     void setIndex(int n);
     void setTurnsInTimsLine(int turns);
     void setRollForJail(int n);
-    void resetTurnsInTims()
+    void resetTurnsInTims();
 
     //additional functions
     void leaveTimsLine();

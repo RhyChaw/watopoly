@@ -7,21 +7,21 @@ using namespace std;
 Player::Player(std::string name, char symbol, int Cash) : name{name}, symbol{symbol}, cash{Cash} {};
 
 
-Player::Player(std::string name, char symbol, int ownedCups, double cash, int index, 
-    bool isTimLine, int turnsInTimsLine, int position_initial, 
-    double assets, std::vector<std::shared_ptr<Building>> ownedProperties,
-    int ownedGyms, int ownedResidence, int ownedAcademic)
-    : name(name), symbol(symbol), index(index), position(position),
-    cash(cash), assets(assets), ownedProperties(ownedProperties),
-    ownedGyms(ownedGyms), ownedResidence(ownedResidence), ownedAcademic(ownedAcademic),
-    isInTimsLine(isTimLine), turnsInTimsLine(turnsInTimsLine), 
-    isBankrupt(false), cups(ownedCups) {
+// Player::Player(std::string name, char symbol, int ownedCups, double cash, int index, 
+//     bool isTimLine, int turnsInTimsLine, int position_initial, 
+//     double assets, std::vector<std::shared_ptr<Building>> ownedProperties,
+//     int ownedGyms, int ownedResidence, int ownedAcademic)
+//     : name(name), symbol(symbol), index(index), position(position),
+//     cash(cash), assets(assets), ownedProperties(ownedProperties),
+//     ownedGyms(ownedGyms), ownedResidence(ownedResidence), ownedAcademic(ownedAcademic),
+//     isInTimsLine(isTimLine), turnsInTimsLine(turnsInTimsLine), 
+//     isBankrupt(false), cups(ownedCups) {
 
-    // Initialize monopoly ownership
-    for (int i = 0; i < 8; ++i) {
-        monopolyBlocks[i] = 0;
-    }
-}
+//     // Initialize monopoly ownership
+//     for (int i = 0; i < 8; ++i) {
+//         monopolyBlocks[i] = 0;
+//     }
+// }
 
 Player::~Player() {}
 
@@ -481,14 +481,14 @@ std::string Player::monoBlockOfProp(std::string name) {
 }
 
 
-bool Player::checkMonopoly(int block) {
-    int getMonopoly[8] = {2, 3, 3, 3, 3, 3, 3, 2};
-    if (monopolyBlocks[block] == getMonopoly[block]) {
-        return true;
-    } else {
-        return false;
-    }
-}
+// bool Player::checkMonopoly(int block) {
+//     int getMonopoly[8] = {2, 3, 3, 3, 3, 3, 3, 2};
+//     if (monopolyBlocks[block] == getMonopoly[block]) {
+//         return true;
+//     } else {
+//         return false;
+//     }
+// }
 
 
 void Player::declareBankruptcy() {
