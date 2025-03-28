@@ -3,30 +3,47 @@
 
 #include <memory>
 #include <string>
-#include "GameBoard.h"
+#include <iostream>
+#include <fstream>
+#include <map>
+#include <vector>
 #include "load.h"
 #include "Player.h"
-#include <memory>
+#include "GameBoard.h"
+#include "Dice.h"
+#include "transaction.h"
+#include "watopoly-display.h"
+#include "building.h"
+#include "nonbuilding.h"
+#include "propertyArray.h"
 
+using namespace std;
+
+class Board;
+class Player;
+class Dice;
+class Transactions;
+class nonbuilding;
 
 class Controller {
 private:
-    std::shared_ptr<GameBoard> gameBoard;
-    // Display display;
-    int currentPlayerIndex;
-    GameState loadedState;
-
-    void initializeFromLoadedState();
 
 public:
     Controller();
+    ~Controller();
+    void letTheGameBegin(int argc, char *argv);
+    void commandTrade(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer);
+    void commandImprove(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, std::shared_ptr<GameBoard> b);
+    void commandMortgage(std::shared_ptr<Player> currActingPlayer);
+    void commandMortgage(std::shared_ptr<Player> currActingPlayer);
+void commandBankrupt(std::shared_ptr<Player> currActingPlayer, std::shared_ptr<Player> owner);
+void commandAuction(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, std::string prop);
 
-    // Game control
-    bool loadGame(const std::string &filename);
-    void play();
-    void saveGame(const std::string &filename);
-    void displayAssets();
-    void displayAll();
+void CommandRoll(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, bool testMode, std::shared_ptr<GameBoard> b);
+
+
+
+
 };
 
 #endif // CONTROLLER_H

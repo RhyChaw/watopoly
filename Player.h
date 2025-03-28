@@ -48,6 +48,7 @@ private:
 public:
     //big five
     Player(std::string name, char symbol, int Cash);
+    
     Player(std::string name, char symbol, int ownedCups, double cash, int index, 
         bool isTimLine, int turnsInTimsLine, int position_initial, 
         double assets, std::vector<std::shared_ptr<Building>> ownedProperties,
@@ -94,19 +95,22 @@ public:
     int getadd_roll_for_jail() const;
 
     //setters
-    void setCups(int n);  
+    void setCups(int n); 
+    void useCups();
     void setPos(int pos);
     void setBankrupt(bool b);
-
+    void setIsInTimsLine(bool status);
     void setownedGyms(int n);
     void setownedResidence(int n);
     void setownedAcademic(int n);
     void setIndex(int n);
     void setTurnsInTimsLine(int turns);
     void setRollForJail(int n);
+    void resetTurnsInTims()
 
     //additional functions
     void leaveTimsLine();
+    void changeTurnsInTimsLine();
     void changeAsset(double c);
     void changePropertyCount(int residences, int gyms, int academics);
     void receive(int amount);

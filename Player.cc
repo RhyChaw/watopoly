@@ -6,6 +6,7 @@ using namespace std;
 
 Player::Player(std::string name, char symbol, int Cash) : name{name}, symbol{symbol}, cash{Cash} {};
 
+
 Player::Player(std::string name, char symbol, int ownedCups, double cash, int index, 
     bool isTimLine, int turnsInTimsLine, int position_initial, 
     double assets, std::vector<std::shared_ptr<Building>> ownedProperties,
@@ -149,9 +150,19 @@ void Player::setTurnsInTimsLine(int turns) {
     turnsInTimsLine = turns; 
 }
 
+void Player::changeTurnsInTimsLine() {
+    turnsInTimsLine++;
+}
+
 void Player::setRollForJail(int n) {
     roll_for_jail = n;
 }
+
+void Player::useCups() {
+    cups--;
+}
+
+void Player::resetTurnsInTims() { turnsInTimsLine = 0; }
 
 bool Player::checkIfInMonopolyBlock(std::string name) {
     std::string monoBlockOfSquare = monoBlockOfProp(name);
@@ -302,6 +313,7 @@ void Player::movePlayer(int roll) {
 
 void Player::moveToDCTims() {
     position = 10;
+    isInTimsLine = true;
     return;
 }
 
@@ -431,6 +443,8 @@ void Player::addProp(std::shared_ptr<Building> property_name) {
 void Player::leaveTimsLine() { 
     isInTimsLine = false;
 }
+
+void Player::setIsInTimsLine(bool status) { isInTimsLine = status; }
 
 void Player::changeAsset(double c) {
     assets += c; 

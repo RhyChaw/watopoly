@@ -23,7 +23,7 @@ void Auction::place(std::shared_ptr<Player> p, int amount) {
 
 //assuming maxbidder cant withdraw
 void Auction::withdraw(std::shared_ptr<Player> p) {
-    std::cout << "--> The player " << p->getName() << " withdraws from the bid" << std::endl << std::endl;
+    std::cout << "The player " << p->getName() << " withdraws from the bid" << std::endl << std::endl;
     
     bidders -= 1;
     
@@ -41,7 +41,7 @@ void Auction::withdraw(std::shared_ptr<Player> p) {
     
     if (bidders == 1) {
         maxBidder = people[0];
-        std::cout << "$$$$$ Congratulation $$$$$ -->";
+        std::cout << "Congratulation";
         std::cout << maxBidder->getName() << " wins the property " << std::endl << std::endl;
         
         Transactions::addPropByAuction(build, maxBidder, maxBid);

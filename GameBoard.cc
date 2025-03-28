@@ -6,19 +6,27 @@ GameBoard::GameBoard() {}
 GameBoard::~GameBoard() {}
 
 void GameBoard::drawBoard() {
-    board->draw();
+    update();
+    bd->draw();
+    //bd->reset();
 }
 
 void GameBoard::update() {
     for (auto &p : sqrAndImp) {
+        for (int i = 0; i < 40; i++) {
+            int a;
+            if(p.first == BOARD[i]) {
+                a = i;
+            }
+        }
         if (p.second > 0) {
-            board->addImpr(p.first, p.second);
+            board->addImpr(a, p.second);
         }
     }
 
     for (auto &p : playerAndSqr) {
         string sqr = BOARD[p.second % 40]; // Ensure board wrapping
-        board->addPlayer(p.first, sqr);
+        board->addPlayer(p.first, std::stoi(sqr));
     }
 }
 
