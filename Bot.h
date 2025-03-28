@@ -1,30 +1,20 @@
 #ifndef BOT_H
 #define BOT_H
 
-#include <vector>
+#include "Player.h"
+#include <cstdlib>
 
-// Forward declare the Game class or any other class representing the game state
-class Game;
-
-class Bot {
+class Bot : public Player {
 public:
-    Bot();
-    
-    // Function to decide the next move
-    int makeMove(Game &game);
+    // ctor
+    Bot(std::string name, char symbol, int cash) : Player(name, symbol, cash) {}
 
-    // Optionally add a strategy method to decide moves (for future extensions)
-    int strategicMove(Game &game);
-
-private:
-    // Function to evaluate the best move (for example, using minimax or another algorithm)
-    int evaluateBestMove(Game &game);
-    
-    // Any other helper functions needed for decision-making (e.g., checking available moves)
-    std::vector<int> availableMoves(Game &game);
-    
-    // Optionally, add any bot attributes (e.g., strategy level, randomness factor)
-    int randomnessLevel;
+    // void functions
+    void botController(Bot *b);
+    void checkSelfValid(Bot *b);
+    void buyBot(Bot *b, std::shared_ptr<Building> property_name);
 };
 
-#endif // BOT_H
+#endif
+ 
+// here prob of auction higher

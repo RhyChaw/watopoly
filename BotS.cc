@@ -1,25 +1,25 @@
-#include "Bot.h"
+#include "BotS.h"
 #include "Player.h"
 using namespace std;
 
-Bot::Bot(std::string name, char symbol, int cash) : Player(name, symbol, cash) {}
+BotS::BotS(std::string name, char symbol, int cash) : Player(name, symbol, cash) {}
 
-void botController(Bot *b, int roll) {
+void botSController(BotS *b, int roll) {
     std::cout << "I am rolling yay!" << endl;
     b->movePlayer(roll);
 
     b->getSquareAtCurrPos();
 
     if (checkSelfValid(b)) {
-        buyBot(b);
+        buyBotS(b);
     }
 }
 
-bool checkSelfValid(Bot *b) {
+bool checkSelfValid(BotS *b) {
     return (b->getAsset() > 0);
 }
 
-void buyBot(Bot *b) {
+void buyBotS(BotS *b) {
     int idx = b->getPosition();
     vector<shared_ptr<Building>> prop = b->getOwnedPropList();
     b->addProp(prop[idx]);
