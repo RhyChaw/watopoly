@@ -51,9 +51,9 @@ void SLC::moveeee(std::shared_ptr<Player> p) {
 		change = 3;
     } else if (s == 23) {
 		cout << "Go to DC Tims Line." << endl;
-		p->moveToTimsLine();
+		p->moveToDCTims();
     } else if (s == 24) {
-		p->setPosition(0);
+		p->setPos(0);
 		cout << "You passed Collect OSAP! you get $200!" << endl;
 		p->changeCash(200);
 	} 
@@ -63,7 +63,7 @@ void SLC::moveeee(std::shared_ptr<Player> p) {
 	        p->changeCash(200);
 		    cout << "You passed Collect OSAP! Enjoy your $200!" << endl;
 	    }
-	    p->setPosition((p->getPosition() + change)); 
+	    p->setPos((p->getPosition() + change)); 
 	}
 	return;
 }
