@@ -290,9 +290,14 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
         } 
         else if (sq == "GO TO TIMS") {
             cout << "Go to TIMS" << endl;
-            curPlayer->moveToDCTims();	
-        } 
-        else if (sq == "NEEDLES HALL") {
+            currActingPlayer->moveToDCTims();	
+            cout << curPlayer->getName() << " is being sent to DC Tims Line!" << endl;
+            currActingPlayer->setPosition(10);
+            currActingPlayer->setIsInTimsLine(true);
+            currActingPlayer->resetTurnsInTims();
+            b->movePlayer(currActingPlayer->getSymbol(), 10);
+            b->drawBoard();
+        } else if (sq == "NEEDLES HALL") {
             cout << "You are at Needles Hall." << endl;
             NeedlesHall::moveee(currActingPlayer);
         } else {  
@@ -505,13 +510,24 @@ void Controller::letTheGameBegin(int argc, char *argv) {
     while (true) {
         currActingPlayer = group[currIndex];
         if (currActingPlayer->getisBankrupt()) {
-            currIndex = currIndex % group.size();
+            currIndex = (currIndex + 1) % group.size();
             continue;
         }
         if (numberOfPlayer == 1) {
             cout << "Congratulation! The winner is " << currActingPlayer->getName();
             cout << " His Properties are " << currActingPlayer->getAssets() << endl;
             break;
+        }
+        if (currActingPlayer->getIsInTimsLine()) {
+            cout << currActingPlayer->getName() << ", you are in DC Tims Line (Turn " << currActingPlayer->getTurnsInTims() + 1 << ")." << endl;
+            TimsLine::handleTimsTurn(currActingPlayer, dicee);
+            if (!currActingPlayer->getIsInTimsLine()) { 
+                cout << "You are now free! Moving forward." << endl;
+            } else {
+                cout << "You are still in DC Tims Line. Your turn is over." << endl;
+            }
+            currIndex = (currIndex + 1) % group.size();
+            continue;
         }
         cout << "Your turn " << currActingPlayer->getSymbol() << endl;
         cout << "Available commands - [ROLL, NEXT, TRADE, IMPROVE, MORTGAGE, UNMORTGAGE, BANKRUPT, ASSETS, ALL, SAVE]" << endl;
