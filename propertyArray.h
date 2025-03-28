@@ -65,5 +65,33 @@ const std::map<std::string, int> IMPR = {
     {"ESC", 0}, {"C2", 0}, {"MC", 0}, {"DC", 0}
 };
 
+bool isGym(std::string squareName){
+    for (int i = 22; i < 24; i++){
+        if (OWNABLE[i][0] == squareName) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool isResidence(std::string squareName){
+    for (int i = 24; i < 28; i++){
+        if (OWNABLE[i][0] == squareName){
+	    return true;
+	}
+    }
+    return false;
+}
+
+
+bool isAcademic(std::string squareName){
+    for (int i = 0; i < 22; i++){
+        if (OWNABLE[i][0] == squareName){
+	    return true;
+	}
+    }
+    return false;
+}
+
 
 #endif

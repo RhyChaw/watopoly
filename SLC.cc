@@ -21,7 +21,7 @@ void SLC::moveeee(std::shared_ptr<Player> p) {
     cout << "Your Tims Roll is " << timsRoll << "." << endl;
     if (timsRoll == 48) {
 		cout << "Congratulations! You have won a TimsCup" << endl;
-		p->addCup();
+		p->addTimsCup();
 		return;
 	}
 	cout << "you did not recive, sad really sad" << endl;

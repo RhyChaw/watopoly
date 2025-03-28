@@ -15,6 +15,7 @@
 #include "watopoly-display.h"
 #include "building.h"
 #include "nonbuilding.h"
+#include "propertyArray.h"
 
 using namespace std;
 
@@ -31,7 +32,18 @@ public:
     Controller();
     ~Controller();
     void letTheGameBegin(int argc, char *argv);
-    void loadGame(std::ifstream f);
+    void commandTrade(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer);
+    void commandImprove(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, std::shared_ptr<GameBoard> b);
+    void commandMortgage(std::shared_ptr<Player> currActingPlayer);
+    void commandMortgage(std::shared_ptr<Player> currActingPlayer);
+void commandBankrupt(std::shared_ptr<Player> currActingPlayer, std::shared_ptr<Player> owner);
+void commandAuction(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, std::string prop);
+
+void CommandRoll(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, bool testMode, std::shared_ptr<GameBoard> b);
+
+
+
+
 };
 
 #endif // CONTROLLER_H

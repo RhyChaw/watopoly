@@ -34,8 +34,8 @@ class Transactions{
     static void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Building> building1, std::shared_ptr<Building> building2);
     static void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Building> building, double money);
     static void trade(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money1, double money2);
-    static void payRent(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, int rent); 
-    static void payBank(std::shared_ptr<Player> p1, int rent);
+    static bool payRent(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, int rent); 
+    static bool payBank(std::shared_ptr<Player> p1, int rent);
     static void buyBuilding(std::string property_name, std::shared_ptr<Player> owner);
     static void sellBuilding(std::string property_name, std::shared_ptr<Player> owner);
     static void buyImprovement(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner);
