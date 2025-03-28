@@ -94,9 +94,9 @@ double Player::getAsset() const {
             int cost = 0;
             for (int i = 0; i < 28; ++i) {
                 if (propName == OWNABLE[i][0]) {
-                    int cost;
                     std::stringstream ss(OWNABLE[i][3]);
                     ss >> cost;
+                    cost = imprLevel*cost;
                     result += cost;
                 }
             }
@@ -377,7 +377,7 @@ void Player::printOwnedProp() {
                 cout << "Residence   ";
             }
             if (isAcademic(ownedProperties[i]->getName())) {
-                cout << "Improvements: " << ownedProperties[i]->getImprLevel() << "\t";
+                cout << "Improvements: " << ownedProperties[i]->getImprLevel() - 1 << "\t";
             }
             cout << endl;
         }
