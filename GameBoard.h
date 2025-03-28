@@ -1,41 +1,44 @@
 #ifndef GAMEBOARD_H
 #define GAMEBOARD_H
 
-#include "building.h"
-#include "nonbuilding.h"
-#include "Dice.h"
-#include <iostream>
-#include <map>
-#include <vector>
-#include <string>
-#include <memory>
-#include <vector>
 #include "watopoly-display.h"
-#include "propertyArray.h"
-
-using namespace std;
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
 class GameBoard {
-private:
-    std::unique_ptr<Display> board = nullptr;
-    map<char, int> playerAndSqr;
-    map<string, int> sqrAndImp = IMPR; 
+    std::shared_ptr<WatopolyDisplay> display;
+    std::map<char, int> playerPositions;  // symbol to board position (0-39)
+    std::map<std::string, int> squareImprovements; // square name to improvement count
+    std::map<std::string, int> squareToPosition; // maps square names to board positions
+
+    void initializeSquareMap();
 
 public:
     GameBoard();
     ~GameBoard();
-    void update();
+
+    // Display control
     void drawBoard();
+    void update();
+
+    // Player management
     void addPlayer(char symbol);
     void removePlayer(char symbol);
-    void addImpr(std::string square);
-    void removeImpr(std::string square);
-    void move(char symbol, int position);
+    void movePlayer(char symbol, int steps);
     int getPlayerPosition(char symbol) const;
+
+    // Improvement management
+    void addImpr(const std::string& square, int count = 1);
+    void removeImpr(const std::string& square);
     int getSquareImprovements(const std::string& square) const;
-    std::shared_ptr<Display> getBoard() const;
-    void loadGame(std::string filename);
-    void saveGame(std::string filename);
+
+    // Game state
+    void loadGame(const std::string& filename);
+    void saveGame(const std::string& filename) const;
+
+    std::shared_ptr<WatopolyDisplay> getDisplay() const;
 };
 
 #endif // GAMEBOARD_H

@@ -1,19 +1,23 @@
 CXX = g++
 CXXFLAGS = -std=c++20 -Wall -g
-EXEC = display
-SOURCES = watopoly-display.cc 
+EXEC = watopoly-test
+SOURCES = watopoly-display.cc GameBoard.cc test-watopoly.cc
 OBJECTS = $(SOURCES:.cc=.o)
 DEPENDS = $(SOURCES:.cc=.d)
+LDFLAGS = -lX11
 
 $(EXEC): $(OBJECTS)
-	$(CXX) $(OBJECTS) -o $(EXEC) -lX11
+	$(CXX) $(CXXFLAGS) $(OBJECTS) -o $(EXEC) $(LDFLAGS)
 
 -include $(DEPENDS)
 
 %.o: %.cc
 	$(CXX) $(CXXFLAGS) -c $< -o $@ -MMD
 
-.PHONY: clean
+.PHONY: clean run
 
 clean:
 	rm -f $(OBJECTS) $(EXEC) $(DEPENDS)
+
+run: $(EXEC)
+	./$(EXEC).
