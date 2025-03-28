@@ -23,7 +23,7 @@ void testPlayers(GameBoard& board) {
     
     // Remove player
     board.removePlayer('D');
-    board.update();
+    board.update"();
     std::cout << "Removed Doughnut player" << std::endl;
     sleep(20);
 }
