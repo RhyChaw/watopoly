@@ -1,5 +1,6 @@
 #include "Gym.h"
 using namespace std;
+#include <sstream>
 
 Gym::Gym(int ID, string name, int price, char owner)
 	: Building(ID, name, price, owner) {}

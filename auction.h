@@ -4,6 +4,7 @@
 #include <memory>
 #include <map>
 #include <vector>
+#include <algorithm>
 #include "Player.h"
 #include "building.h"
 #include "transaction.h"

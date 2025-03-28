@@ -2,6 +2,7 @@
 #define TRANSACTION_H
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include "Player.h"
 #include "Cell.h"
 #include "building.h"

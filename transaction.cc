@@ -1,4 +1,5 @@
 #include "transaction.h"
+#include "propertyArray.h"
 #include <sstream>
 
 int Transactions::getPropertyCost(const std::string &property_name) {
@@ -21,7 +22,7 @@ bool Transactions::isGym(std::string squareName){
     }
     return false;
 }
-
+ 
 bool Transactions::checkFund(std::shared_ptr<Player> p1, int amt) {
     if (p1->getCash() < amt) {
         std::cout << "The player " << p1->getName() << " doesn't have enough funds to use" << std::endl;
@@ -256,7 +257,8 @@ void Transactions::buyBuilding(std::string property_name, std::shared_ptr<Player
     int buycost = 0;
     for (int i = 0; i < 28; i++){
         if (OWNABLE[i][0] == property_name) {
-            buycost = OWNABLE[i][2];
+            std::stringstream ss(OWNABLE[i][2]);
+            ss >> buycost;
         }
     }
     char owner_symbol = owner->getSymbol();
@@ -302,7 +304,7 @@ void Transactions::buyBuilding(std::string property_name, std::shared_ptr<Player
 void Transactions::sellBuilding(std::string property_name, std::shared_ptr<Player> owner) {
     int indexResult = 0;
     for (int i = 0; i < 40; i++) {
-        if (property_name == OWNABLE[i]) {
+        if (property_name == OWNABLE[i][0]) {
             indexResult = i;
             break;
         }
@@ -310,7 +312,9 @@ void Transactions::sellBuilding(std::string property_name, std::shared_ptr<Playe
     int buycost = 0;
     for (int i = 0; i < 28; i++){
         if (OWNABLE[i][0] == property_name) {
-            buycost = OWNABLE[i][2];
+            std::stringstream ss(OWNABLE[i][2]);
+            ss >> buycost;
+            break;
         }
     }
     char owner_symbol = owner->getSymbol();
@@ -338,7 +342,13 @@ void Transactions::sellBuilding(std::string property_name, std::shared_ptr<Playe
     }
     owner->removeProp(build);
     owner->updateMonopolyBlock();
-    auto it = std::find(ownedProperties.begin(), ownedProperties.end(), build);
+
+    // added a change here
+    auto it = std::find_if(ownedProperties.begin(), ownedProperties.end(),
+    [&build](const std::shared_ptr<Building>& prop) {
+        return prop == build;
+    });
+
     if (it != ownedProperties.end()) {
         ownedProperties.erase(it);
     }
@@ -423,7 +433,7 @@ void Transactions::mortgage(std::shared_ptr<Building> property_name, std::shared
 
     int cost = 0;
     for (int i = 0; i < 28; i++) {
-        if (OWNABLE[i][0] == property_name) {
+        if (OWNABLE[i][0] == property_name->getName()) { // FIXED COMPARISON
             std::stringstream ss(OWNABLE[i][2]);
             ss >> cost;
         }
@@ -456,7 +466,7 @@ void Transactions::unmortgage(std::shared_ptr<Building> property_name, std::shar
 
     int cost = 0;
     for (int i = 0; i < 28; i++) {
-        if (OWNABLE[i][0] == property_name) {
+        if (OWNABLE[i][0] == property_name->getName()) {
             std::stringstream ss(OWNABLE[i][2]);
             ss >> cost;
         }
@@ -483,7 +493,7 @@ std::shared_ptr<Building> Transactions::listProp(std::string property_name) {
 
     for (int i = 0; i < size; i++) {
         if (ownedProperties[i]->getName() == property_name) {
-            return ownedList[i];
+            return ownedProperties[i];
         }
     }
 
@@ -499,11 +509,13 @@ void Transactions::addPropByAuction(std::string build, std::shared_ptr<Player> p
             break;
         }
     }
-    char owner = p->getSymbol();
+    
     int buycost = 0;
+    char owner = p->getSymbol();
     for (int i = 0; i < 28; i++){
         if (OWNABLE[i][0] == build) {
-            buycost = OWNABLE[i][2];
+            std::stringstream ss(OWNABLE[i][2]);
+            ss >> buycost;
         }
     }
     std::shared_ptr<Building> ownable;
