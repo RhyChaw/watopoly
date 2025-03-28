@@ -404,8 +404,8 @@ void Player::loadUpdateAmountToPay() {
 }
 
 void Player::removeProp(std::shared_ptr<Building> property_name) {
-    if (!this->ownThisProp(property_name->getName())) {
-        std::cout << "this props is not owned" << std::endl;
+    if (!ownThisProp(property_name->getName())) {
+        std::cout << "this props is nnowned" << std::endl;
         return;
     }
 
@@ -419,7 +419,7 @@ void Player::removeProp(std::shared_ptr<Building> property_name) {
 
 
 void Player::addProp(std::shared_ptr<Building> property_name) {
-    if (this->ownThisProp(property_name->getName())) {
+    if (ownThisProp(property_name->getName())) {
         std::cout << "this props is owned" << std::endl;
         return;
     }
