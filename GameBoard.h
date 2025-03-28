@@ -1,7 +1,7 @@
 #ifndef GAMEBOARD_H
 #define GAMEBOARD_H
 
-#include "watopoly-display.h"
+#include "watopoly_display.h"
 #include <map>
 #include <memory>
 #include <string>

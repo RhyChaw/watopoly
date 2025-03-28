@@ -1,4 +1,4 @@
-#include "watopoly-display.h"
+#include "watopoly_display.h"
 #include <iostream>
 #include <cstring>
 #include <unistd.h>
