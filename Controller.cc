@@ -1,18 +1,60 @@
 #include "Controller.h"
 
+
 Controller::Controller() {}
 
 Controller::~Controller() {}
+using namespace std;
+
+void Controller::commandTrade(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer) {
+    string offer, want;
+            int size = group.size();
+            for (int i = 0; i < size; i++) {
+                if (group[i] == currActingPlayer) continue;
+                std::cout << "name:" << group[i]->getName() << "piece:" << group[i]->getSymbol() << endl;
+            }
+            shared_ptr<Player> p;
+            while (true) {
+                std::cout << "enter the symbol of the player" << endl;
+                std::cin >> p;
+                int i = 0;
+                while (i < size) {
+                    if (group[i]->getSymbol() == p->getSymbol()){
+                        p = group[i];
+                        break;
+                    }
+                }
+                if(i == size) {
+                    std::cout << "invalid player symbol" << endl;
+                }
+            }
+            std::cout << "initiating trading with: " << p->getSymbol() << endl;
+            std::cout << "Enter what you want to offer" << endl;
+            int size = currActingPlayer->getOwnedPropList().size();
+            for (int i = 0; i < size; i++) {
+                std::cout << currActingPlayer->getOwnedPropList()[i]->getName(); 
+                std::cout << " ";
+            }
+            std::cin >> offer;
+            std::cout << "Enter what you want" << endl;
+            int size = p->getOwnedPropList().size();
+            for (int i = 0; i < size; i++) {
+                std::cout << p->getOwnedPropList()[i]->getName(); 
+                std::cout << " ";
+            }
+            std::cin >> want;
+            Transactions::trade(currActingPlayer, p, offer, want);
+}
 
 //handle when in these code segments the input is invalid.
-void Controller::commandTrade(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer) {
+void Controller::commandAuction(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, std::string prop) {
     auto newAuction = std::make_shared<Auction>(group, currActingPlayer, prop);
 
-    cout << "========== PROPERTY AUCTION ==========" << endl;
-    cout << "Auctioning: " << prop << endl;
-    cout << "Starting auction process..." << endl;
+    std::cout << "========== PROPERTY AUCTION ==========" << endl;
+    std::cout << "Auctioning: " << prop << endl;
+    std::cout << "Starting auction process..." << endl;
     std::vector<bool> withdrawnPlayers(group.size(), false);
-    int currentPlayerIndex = std::find(group.begin(), group.end(), curPlayer) - group.begin();
+    int currentPlayerIndex = std::find(group.begin(), group.end(), currActingPlayer) - group.begin();
     withdrawnPlayers[currentPlayerIndex] = false;
     int currentBidderIndex = (currentPlayerIndex) % group.size();
     while (true) {
@@ -28,15 +70,15 @@ void Controller::commandTrade(std::vector<std::shared_ptr<Player>> group, std::s
         }
         auto currentBidder = group[currentBidderIndex];
         
-        cout << "Current bidder: " << currentBidder->getName() << endl;
-        cout << "Current highest bid: $" << newAuction->maxBid << endl;
+        std::cout << "Current bidder: " << currentBidder->getName() << endl;
+        std::cout << "Current highest bid: $" << newAuction->getMaxBid() << endl;
         string action;
-        cout << "Do you want to (raise) or (withdraw)? ";
-        cin >> action;
+        std::cout << "Do you want to (raise) or (withdraw)? ";
+        std::cin >> action;
         if (action == "raise") {
             int bidAmount;
-            cout << "Enter your bid amount: ";
-            cin >> bidAmount;
+            std::cout << "Enter your bid amount: ";
+            std::cin >> bidAmount;
             newAuction->place(currentBidder, bidAmount);
         } 
         else if (action == "withdraw") {
@@ -44,7 +86,7 @@ void Controller::commandTrade(std::vector<std::shared_ptr<Player>> group, std::s
             newAuction->withdraw(currentBidder);
         } 
         else {
-            cout << "Invalid action. Please choose 'raise' or 'withdraw'." << endl;
+            std::cout << "Invalid action. Please choose 'raise' or 'withdraw'." << endl;
             continue;
         }
         currentBidderIndex = (currentBidderIndex + 1) % group.size();
@@ -55,31 +97,31 @@ void Controller::commandTrade(std::vector<std::shared_ptr<Player>> group, std::s
         if (!withdrawn) remainingBidders++;
     }
     if (remainingBidders == 1) {
-        cout << "Auction completed successfully!" << endl;
+        std::cout << "Auction completed successfully!" << endl;
     } else {
-        cout << "Auction ended without a winner." << endl;
+        std::cout << "Auction ended without a winner." << endl;
     }
 }
 
 
 void Controller::commandImprove(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, std::shared_ptr<GameBoard> b) {
     string prop, action;
-            cout << currActingPlayer->getSymbol() << " please choose a property to improve" << endl;
+            std::cout << currActingPlayer->getSymbol() << " please choose a property to improve" << endl;
             int size = currActingPlayer->getOwnedPropList().size();
             for (int i = 0; i < size; i++) {
-                cout << currActingPlayer->getOwnedPropList()[i]->getName() << endl; 
+                std::cout << currActingPlayer->getOwnedPropList()[i]->getName() << endl; 
             }
-            cin >> prop;
+            std::cin >> prop;
 
-            cout << "do you wanna BUY/SELL?" << endl;
+            std::cout << "do you wanna BUY/SELL?" << endl;
 
-            cin >> action;
+            std::cin >> action;
 
             while (true) {
-                if (action == "buy" || action == "sell" || cin.fail()) break;
-                cout << "command not recognized" << endl;
-                cout << "please select buy or sell" << endl;
-                cin >> action;
+                if (action == "buy" || action == "sell" || std::cin.fail()) break;
+                std::cout << "command not recognized" << endl;
+                std::cout << "please select buy or sell" << endl;
+                std::cin >> action;
             }
             shared_ptr<Building> p;
             p = Transactions::listProp(prop);
@@ -98,38 +140,38 @@ void Controller::commandImprove(std::vector<std::shared_ptr<Player>> group, std:
 }
 
 void Controller::commandMortgage(std::shared_ptr<Player> currActingPlayer) {
-    cout << currActingPlayer->getSymbol() << "what do you want to mortgage" << endl;
+    std::cout << currActingPlayer->getSymbol() << "what do you want to mortgage" << endl;
             int size = currActingPlayer->getOwnedPropList().size();
             for (int i = 0; i < size; i++) {
-                cout << currActingPlayer->getOwnedPropList()[i]->getName() << endl; 
+                std::cout << currActingPlayer->getOwnedPropList()[i]->getName() << endl; 
             }
             string item;
-            cin >> item;
+            std::cin >> item;
 
             shared_ptr<Building> p;
-            p = Transactions::listProp(property);
+            p = Transactions::listProp(item);
             Transactions::mortgage(p, currActingPlayer);
 }
 
 void Controller::commandUnmortgage(std::shared_ptr<Player> currActingPlayer) {
-    cout << currActingPlayer->getSymbol() << "what do you want to unmortgage" << endl;
+    std::cout << currActingPlayer->getSymbol() << "what do you want to unmortgage" << endl;
             int size = currActingPlayer->getOwnedPropList().size();
             for (int i = 0; i < size; i++) {
-                cout << currActingPlayer->getOwnedPropList()[i]->getName() << endl; 
+                std::cout << currActingPlayer->getOwnedPropList()[i]->getName() << endl; 
             }
             string item;
-            cin >> item;
+            std::cin >> item;
             shared_ptr<Building> p;
-            p = Transactions::listProp(property);
+            p = Transactions::listProp(item);
             Transactions::unmortgage(p, currActingPlayer);
 }
 
 void Controller::commandBankrupt(std::shared_ptr<Player> currActingPlayer, std::shared_ptr<Player> owner) {
     currActingPlayer->setBankrupt(true);
     owner->changeCash(currActingPlayer->getCash());
-    vector<shared_ptr<Building>> prop = currActingPlayer->getSymbol();
+    vector<shared_ptr<Building>> prop = currActingPlayer->getOwnedPropList();
     int size = prop.size();
-    char piece = owner->getGamePiece();
+    char piece = owner->getSymbol();
     for (int i = 0; i < size; i++){
         owner->addProp(prop[i]);
         prop[i]->setOwner(piece);
@@ -137,78 +179,84 @@ void Controller::commandBankrupt(std::shared_ptr<Player> currActingPlayer, std::
 }
 
 void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, bool testMode, std::shared_ptr<GameBoard> b) {
+    
     auto pointerOfPlayer = [group](char trackingPiece) {
         int sizeGroup = group.size();
         shared_ptr<Player> result;
         for (int i = 0; i < sizeGroup; i++)
         {
-            if (group[i]->getGamePiece() == trackingPiece)
+            if (group[i]->getSymbol() == trackingPiece)
             {
                 return group[i];
             }
         }
-        cout << "why trackingPiece is not in this player group? hmmm..." << endl;
+        std::cout << "why trackingPiece is not in this player group? hmmm..." << endl;
         // this will return empty share_ptr of player
         return result;
     };
 
     string sq = currActingPlayer->getSquareAtCurrPos();
     bool flag;
+    int cost;
+
     for (int i = 0; i < 28; i++) {
         if (sq == OWNABLE[i][0])
         flag = true;
     }
     if (flag) { 
         if (Transactions::isOwned(sq)) { 
-            shared_ptr<Building> prop = Transactions::pointerOfProp(sq);
+            shared_ptr<Building> prop = Transactions::listProp(sq);
             shared_ptr<Player> owner = pointerOfPlayer(prop->getOwner());
-            int cost;
+            
             for (int i = 0; i < 28; i ++) {
                 if (prop->getName() == OWNABLE[i][0]) {
                 cost = std::stoi(OWNABLE[i][2]);
                 }
             }
+
+            int rollValue = 0;
+
             if (owner == currActingPlayer) {
-                cout << "you own this property, no need to pay rent" << endl;
+                std::cout << "you own this property, no need to pay rent" << endl;
             } else if (owner != currActingPlayer && !prop->getMortStatus()) {
-                cout << "the property belongs to " << owner->getName();
+                std::cout << "the property belongs to " << owner->getName();
                 if (isGym(prop->getName())) {
-                    cout << "landed on the gym, you have to roll to see what rent you will have to pay" << endl;
-                    auto gym = std::dynamic_pointer_cast<Gym>(propPointer);
+                    std::cout << "landed on the gym, you have to roll to see what rent you will have to pay" << endl;
+                    auto gym = std::dynamic_pointer_cast<Gym>(prop);
                     int roll = 0;
-                    cout << "please type roll" << endl;
+                    std::cout << "please type roll" << endl;
                     string command;
-                    cin >> command;
+                    std::cin >> command;
                     while (command != "roll") {
-                        cout << "Sorry, you have to roll first." << endl;
-                        cin >> command;
+                        std::cout << "Sorry, you have to roll first." << endl;
+                        std::cin >> command;
                     }
                     bool overload = false;
                     if (testMode) {
                         std::string d1;
-                        std::string d1;
-                        cin >> die1;
-                        cin >> die2;
-                        rollValue = std::stoi(die1) + std::stoi(die2);
+                        std::string d2;
+                        std::cin >> d1;
+                        std::cin >> d2;
+                        rollValue = std::stoi(d1) + std::stoi(d2);
                         overload = true;
                     }
                     if (!overload) {
                         auto twoDices = make_unique<Dice>();
-                        dicee->rollDice();
-                        cout << "Rolling your dice..." << endl;
-                        cout << dicee->getDie1() << " + ";
-                        cout << dicee->getDie2() << " = ";
-                        cout << dicee->diceSum() << "!" << endl;
-                        gym->setRoll(twoDices->diceSum());
+                        dicee->roll();
+                        std::cout << "Rolling your dice..." << endl;
+                        std::cout << dicee->getFirstDie() << " + ";
+                        std::cout << dicee->getSecondDie() << " = ";
+                        std::cout << dicee->getSum() << "!" << endl;
+                        gym->setRoll(twoDices->getSum());
                     }
                 }
-                while (!Transactions::payPlayer(currActingPlayer, prop, prop->amountToPay())) {
-                    cout << "you must sell or trade something, or declare bankruptcy, you cant continue " << endl;
-                    cout << "Avaliable commands - trade, mortgage, improve, bankrupt" << endl;
+                while (!Transactions::payRent(currActingPlayer, owner, prop->amountToPay())) {
+                    std::cout << "you must sell or trade something, or declare bankruptcy, you cant continue " << endl;
+                    std::cout << "Avaliable commands - trade, mortgage, improve, bankrupt" << endl;
                     string command;
-                    cin >> command;
+                    std::cin >> command;
                     if (command == "bankrupt" || command == "BANKRUPT") {
-                        currActingPlayer->setBankruptStatus(true);
+                        currActingPlayer->setBankrupt(true);
                         commandBankrupt(currActingPlayer, owner);
                     }
                     else if (command == "trade" || command == "TRADE")
@@ -225,52 +273,52 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                     }
                 }
                 if (!currActingPlayer->getisBankrupt()){
-                    cout << "rent paid successfully" << endl;
+                    std::cout << "rent paid successfully" << endl;
                 }
             }
         }
         else { 
-            cout << "this property is available to buy" << endl;
-            cout << "type buy or auction to proceed accordingly" << endl;
+            std::cout << "this property is available to buy" << endl;
+            std::cout << "type buy or auction to proceed accordingly" << endl;
             string input;
-            cin >> input;
+            std::cin >> input;
             while (true) {
                 if (input == "buy" || input == "auction") {
                     break;
                 } else {
-                    cout <<"it has to be one of those commands - buy or auction" << endl;
+                    std::cout <<"it has to be one of those commands - buy or auction" << endl;
                 }
             }
             if (input == "buy"){
-                if(currActingPlayer->getCash < cost) {
+                if(currActingPlayer->getCash() < cost) {
                     while (true) {
-                        cout << "you must auction, trade, mortgage, improve one of your properties, you cant afford it, you cant continue without choosing" << endl;
+                        std::cout << "you must auction, trade, mortgage, improve one of your properties, you cant afford it, you cant continue without choosing" << endl;
                         string cand;
-                        cin >> cand;
-                        if (command == "auction" || command == "AUCTION") {
+                        std::cin >> cand;
+                        if (cand == "auction" || cand == "AUCTION") {
                             commandAuction(group, currActingPlayer, sq);
                             break;
                         }
-                        else if (command == "trade" || command == "TRADE")
+                        else if (cand == "trade" || cand == "TRADE")
                         {
                             commandTrade(group, currActingPlayer);
                             break;
 
                         }
-                        else if (command == "mortgage" || command == "MORTGAGE")
+                        else if (cand == "mortgage" || cand == "MORTGAGE")
                         {
                             commandMortgage(currActingPlayer);
                             break;
 
                         }
-                        else if (command == "improve" || command == "IMPROVE")
+                        else if (cand == "improve" || cand == "IMPROVE")
                         {
                             commandImprove(group, currActingPlayer, b);
                             break;
                         }
                     }
                 } else {
-                    Transactions::buyBuilding(sq, currActingPlayer)
+                    Transactions::buyBuilding(sq, currActingPlayer);
                 }
             }
             else {
@@ -280,26 +328,26 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
     }
     else { 
         if (sq == "SLC"){
-            cout << "You are at SLC" << endl;
+            std::cout << "You are at SLC" << endl;
             SLC::moveeee(currActingPlayer);
-            b->move(currActingPlayer->getSymbol(), currActingPlayer->getPosition());
+            b->movePlayer(currActingPlayer->getSymbol(), currActingPlayer->getPosition());
             b->drawBoard();
         } 
         else if (sq == "DC Tims Line"){
-            cout << "you are at DC Tim Line" << endl;
+            std::cout << "you are at DC Tim Line" << endl;
         } 
         else if (sq == "GO TO TIMS") {
-            cout << "Go to TIMS" << endl;
+            std::cout << "Go to TIMS" << endl;
             currActingPlayer->moveToDCTims();	
-            cout << curPlayer->getName() << " is being sent to DC Tims Line!" << endl;
-            currActingPlayer->setPosition(10);
+            std::cout << currActingPlayer->getName() << " is being sent to DC Tims Line!" << endl;
+            currActingPlayer->setPos(10);
             currActingPlayer->setIsInTimsLine(true);
             currActingPlayer->resetTurnsInTims();
-            b->move(currActingPlayer->getSymbol(), 10);
+            b->movePlayer(currActingPlayer->getSymbol(), 10);
             b->drawBoard();
         } else if (sq == "NEEDLES HALL") {
-            cout << "You are at Needles Hall." << endl;
-            NeedlesHall::moveee(currActingPlayer);
+            std::cout << "You are at Needles Hall." << endl;
+            NeedlesHall::moveeee(currActingPlayer);
         } else {  
             if (sq == "TUITION"){
                 Tuition::pay(currActingPlayer);
@@ -311,24 +359,24 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
         } 
     }
     if (currActingPlayer->getCash() < 0) {
-        cout<< "your cash after the move is in negative now" << endl;
+        std::cout<< "your cash after the move is in negative now" << endl;
         while (true) {
-            cout<< "you must trade, mortgage, improve one of your properties, you cant continue without choosing" << endl;
+            std::cout<< "you must trade, mortgage, improve one of your properties, you cant continue without choosing" << endl;
             string cand;
-            cin >> cand;
-            if (command == "trade" || command == "TRADE")
+            std::cin >> cand;
+            if (cand == "trade" || cand == "TRADE")
             {
                 commandTrade(group, currActingPlayer);
                 break;
 
             }
-            else if (command == "mortgage" || command == "MORTGAGE")
+            else if (cand == "mortgage" || cand == "MORTGAGE")
             {
                 commandMortgage(currActingPlayer);
                 break;
 
             }
-            else if (command == "improve" || command == "IMPROVE")
+            else if (cand == "improve" || cand == "IMPROVE")
             {
                 commandImprove(group, currActingPlayer, b);
                 break;
@@ -338,10 +386,10 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
     } 
 }
 
-void Controller::letTheGameBegin(int argc, char *argv) {
-    cout << "*********************************" << endl;
-    cout << "---     WATOPOLY PROJECT      ---" << endl;
-    cout << "*********************************" << endl;
+void Controller::letTheGameBegin(int argc, char **argv) {
+    std::cout << "*********************************" << endl;
+    std::cout << "---     WATOPOLY PROJECT      ---" << endl;
+    std::cout << "*********************************" << endl;
     vector<char> pieceCharTaken;
     string command, name, give, receive, property, action, filename;
     auto b = std::make_shared<GameBoard>();
@@ -350,7 +398,7 @@ void Controller::letTheGameBegin(int argc, char *argv) {
 
     if (argc > 1) {
         if(argv[1] == "LOAD") {
-            cout << "loading a saved game " << endl;
+            std::cout << "loading a saved game " << endl;
             std::ifstream f{argv[2]};
 
             int num;
@@ -374,17 +422,17 @@ void Controller::letTheGameBegin(int argc, char *argv) {
                     bool in;
                     f >> in;
                     if (in) {
-                        b->move(piece, 10);
+                        b->movePlayer(piece, 10);
                         int turn;
                         f >> turn;
                         p->moveToDCTims();
                     } else {
                         p->movePlayer(pos); 
-                        b->move(piece, pos);
+                        b->movePlayer(piece, pos);
                     }
                 } else {
-                    p->movePlayer(sqr); 
-                    b->move(piece, pos);
+                    p->movePlayer(pos); 
+                    b->movePlayer(piece, pos);
                 }
                 group.push_back(p);
             }
@@ -413,7 +461,8 @@ void Controller::letTheGameBegin(int argc, char *argv) {
                     int buycost = 0;
                     for (int i = 0; i < 28; i++){
                         if (OWNABLE[i][0] == property_name) {
-                            buycost = OWNABLE[i][2];
+                            std::stringstream ss(OWNABLE[i][2]);
+                            ss >> buycost;
                         }
                     }
                     char owner_symbol = group[i]->getSymbol();
@@ -442,7 +491,7 @@ void Controller::letTheGameBegin(int argc, char *argv) {
                     group[i]->updateMonopolyBlock();
                     group[i]->loadUpdateAmountToPay();
                 }
-                cout << "Displaying assets of every player, so everyone is on track" << endl;
+                std::cout << "Displaying assets of every player, so everyone is on track" << endl;
                 for (int i = 0; i < num; i++) {
                     group[i]->getAsset();
                 }
@@ -450,61 +499,63 @@ void Controller::letTheGameBegin(int argc, char *argv) {
             }
         } else if (argv[1] == "TEST"){
             testMode = true;
-            cout << "currently playing in test mode" << endl;
+            std::cout << "currently playing in test mode" << endl;
         } else {
-            cout << "Please input the number of player for this game" << endl;
+            std::cout << "Please input the number of player for this game" << endl;
             int num;
             int count = 0;
             while(true) {
-                cin >> num;
-                if (cin.fail()) break;
+                std::cin >> num;
+                if (std::cin.fail()) break;
                 if (num < 2 || num > 6) {
-                    cout << "Please input the number between 2 - 6" << endl;
+                    std::cout << "Please input the number between 2 - 6" << endl;
                 } else {
                     break;
                 }
             }
-            cout << "The number of player is " << num << endl;
+            std::cout << "The number of player is " << num << endl;
             std::vector<char> arr = {'G', 'B', 'D', 'P', 'S', '$', 'L', 'T'};
             int i = 0;
             while (i <= num) {
-                cout << "Player " << i + 1 << "enter your name";
+                std::cout << "Player " << i + 1 << "enter your name";
                 string name;
-                cin >> name;
+                std::cin >> name;
                 while (name == "BANK" && name == "bank") {
-                    cout << "this name is not valid, select a different one" << endl;
-                    cin >> name;
+                    std::cout << "this name is not valid, select a different one" << endl;
+                    std::cin >> name;
                 }
-                cout << "Player " << i + 1 << "enter your symbol";
-                cout << "Please choose one from the available piece char to represent yourself on board ";
+                std::cout << "Player " << i + 1 << "enter your symbol";
+                std::cout << "Please choose one from the available piece char to represent yourself on board ";
                 for (char ch : arr) {
                     std::cout << ch << " ";
                 }
                 char piece = ' ';
-                cin >> piece;
-                if (std::find(arr.begin(), arr.end(), piece) != arr.end()) {
-                    arr.erase[piece];
-                    count++;
-                    pieceCharTaken[count] == piece;
-                    cout << piece << " has been taken" << endl;
+                std::cin >> piece;
+                auto it = std::find(arr.begin(), arr.end(), piece);
+                if (it != arr.end()) {
+                    arr.erase(it);
+                    pieceCharTaken.push_back(piece);
+                    std::cout << piece << " has been taken" << std::endl;
                     i++;
                 } else {
-                    cout << "please select a piece from the given pieces, that are available";
+                    std::cout << "Please select a piece from the available ones.\n";
                     continue;
                 }
                 auto p = make_shared<Player>(name , piece, 1500);
-                group.push_back(newPlayer);
+                group.push_back(p);
                 char piece = ' ';
             }
         } 
-    } 
-    cout << "++++++++++++  GAME START  ++++++++++++" << endl;
+    }
+
+    std::cout << "++++++++++++  GAME START  ++++++++++++" << endl;
     int currIndex = 0;
     shared_ptr<Player> currActingPlayer = group[currIndex];
     int numberOfPlayer = group.size();
     auto dicee = make_shared<Dice>();
     auto b = std::make_shared<GameBoard>();
     bool hasRolled = false;
+
     while (true) {
         currActingPlayer = group[currIndex];
         if (currActingPlayer->getisBankrupt()) {
@@ -512,27 +563,28 @@ void Controller::letTheGameBegin(int argc, char *argv) {
             continue;
         }
         if (numberOfPlayer == 1) {
-            cout << "Congratulation! The winner is " << currActingPlayer->getName();
-            cout << " His Properties are " << currActingPlayer->getAssets() << endl;
+            std::cout << "Congratulation! The winner is " << currActingPlayer->getName();
+            std::cout << " His Properties are " << currActingPlayer->getAssets() << endl;
             break;
         }
         if (currActingPlayer->getIsInTimsLine()) {
-            cout << currActingPlayer->getName() << ", you are in DC Tims Line (Turn " << currActingPlayer->getTurnsInTims() + 1 << ")." << endl;
+            std::cout << currActingPlayer->getName() << ", you are in DC Tims Line (Turn " << currActingPlayer->getTurnsInTims() + 1 << ")." << endl;
             TimsLine::handleTimsTurn(currActingPlayer, dicee);
             if (!currActingPlayer->getIsInTimsLine()) { 
-                cout << "You are now free! Moving forward." << endl;
+                std::cout << "You are now free! Moving forward." << endl;
             } else {
-                cout << "You are still in DC Tims Line. Your turn is over." << endl;
+                std::cout << "You are still in DC Tims Line. Your turn is over." << endl;
             }
             currIndex = (currIndex + 1) % group.size();
             continue;
         }
-        cout << "Your turn " << currActingPlayer->getSymbol() << endl;
-        cout << "Available commands - [ROLL, NEXT, TRADE, IMPROVE, MORTGAGE, UNMORTGAGE, BANKRUPT, ASSETS, ALL, SAVE]" << endl;
-        cin >> command;
+        std::cout << "Your turn " << currActingPlayer->getSymbol() << endl;
+        std::cout << "Available commands - [ROLL, NEXT, TRADE, IMPROVE, MORTGAGE, UNMORTGAGE, BANKRUPT, ASSETS, ALL, SAVE]" << endl;
+        std::cin >> command;
+
         if (command == "roll" || command == "ROLL") {
             if (hasRolled) {
-                cout << "you have already rolled once, cant roll again"<< endl;
+                std::cout << "you have already rolled once, cant roll again"<< endl;
                 continue;
             }
             int rollValue = 0;
@@ -543,17 +595,17 @@ void Controller::letTheGameBegin(int argc, char *argv) {
                 if (testMode) {
                     std::string d1;
                     std::string d1;
-                    cin >> die1;
-                    cin >> die2;
+                    std::cin >> die1;
+                    std::cin >> die2;
                     rollValue = std::stoi(die1) + std::stoi(die2);
                     overload = true;
                 }
                 if (!overload) {
                     dicee->rollDice();
-                    cout << "Rolling your dice..." << endl;
-                    cout << dicee->getDie1() << " + ";
-                    cout << dicee->getDie2() << " = ";
-                    cout << dicee->diceSum() << "!" << endl;
+                    std::cout << "Rolling your dice..." << endl;
+                    std::cout << dicee->getDie1() << " + ";
+                    std::cout << dicee->getDie2() << " = ";
+                    std::cout << dicee->diceSum() << "!" << endl;
                 }
                 if (!dicee->isDoubles()){
                     if (!overload) {
@@ -568,7 +620,7 @@ void Controller::letTheGameBegin(int argc, char *argv) {
                     break;
                 } else {
                     if (dicee->getDoubles == 0) {
-                        cout << "you got double 3 times in a row, go to Tims Line" << endl;
+                        std::cout << "you got double 3 times in a row, go to Tims Line" << endl;
                         currActingPlayer->moveToDCTims();
                         break;
                     }
@@ -580,18 +632,18 @@ void Controller::letTheGameBegin(int argc, char *argv) {
                                   currActingPlayer->getCurrPos());
                     b->drawBoard();
                     CommandRoll(group, currActingPlayer, testMode, b);
-                    cout << "you rolled doubles! you can roll again" << endl;
+                    std::cout << "you rolled doubles! you can roll again" << endl;
                     dicee->changeDouble;
                 }
             }
         } else if (command == "next" || command == "NEXT") {
             if (!hasRolled) {
-                cout << "You must roll the dice before ending your turn!" << endl;
+                std::cout << "You must roll the dice before ending your turn!" << endl;
                 continue;
             }
             currIndex += 1;
             currIndex = currIndex % group.size();
-            cout << "turn finished, going to the next player!" << endl;
+            std::cout << "turn finished, going to the next player!" << endl;
         } else if (command == "trade" || command == "TRADE") {
             commandTrade(group, currActingPlayer);
         } else if (command == "improve" || command == "IMPROVE") {
@@ -601,7 +653,7 @@ void Controller::letTheGameBegin(int argc, char *argv) {
         } else if (command == "unmortgage" || command == "UNMORTGAGE") {
             commandUnmortgage(currActingPlayer);
         } else if (command == "bankrupt" || command == "BANKRUPT") {
-            cout << currActingPlayer->getSymbol() << " has declared bankruptcy!!!!" << endl;
+            std::cout << currActingPlayer->getSymbol() << " has declared bankruptcy!!!!" << endl;
             group.erase(group.begin() + currIndex);
             numberOfPlayer--;
             currActingPlayer->setBankrupt(true);
@@ -609,15 +661,15 @@ void Controller::letTheGameBegin(int argc, char *argv) {
             int size = prop.size();
             char piece = owner->getSymbol();
             if (numberOfPlayer == 1) {
-                cout << "Congratulations! The winner is " << group[0]->getName() << endl;
-                cout << "Their properties: " << group[0]->getAssets() << endl;
+                std::cout << "Congratulations! The winner is " << group[0]->getName() << endl;
+                std::cout << "Their properties: " << group[0]->getAssets() << endl;
                 break;
             }
             for (int i = 0; i < size; i++){
                 commandAuction(group, currActingPlayer, prop->getName());
             }
             currIndex = currIndex % group.size();
-            cout << "Moving to the next player!" << endl;
+            std::cout << "Moving to the next player!" << endl;
             b->removeplayer(currActingPlayer->getSymbol());
         } else if (command == "assets" || command == "ASSETS") {
             if (currActingPlayer->getPosition() != 4)
@@ -626,31 +678,31 @@ void Controller::letTheGameBegin(int argc, char *argv) {
             }
             else
             {
-                cout << "You can not check your assets if you are paying tuition ";
+                std::cout << "You can not check your assets if you are paying tuition ";
             }
         } else if (command == "all" || command == "ALL") {
             if (currActingPlayer->getPosition() != 4)
             {   
-                cout << "Displaying assets of every player in the game." << endl;
+                std::cout << "Displaying assets of every player in the game." << endl;
                 for (unsigned int i = 0; i < group.size(); ++i)
                 {
                     group[i]->printAsset();
-                    cout << "========================================" << endl;
+                    std::cout << "========================================" << endl;
                 }
             }
             else
             {
-                cout << "You can not check your assets if you are paying tuition ";
+                std::cout << "You can not check your assets if you are paying tuition ";
 
             }
         } else if (command == "save" || command == "SAVE") {
-            cout << "saving the game. are you sure?(y/n)" << endl;
+            std::cout << "saving the game. are you sure?(y/n)" << endl;
             char c;
-            cin >> c;
+            std::cin >> c;
             if(c == 'y') {
-                cout << "enter the name of the file you want to save in" << endl;
+                std::cout << "enter the name of the file you want to save in" << endl;
                 string file;
-                cin >> file;
+                std::cin >> file;
                 std::ofstream f{file};
                 int size = group.size();
                 f << size << endl;
@@ -690,7 +742,7 @@ void Controller::letTheGameBegin(int argc, char *argv) {
                 f << b->getImpr(OWNABLE[i][0]) << endl;
             }
         } else {
-            cout << "Command not found, Please check again" << endl;
+            std::cout << "Command not found, Please check again" << endl;
         }
     }
 }
