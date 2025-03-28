@@ -323,7 +323,6 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                 }
             }
             if (input == "buy"){
-                std::cout << "hello ji" << endl;
                 if(currActingPlayer->getCash() < cost) {
                     while (true) {
                         std::cout << "you must auction, trade, mortgage, improve one of your properties, you cant afford it, you cant continue without choosing" << endl;
@@ -429,12 +428,11 @@ void Controller::letTheGameBegin(int argc, char **argv) {
     auto b = std::make_shared<GameBoard>();
     bool testMode = false;
     vector<shared_ptr<Player>> group;
-    std::cout << argv[1];
     if (argc > 1) {
 
-        if(argv[1] == "LOAD") {
+        if(std::string(argv[1]) == "LOAD" || std::string(argv[1]) == "load") {
             std::cout << "loading a saved game " << endl;
-            std::ifstream f{argv[2]};
+            std::ifstream f{std::string(argv[2])};
 
             int num;
             f >> num;
@@ -532,56 +530,68 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                 }
                 b->drawBoard();
             }
-        } else if (argv[1] == "TEST" || argv[1] == "test"){
+        }
+        if (std::string(argv[1]) == "TEST" || std::string(argv[1]) == "test" || std::string(argv[3]) == "TEST" || std::string(argv[3]) == "test"){
             testMode = true;
             std::cout << "currently playing in test mode" << endl;
         } 
-    
-        std::cout << "Please input the number of player for this game" << endl;
-        int num;
-        int count = 0;
-        while(true) {
-            std::cin >> num;
-            if (std::cin.fail()) break;
-            if (num < 2 || num > 6) {
-                std::cout << "Please input the number between 2 - 6" << endl;
-            } else {
-                break;
+        if(std::string(argv[1]) != "LOAD" && std::string(argv[1]) != "load") {
+            std::cout << "Please input the number of player for this game" << endl;
+            int num;
+            int count = 0;
+            while(true) {
+                std::cin >> num;
+                if (std::cin.fail()) break;
+                if (num < 2 || num > 6) {
+                    std::cout << "Please input the number between 2 - 6" << endl;
+                } else {
+                    break;
+                }
             }
-        }
-        std::cout << "The number of player is " << num << endl;
-        std::vector<char> arr = {'G', 'B', 'D', 'P', 'S', '$', 'L', 'T'};
-        int i = 0;
-        char piece;
-        while (i < num) {
-            std::cout << "Player " << i + 1 << " enter your name: ";
-            string name;
-            std::cin >> name;
-            while (name == "BANK" && name == "bank") {
-                std::cout << "this name is not valid, select a different one" << endl;
+            std::cout << "The number of player is " << num << endl;
+            std::vector<char> arr = {'G', 'B', 'D', 'P', 'S', '$', 'L', 'T'};
+            int i = 0;
+            char piece;
+            while (i < num) {
+                std::cout << "Player " << i + 1 << " enter your name: ";
+                string name;
                 std::cin >> name;
+            
+                while (name == "BANK" || name == "bank") {  // Use || instead of &&
+                    std::cout << "This name is not valid, select a different one: ";
+                    std::cin >> name;
+                }
+            
+                char piece;
+                while (true) {  // Keep asking for a symbol until a valid one is chosen
+                    std::cout << "Player " << i + 1 << " enter your symbol: ";
+                    std::cout << "Please choose one from the available pieces: ";
+                    
+                    for (char ch : arr) {
+                        std::cout << ch << " ";
+                    }
+                    std::cout << std::endl;
+            
+                    std::cin >> piece;
+                    auto it = std::find(arr.begin(), arr.end(), piece);
+            
+                    if (it != arr.end()) {
+                        arr.erase(it);
+                        pieceCharTaken.push_back(piece);
+                        std::cout << piece << " has been taken" << std::endl;
+                        break;  // Exit the loop since a valid symbol was chosen
+                    } else {
+                        std::cout << "Please select a piece from the available ones.\n";
+                    }
+                }
+            
+                auto p = std::make_shared<Player>(name, piece, 1500);
+                group.push_back(p);
+                b->addPlayer(piece);
+                i++;  // Move to the next player
             }
-            std::cout << "Player " << i + 1 << " enter your symbol: " << endl;
-            std::cout << "Please choose one from the available piece char to represent yourself on board " << endl;
-            for (char ch : arr) {
-                std::cout << ch << " ";
-            }
-            piece = ' ';
-            std::cin >> piece;
-            auto it = std::find(arr.begin(), arr.end(), piece);
-            if (it != arr.end()) {
-                arr.erase(it);
-                pieceCharTaken.push_back(piece);
-                std::cout << piece << " has been taken" << std::endl;
-                i++;
-            } else {
-                std::cout << "Please select a piece from the available ones.\n";
-                continue;
-            }
-            auto p = make_shared<Player>(name , piece, 1500);
-            group.push_back(p);
-            b->addPlayer(piece);
         }
+    
     }
 
     std::cout << "++++++++++++  GAME START  ++++++++++++" << endl;
@@ -630,11 +640,12 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             while (dicee->getDoubles() > 0)
             {
                 bool overload = false;
-                cout << testMode << endl;
+                std::string d1;
+                std::string d2;
                 if (testMode) {
-                    std::string d1;
-                    std::string d2;
+                    std::cout << "Enter the first dice number" << endl;
                     std::cin >> d1;
+                    std::cout << "Enter the second dice number" << endl;
                     std::cin >> d2;
                     rollValue = std::stoi(d1) + std::stoi(d2);
                     overload = true;
@@ -646,10 +657,11 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     std::cout << dicee->getSecondDie() << " = ";
                     std::cout << dicee->getSum() << "!" << endl;
                 }
-                if (!dicee->isDoubles()){
+                if (d1 != d2){
                     if (!overload) {
                         rollValue = dicee->getSum();
                     }
+                    std::cout << "frwf";
                     hasRolled = true;
                     currActingPlayer->movePlayer(rollValue);
                     b->drawBoard();
