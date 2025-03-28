@@ -211,19 +211,21 @@ void Player::changeCash(double c) {
 
 
 void Player::updateMonopolyBlock() {
+    int size = ownedProperties.size();
     std::map<std::string, int> tracking; 
     std::string eachBlock;
 
     ownedGyms = 0;
     ownedResidence = 0;
-    for (int i = 0; i < 28; i++) {
+    for (int i = 0; i < size; i++) {
         std::string propName = ownedProperties[i]->getName();
         if (isGym(propName)){
             ownedGyms++;
         } else if (isResidence(propName)){
             ownedResidence++;
         }
-	    eachBlock = ownedProperties[i]->getMonoBlock();
+        eachBlock = ownedProperties[i]->getMonoBlock();
+	    tracking[eachBlock] += 1;
     }
 
     for (auto &block: tracking) {
@@ -343,34 +345,42 @@ bool Player::isResidence(std::string squareName){
 
 void Player::printOwnedProp() {
     int size = ownedProperties.size();
+    
     for (int i = 0; i < size; i++) {
+        if (!ownedProperties[i]) {  // Check for nullptr before accessing
+            std::cerr << "Error: Null property found at index " << i << std::endl;
+            continue;
+        }
+
         cout << ownedProperties[i]->getName() << "\t";
+
         int cost = 0;
-        for (int i = 0; i < 28; ++i) {
-            if (ownedProperties[i]->getName() == OWNABLE[i][0]) {
-                int cost;
-                std::stringstream ss(OWNABLE[i][2]);
+        for (int j = 0; j < 28; ++j) {  // Loop through OWNABLE, not ownedProperties
+            if (OWNABLE[j][0] == ownedProperties[i]->getName()) {
+                std::stringstream ss(OWNABLE[j][2]);
                 ss >> cost;
+                break;  // Stop once we find the matching property
             }
         }
-	    cout << "Cost: $" << cost << "   ";
-	    cout << "Mortgaged: " ;
-	    if (ownedProperties[i]->getMortStatus()){
-	        cout << "Yes   " << endl;
-	    } else {
-	        cout << "No   ";
+
+        cout << "Cost: $" << cost << "   ";
+        cout << "Mortgaged: ";
+        
+        if (ownedProperties[i]->getMortStatus()) {
+            cout << "Yes   " << endl;
+        } else {
+            cout << "No   ";
             if (isGym(ownedProperties[i]->getName())) {
-	            cout << "Gym   ";
+                cout << "Gym   ";
             }
             if (isResidence(ownedProperties[i]->getName())) {
-	            cout << "Residence   ";
+                cout << "Residence   ";
             }
-	        if (isAcademic(ownedProperties[i]->getName())) {
-	            cout << "Improvements: " << ownedProperties[i]->getImprLevel() << "\t";
-	        } else {
-	            cout << endl;
-	        }
-	    }
+            if (isAcademic(ownedProperties[i]->getName())) {
+                cout << "Improvements: " << ownedProperties[i]->getImprLevel() << "\t";
+            }
+            cout << endl;
+        }
     }
 }
 

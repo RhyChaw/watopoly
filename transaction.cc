@@ -247,6 +247,7 @@ bool Transactions::payBank(std::shared_ptr<Player> p1, int rent) {
 }
 
 void Transactions::buyBuilding(std::string property_name, std::shared_ptr<Player> owner) {
+
     int indexResult = 0;
     for (int i = 0; i < 40; i++) {
         if (property_name == OWNABLE[i][0]) {
@@ -266,12 +267,14 @@ void Transactions::buyBuilding(std::string property_name, std::shared_ptr<Player
         return;
     }
 
+
     std::shared_ptr<Building> build;
     if (isGym(property_name)){
         owner->changePropertyCount(0, 1, 0);
         auto production = std::make_shared<Gym>(indexResult, property_name, buycost, owner_symbol);	
         build = std::dynamic_pointer_cast<Building>(production);
     }
+
     else if (isResidence(property_name)){
         owner->changePropertyCount(1, 0, 0);
 	    auto production = std::make_shared<Residence>(indexResult, property_name, buycost, owner_symbol);
