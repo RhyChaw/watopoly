@@ -725,17 +725,6 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             std::cout << " His Properties are " << currActingPlayer->getAsset() << endl;
             break;
         }
-        if (currActingPlayer->getisInTimsLine()) {
-            std::cout << currActingPlayer->getName() << ", you are in DC Tims Line (Turn " << currActingPlayer->getTurnsInTimsLine() + 1 << ")." << endl;
-            TimsLine::handleTimsTurn(currActingPlayer, dicee);
-            if (!currActingPlayer->getisInTimsLine()) { 
-                std::cout << "You are now free! Moving forward." << endl;
-            } else {
-                std::cout << "You are still in DC Tims Line. Your turn is over." << endl;
-            }
-            currIndex = (currIndex + 1) % group.size();
-            continue; 
-        }
         std::cout << "Your turn " << currActingPlayer->getSymbol() << endl;
         std::cout << "Available commands - [ROLL, NEXT, TRADE, IMPROVE, MORTGAGE, UNMORTGAGE, BANKRUPT, ASSETS, ALL, SAVE]" << endl;
         std::cin >> command;
@@ -747,8 +736,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             }
             int rollValue = 0;
 
-            while (dicee->getDoubles() > 0)
-            {
+            while (!currActingPlayer->getisInTimsLine() && (currActingPlayer->getadd_roll_for_jail() != 0)) {
                 bool overload = false;
                 std::string d1;
                 std::string d2;
@@ -780,11 +768,6 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     CommandRoll(group, currActingPlayer, testMode, b);
                     break;
                 } else {
-                    if (dicee->getDoubles() == 0) {
-                        std::cout << "you got double 3 times in a row, go to Tims Line" << endl;
-                        currActingPlayer->moveToDCTims();
-                        break;
-                    }
                     if (!overload) {
                         rollValue = dicee->getSum();
                     }
@@ -794,8 +777,29 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     currActingPlayer->getPosition());
                     b->update();
                     CommandRoll(group, currActingPlayer, testMode, b);
-                    std::cout << "you rolled doubles! you can roll again" << endl;
-                    dicee->changeDouble();
+                    std::cout << currActingPlayer->getadd_roll_for_jail() <<endl;
+                    if (!currActingPlayer->getisInTimsLine()) {
+                        std::cout << "you rolled doubles! you can roll again" << endl;
+                        currActingPlayer->add_roll_for_jail();
+                    }
+                }
+            }
+            if (currActingPlayer->getadd_roll_for_jail() == 0) {
+                currActingPlayer->setIsInTimsLine(true);
+                std::cout << "you got double 3 times in a row, go to Tims Line" << endl;
+                currActingPlayer->moveToDCTims();
+                currActingPlayer->setPos(10);
+                b->movePlayer(currActingPlayer->getSymbol(),currActingPlayer->getPosition());
+                b->update();
+                std::cout << currActingPlayer->getName() << ", you are in DC Tims Line (Turn " << currActingPlayer->getTurnsInTimsLine() << ")." << endl;
+                TimsLine::handleTimsTurn(currActingPlayer, dicee);
+                if (!currActingPlayer->getisInTimsLine()) { 
+                    std::cout << "You are now free! Moving forward." << endl;
+                }
+                else {
+                    std::cout << "You are still in DC Tims Line. Your turn is over." << endl;
+                    currIndex = (currIndex + 1) % group.size();
+                    continue; 
                 }
             }
         } else if (command == "next" || command == "NEXT") {

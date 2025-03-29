@@ -157,7 +157,7 @@ void Player::setTurnsInTimsLine(int turns) {
 }
 
 void Player::changeTurnsInTimsLine() {
-    turnsInTimsLine++;
+    turnsInTimsLine--;
 }
 
 void Player::setRollForJail(int n) {
@@ -168,7 +168,7 @@ void Player::useCups() {
     cups--;
 }
 
-void Player::resetTurnsInTims() { turnsInTimsLine = 0; }
+void Player::resetTurnsInTims() { turnsInTimsLine = 3; }
 
 bool Player::checkIfInMonopolyBlock(std::string name) {
     std::string monoBlockOfSquare = monoBlockOfProp(name);
@@ -468,7 +468,7 @@ void Player::removeCup() {
 }
 
 void Player::add_roll_for_jail() {
-    ++roll_for_jail;
+    --roll_for_jail;
 }
 
 std::string Player::monoBlockOfProp(std::string name) {

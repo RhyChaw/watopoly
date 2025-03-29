@@ -16,7 +16,7 @@ void TimsLine::sendToJail(std::shared_ptr<Player> p) {
 void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> dice) {
     if (!p->getisInTimsLine()) return; 
 
-    cout << p->getName() << ", you are in DC Tims Line (Turn " << p->getTurnsInTimsLine() + 1 << ")." << endl;
+    cout << "you will roll again, to get out you have to roll doubles"<< endl;
     dice->roll();
     int roll1 = dice->getFirstDie();
     int roll2 = dice->getSecondDie();
@@ -28,6 +28,8 @@ void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> d
         cout << "You rolled doubles! You are free to move " << rollSum << " spaces." << endl;
         p->setIsInTimsLine(false);
         p->resetTurnsInTims();
+        p->setRollForJail(3);
+        p->movePlayer(rollSum);
         return;
     }
 
@@ -63,6 +65,7 @@ void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> d
             cout << "You paid $50 and are free to move" << endl;
             p->setIsInTimsLine(false);
             p->resetTurnsInTims();
+            p->setRollForJail(3);
 
         } else {
             cout << "You don't have enough money to pay. You must stay in jail. try to sell something in your next turn" << endl;
@@ -73,12 +76,14 @@ void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> d
             cout << "You used a Roll Up the Rim cup and are free to move " << endl;
             p->setIsInTimsLine(false);
             p->resetTurnsInTims();
+            p->setRollForJail(3);
         } else {
             cout << "You have no Rim cups. You must stay in jail." << endl;
         }
     } else { // Stay in jail
         cout << "You chose to stay in jail. Try again next turn." << endl;
     }
+
 }
 
 int TimsLine::turns(std::shared_ptr<Player> p) {
