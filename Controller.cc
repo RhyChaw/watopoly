@@ -730,7 +730,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                 std::cout << "You are still in DC Tims Line. Your turn is over." << endl;
             }
             currIndex = (currIndex + 1) % group.size();
-            continue;
+            continue; 
         }
         std::cout << "Your turn " << currActingPlayer->getSymbol() << endl;
         std::cout << "Available commands - [ROLL, NEXT, TRADE, IMPROVE, MORTGAGE, UNMORTGAGE, BANKRUPT, ASSETS, ALL, SAVE]" << endl;
