@@ -125,7 +125,9 @@ void Player::setCups(int n) {
 
 void Player::setPos(int pos) { 
     if (pos < 0) {
-        pos = position - pos + 40;
+        pos = (pos + 40) % 40;  // Ensure it wraps around correctly
+    } else {
+        pos = pos % 40;  // Ensure valid board position
     }
     position = pos; 
 }

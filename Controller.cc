@@ -767,7 +767,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     std::cout << dicee->getSecondDie() << " = ";
                     std::cout << dicee->getSum() << "!" << endl;
                 }
-                if (d1 != d2){
+                if ((dicee->getFirstDie() != dicee->getSecondDie()) || (d1 != d2)){
                     if (!overload) {
                         rollValue = dicee->getSum();
                     }
@@ -776,7 +776,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     b->drawBoard();
                     b->movePlayer(currActingPlayer->getSymbol(),
                     currActingPlayer->getPosition());
-                    b->drawBoard();
+                    b->update();
                     CommandRoll(group, currActingPlayer, testMode, b);
                     break;
                 } else {
