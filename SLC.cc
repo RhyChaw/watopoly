@@ -65,6 +65,7 @@ void SLC::moveeee(std::shared_ptr<Player> p) {
 	    }
 	    p->setPos((p->getPosition() + change)); 
 	}
+	
 	return;
 }
 

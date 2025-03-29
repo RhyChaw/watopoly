@@ -396,7 +396,7 @@ bool Transactions::buyImprovement(std::shared_ptr<Building> property_name, std::
         return false;
     }
     auto acad = std::dynamic_pointer_cast<Academic>(property_name);
-    if (!acad->getOwned()){
+    if (!owner->checkIfInMonopolyBlock(property_name->getName())){
 	    std::cout << "You can't improve this academic building because you don't have a monopoly!" << std::endl;
         return false;
     }
