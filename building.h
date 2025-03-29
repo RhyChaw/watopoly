@@ -8,9 +8,9 @@ class Building : public Cell {
     char owner;
     int price;
     bool mortgageStatus = false;
-    int imprLevel = 0;
-    int GymLevel = 0;  // number of gyms owned by a player
-    int ResLevel = 0; // number of res owned by a player
+    int imprLevel;
+    int GymLevel;  // number of gyms owned by a player
+    int ResLevel; // number of res owned by a player
     std::string monopolyBlock;
 
   public:
