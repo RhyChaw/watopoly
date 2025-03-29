@@ -378,57 +378,59 @@ void Transactions::sellBuilding(std::string property_name, std::shared_ptr<Playe
     std::cout << "The transaction is completed!" << std::endl;
 }
 
-void Transactions::buyImprovement(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner) {
+bool Transactions::buyImprovement(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner) {
     if (!(owner->ownThisProp(property_name->getName()))) {
         std::cout << "The player " << owner->getName() << " doesn't own this property" << std::endl;
-        return ;
+        return false;
     }
     int cost = getPropertyCost(property_name->getName());
     if(!checkFund(owner, cost)) {
-        return ;
+        return false;
     }
     if (isGym(property_name->getName())){
         std::cout << "You can't improve a gym!" << std::endl;
-        return ;
+        return false;
     }
     if (isResidence(property_name->getName())){
         std::cout << "You can't improve a Residence!" << std::endl;
-        return ;
+        return false;
     }
     auto acad = std::dynamic_pointer_cast<Academic>(property_name);
     if (!acad->getOwned()){
 	    std::cout << "You can't improve this academic building because you don't have a monopoly!" << std::endl;
-        return ;
+        return false;
     }
     if (acad->getImprLevel() >= 5) {
         std::cout << "you cant do anymore imroves max limit reached" << std::endl;
-        return ;
+        return false;
     }
     owner->pay(cost);
     property_name->setImprLevel(property_name->getImprLevel() + 1);
     std::cout << "The transaction is completed!" << std::endl;
+    return true;
 }
 
-void Transactions::sellImprovement(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner) {
+bool Transactions::sellImprovement(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner) {
     if (property_name->getName() == "PAC" || property_name->getName() == "CIF" || 
         property_name->getName() == "MKV" || property_name->getName() == "UWP" || 
         property_name->getName() == "V1" || property_name->getName() == "REV") {
         std::cout << "this is not a academic building" << std::endl;
-        return;
+        return false;
     } 
 
     if (!(owner->ownThisProp(property_name->getName()))) {
         std::cout << "The player " << owner->getName() << " doesn't own this property" << std::endl;
-        return;
+        return false;
     }
     if (property_name->getImprLevel() <= 0) {
         std::cout << "there is no improvement to sell" << std::endl;
-        return;
+        return false;
     }
     int cost = getPropertyCost(property_name->getName());
     owner->changeCash(cost * 0.5);
     property_name->setImprLevel(property_name->getImprLevel() - 1);
     std::cout << "The transaction is completed!" << std::endl;
+    return true;
 }
 
 void Transactions::mortgage(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner) {

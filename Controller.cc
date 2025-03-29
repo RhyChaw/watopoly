@@ -170,36 +170,38 @@ void Controller::commandAuction(std::vector<std::shared_ptr<Player>> group, std:
 
 void Controller::commandImprove(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, std::shared_ptr<GameBoard> b) {
     string prop, action;
-            std::cout << currActingPlayer->getSymbol() << " please choose a property to improve" << endl;
-            int size = currActingPlayer->getOwnedPropList().size();
-            for (int i = 0; i < size; i++) {
-                std::cout << currActingPlayer->getOwnedPropList()[i]->getName() << endl; 
-            }
-            std::cin >> prop;
+    std::cout << currActingPlayer->getSymbol() << " please choose a property to improve" << endl;
+    int size = currActingPlayer->getOwnedPropList().size();
+    for (int i = 0; i < size; i++) {
+        std::cout << currActingPlayer->getOwnedPropList()[i]->getName() << endl; 
+    }
+    std::cin >> prop;
 
-            std::cout << "do you wanna BUY/SELL?" << endl;
+    std::cout << "do you wanna BUY/SELL?" << endl;
 
-            std::cin >> action;
+    std::cin >> action;
 
-            while (true) {
-                if (action == "buy" || action == "sell" || std::cin.fail()) break;
-                std::cout << "command not recognized" << endl;
-                std::cout << "please select buy or sell" << endl;
-                std::cin >> action;
-            }
-            shared_ptr<Building> p;
-            p = Transactions::listProp(prop);
-            if (action == "buy") {
-                Transactions::buyImprovement(p, currActingPlayer);
-                b->addImpr(p->getName());
-                b->drawBoard();
-            }
-            else if (action == "sell") {
-                Transactions::sellImprovement(p, currActingPlayer);
-                b->removeImpr(p->getName());
-                b->drawBoard();
+    while (true) {
+        if (action == "buy" || action == "sell" || std::cin.fail()) break;
+        std::cout << "command not recognized" << endl;
+        std::cout << "please select buy or sell" << endl;
+        std::cin >> action;
+    }
+    shared_ptr<Building> p;
+    p = Transactions::listProp(prop);
+    if (action == "buy") {
+        if (Transactions::buyImprovement(p, currActingPlayer)) {
+            b->addImpr(p->getName());
+            b->drawBoard();
+        }
+    }
+    else if (action == "sell") {
+        if(Transactions::sellImprovement(p, currActingPlayer)) {
+            b->removeImpr(p->getName());
+            b->drawBoard();
+        }
 
-            }
+    }
 }
 
 void Controller::commandMortgage(std::shared_ptr<Player> currActingPlayer) {
