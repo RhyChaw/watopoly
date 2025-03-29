@@ -90,7 +90,7 @@ WatopolyDisplay::WatopolyDisplay() {
     int screen = DefaultScreen(display);
     window = XCreateSimpleWindow(display, RootWindow(display, screen),
                                 100, 100, WIN_WIDTH, WIN_HEIGHT, 1,
-                                BlackPixel(display, screen), WhitePixel(display, screen));
+                                WhitePixel(display, screen), BlackPixel(display, screen)); // Swapped colors
     XSelectInput(display, window, ExposureMask);
     XMapWindow(display, window);
 
@@ -130,7 +130,8 @@ WatopolyDisplay::WatopolyDisplay() {
 
     gc = XCreateGC(display, window, 0, NULL);
     XSetFont(display, gc, font);
-    XSetForeground(display, gc, BlackPixel(display, screen));
+    XSetForeground(display, gc, WhitePixel(display, screen)); // Set default text to white
+    XSetBackground(display, gc, BlackPixel(display, screen)); // Set background to black
 }
 
 WatopolyDisplay::~WatopolyDisplay() {
@@ -194,7 +195,7 @@ void WatopolyDisplay::setImprovements(int position, int count) {
 void WatopolyDisplay::drawPlayers() {
     std::map<int, int> position_counts; // Tracks how many players are at each position
     
-    XSetForeground(display, gc, BlackPixel(display, DefaultScreen(display)));
+    XSetForeground(display, gc, WhitePixel(display, DefaultScreen(display)));
     
     for (const auto &player : players) {
         if (player.second < 0 || player.second >= 40) continue;
@@ -217,7 +218,7 @@ void WatopolyDisplay::drawPlayers() {
 }
 
 void WatopolyDisplay::drawImprovements() {
-    XSetForeground(display, gc, BlackPixel(display, DefaultScreen(display)));
+    XSetForeground(display, gc, WhitePixel(display, DefaultScreen(display)));
     
     for (const auto &imp : improvements) {
         int position = imp.first;
@@ -272,7 +273,7 @@ void WatopolyDisplay::drawBoard() {
     XClearWindow(display, window);
     
     // Set text color
-    XSetForeground(display, gc, BlackPixel(display, DefaultScreen(display)));
+    XSetForeground(display, gc, WhitePixel(display, DefaultScreen(display)));
     
     // Draw board ASCII art
     for (int i = 0; i < sizeof(board)/sizeof(board[0]); i++) {

@@ -394,8 +394,10 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
         if (sq == "SLC"){
             std::cout << "You are at SLC" << endl;
             SLC::moveeee(currActingPlayer);
+            
             b->movePlayer(currActingPlayer->getSymbol(), currActingPlayer->getPosition());
             b->drawBoard();
+            CommandRoll(group, currActingPlayer, testMode, b);
         } 
         else if (sq == "DC Tims Line"){
             std::cout << "you are at DC Tim Line" << endl;
