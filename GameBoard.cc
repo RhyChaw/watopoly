@@ -53,19 +53,25 @@ void GameBoard::update() {
 }
 
 void GameBoard::addPlayer(char symbol) {
-    playerPositions[symbol] = 0; // Start at GO
+    playerPositions[symbol] = 0;
+    totalSteps[symbol] = 0; // Initialize step counter
     display->addPlayer(symbol, 0);
 }
-
 void GameBoard::removePlayer(char symbol) {
     playerPositions.erase(symbol);
     display->removePlayer(symbol);
 }
 
-void GameBoard::movePlayer(char symbol, int steps) {
+int GameBoard::getTotalSteps(char symbol) const {
+    auto it = totalSteps.find(symbol);
+    return (it != totalSteps.end()) ? it->second : -1;
+}
+
+void GameBoard::movePlayer(char symbol, int absolutePosition) {
     if (playerPositions.find(symbol) != playerPositions.end()) {
-        playerPositions[symbol] = (playerPositions[symbol] + steps) % 40;
-        display->movePlayer(symbol, playerPositions[symbol]);
+        // Directly set absolute position (0-39)
+        playerPositions[symbol] = absolutePosition % 40; // Safety wrap-around
+        display->movePlayer(symbol, absolutePosition % 40);
     }
 }
 
@@ -76,6 +82,7 @@ int GameBoard::getPlayerPosition(char symbol) const {
 
 void GameBoard::addImpr(const std::string& square, int count) {
     // Validate input count
+    if (count == 0) return;
     if (count < 1) count = 1;          // Minimum 1 improvement
     else if (count > 5) count = 5;     // Maximum 5 improvements
     
