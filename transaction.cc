@@ -138,7 +138,6 @@ void Transactions::trade1(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2
         std::cout << "The player " << p1->getName() << " doesn't own this property" << std::endl;
         return;
     }
-   
     if (building1->getImprLevel() != 0) {
         std::cout << "there are improvments on this property." << std::endl;
         return;
@@ -309,6 +308,10 @@ void Transactions::buyBuilding(std::string property_name, std::shared_ptr<Player
     std::cout << "The transaction is completed!" << std::endl;
 }
 
+void Transactions::setowned(std::shared_ptr<Building> build) {
+    ownedProperties.push_back(build);
+}
+
 void Transactions::sellBuilding(std::string property_name, std::shared_ptr<Player> owner) {
     int indexResult = 0;
     for (int i = 0; i < 40; i++) {
@@ -375,36 +378,35 @@ void Transactions::sellBuilding(std::string property_name, std::shared_ptr<Playe
     std::cout << "The transaction is completed!" << std::endl;
 }
 
-bool Transactions::buyImprovement(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner) {
+void Transactions::buyImprovement(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner) {
     if (!(owner->ownThisProp(property_name->getName()))) {
         std::cout << "The player " << owner->getName() << " doesn't own this property" << std::endl;
-        return false;
+        return ;
     }
     int cost = getPropertyCost(property_name->getName());
     if(!checkFund(owner, cost)) {
-        return false;
+        return ;
     }
     if (isGym(property_name->getName())){
         std::cout << "You can't improve a gym!" << std::endl;
-        return false;
+        return ;
     }
     if (isResidence(property_name->getName())){
         std::cout << "You can't improve a Residence!" << std::endl;
-        return false;
+        return ;
     }
     auto acad = std::dynamic_pointer_cast<Academic>(property_name);
     if (!acad->getOwned()){
 	    std::cout << "You can't improve this academic building because you don't have a monopoly!" << std::endl;
-        return false;
+        return ;
     }
     if (acad->getImprLevel() >= 5) {
         std::cout << "you cant do anymore imroves max limit reached" << std::endl;
-        return false;
+        return ;
     }
     owner->pay(cost);
     property_name->setImprLevel(property_name->getImprLevel() + 1);
     std::cout << "The transaction is completed!" << std::endl;
-    return true;
 }
 
 void Transactions::sellImprovement(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner) {

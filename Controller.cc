@@ -57,12 +57,10 @@ void Controller::commandTrade(std::vector<std::shared_ptr<Player>> group, std::s
 
     std::cout << std::endl;
     std::cin >> wantStr;
-    std::cout << "frf";
 
 
     bool b1 = false;
     bool b2 = false;
-    std::cout << "frf";
 
 
     for (int i = 0; i < 28; i++) {
@@ -73,13 +71,9 @@ void Controller::commandTrade(std::vector<std::shared_ptr<Player>> group, std::s
             b2 = true;
         }
     }
-    std::cout << "frf";
 
     if (b1 && b2) {
-        std::cout << "frf";
         Transactions::trade1(currActingPlayer, p, Transactions::listProp(offerStr), Transactions::listProp(wantStr));
-        std::cout << "frf";
-
     } 
     else if (b1) {
         std::shared_ptr<Building> offerProp = Transactions::listProp(offerStr);
@@ -196,10 +190,9 @@ void Controller::commandImprove(std::vector<std::shared_ptr<Player>> group, std:
             shared_ptr<Building> p;
             p = Transactions::listProp(prop);
             if (action == "buy") {
-                if(Transactions::buyImprovement(p, currActingPlayer)) {
-                    b->addImpr(p->getName());
-                    b->drawBoard();
-                }
+                Transactions::buyImprovement(p, currActingPlayer);
+                b->addImpr(p->getName());
+                b->drawBoard();
             }
             else if (action == "sell") {
                 Transactions::sellImprovement(p, currActingPlayer);
@@ -560,10 +553,11 @@ void Controller::letTheGameBegin(int argc, char **argv) {
 
                     // Add the property to the player's assets and update the building status
                     group[playerIndex]->addProp(build);
+                    Transactions::setowned(build);
                     if (imp == -1) {
                         build->setMortStatus(true);
                     } else {
-                        build->setImprLevel(imp + 1); 
+                        build->setImprLevel(imp); 
                     }
                     b->addImpr(property_name, imp);
                 }
@@ -650,6 +644,61 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             }
         }
     
+    } else {
+        std::cout << "Please input the number of player for this game" << endl;
+        int num;
+        int count = 0;
+        while(true) {
+            std::cin >> num;
+            if (std::cin.fail()) break;
+            if (num < 2 || num > 6) {
+                std::cout << "Please input the number between 2 - 6" << endl;
+            } else {
+                break;
+            }
+        }
+        std::cout << "The number of player is " << num << endl;
+        std::vector<char> arr = {'G', 'B', 'D', 'P', 'S', '$', 'L', 'T'};
+        int i = 0;
+        char piece;
+        while (i < num) {
+            std::cout << "Player " << i + 1 << " enter your name: ";
+            string name;
+            std::cin >> name;
+        
+            while (name == "BANK" || name == "bank") {  // Use || instead of &&
+                std::cout << "This name is not valid, select a different one: ";
+                std::cin >> name;
+            }
+        
+            char piece;
+            while (true) {  // Keep asking for a symbol until a valid one is chosen
+                std::cout << "Player " << i + 1 << " enter your symbol: ";
+                std::cout << "Please choose one from the available pieces: ";
+                
+                for (char ch : arr) {
+                    std::cout << ch << " ";
+                }
+                std::cout << std::endl;
+        
+                std::cin >> piece;
+                auto it = std::find(arr.begin(), arr.end(), piece);
+        
+                if (it != arr.end()) {
+                    arr.erase(it);
+                    pieceCharTaken.push_back(piece);
+                    std::cout << piece << " has been taken" << std::endl;
+                    break;  // Exit the loop since a valid symbol was chosen
+                } else {
+                    std::cout << "Please select a piece from the available ones.\n";
+                }
+            }
+        
+            auto p = std::make_shared<Player>(name, piece, 1500);
+            group.push_back(p);
+            b->addPlayer(piece);
+            i++;  // Move to the next player
+        }
     }
 
     std::cout << "++++++++++++  GAME START  ++++++++++++" << endl;
@@ -690,7 +739,6 @@ void Controller::letTheGameBegin(int argc, char **argv) {
         if (command == "roll" || command == "ROLL") {
             if (hasRolled) {
                 std::cout << "you have already rolled once, cant roll again"<< endl;
-                hasRolled = false;
                 continue;
             }
             int rollValue = 0;

@@ -39,12 +39,14 @@ class Transactions{
     static bool payBank(std::shared_ptr<Player> p1, int rent);
     static void buyBuilding(std::string property_name, std::shared_ptr<Player> owner);
     static void sellBuilding(std::string property_name, std::shared_ptr<Player> owner);
-    static bool buyImprovement(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner);
+    static void buyImprovement(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner);
     static void sellImprovement(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner);
     static void mortgage(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner);
     static void unmortgage(std::shared_ptr<Building> property_name, std::shared_ptr<Player> owner);
     static std::shared_ptr<Building> listProp(std::string property_name);
     static void addPropByAuction(std::string build, std::shared_ptr<Player> p, int amount);
+    static void setowned(std::shared_ptr<Building> build);
+    
 
 };
 
