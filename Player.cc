@@ -82,10 +82,26 @@ void Player::setGymsOwned() {
     ownedGyms = count;
 }
 
+void Player::setResOwned() {
+    int count = 0;
+    for (const auto& prop : ownedProperties) {
+        if (isResidence(prop->getName())) count++;
+    }
+    ownedResidence = count;
+}
+
 int Player::countGymsOwned() {
     int count = 0;
     for (const auto& prop : ownedProperties) {
         if (isGym(prop->getName())) count++;
+    }
+    return count;
+}
+
+int Player::countResOwned() {
+    int count = 0;
+    for (const auto& prop : ownedProperties) {
+        if (isResidence(prop->getName())) count++;
     }
     return count;
 }

@@ -77,6 +77,8 @@ public:
     void printAsset();
     void printOwnedProp();
 void setGymsOwned();
+void setResOwned();
+int countResOwned();
 
 
     //getters
