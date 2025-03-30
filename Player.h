@@ -42,8 +42,8 @@ private:
     int index = 0; // Index on the board [0-39]
     double assets = 0; // Player's total assets
     bool isInTimsLine = false; // If player is in Tims Line
-    int turnsInTimsLine = 0; // Number of turns player must wait in Tims Line
-    int roll_for_jail = 0; //you jut added this, its used in timeline
+    int turnsInTimsLine = 3; // Number of turns player must wait in Tims Line
+    int roll_for_jail = 3; //you jut added this, its used in timeline
 
 public:
     //big five
@@ -56,8 +56,10 @@ public:
     ~Player();
 
     //basic functions
+
     bool isResidence(std::string squareName);
     bool isGym(std::string squareName);
+    int countGymsOwned() ;
     bool isAcademic(std::string squareName);
     bool checkIfInMonopolyBlock(std::string name) ;
     bool ownThisProp(std::string name);
@@ -74,6 +76,8 @@ public:
     void loadUpdateAmountToPay();
     void printAsset();
     void printOwnedProp();
+void setGymsOwned();
+
 
     //getters
     char getSymbol() const;

@@ -61,6 +61,7 @@ bool Academic::getOwned() const {
 
 int Academic::amountToPay() {
     if (owned) {
+        std::cout <<"since monopoly have to pay double" <<endl;
         return 2 * costTogen(this->getName());
     }
     return costToimp(this->getName(), this->getImprLevel());

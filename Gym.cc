@@ -31,7 +31,12 @@ int Gym::costToimp(std::string squareName, int imprLevel) {
 }
 
 int Gym::amountToPay() {
-    return this->getRoll() * costToimp(this->getName(), this->getGymLevel());
+    
+    cout << this->getGymLevel() << endl;
+    if (this->getGymLevel() == 1) {
+        return this->getRoll() * 4;
+    }
+    return this->getRoll() * 10;
 }
 
 
