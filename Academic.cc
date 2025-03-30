@@ -64,6 +64,5 @@ int Academic::amountToPay() {
         std::cout <<"since monopoly have to pay double" <<endl;
         return 2 * costTogen(this->getName());
     }
-    cout << this->getImprLevel() << "impr" << endl;
     return costToimp(this->getName(), this->getImprLevel());
 }

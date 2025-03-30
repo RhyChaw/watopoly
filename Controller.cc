@@ -349,7 +349,7 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                 }
                 if (isAcademic(prop->getName())) {
                     rent = prop->amountToPay();
-                    cout<<rent <<"rent"<<endl;
+                    cout << "Rent for " << prop->getName() << ": $" << rent << endl;
                 }
                 // cout << prop->getGymLevel() << endl;
                 // int rent = prop->amountToPay();
@@ -780,6 +780,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             std::cout << " His Properties are " << currActingPlayer->getAsset() << endl;
             break;
         }
+        b->printBoard();
         std::cout << "Your turn " << currActingPlayer->getSymbol() << endl;
         std::cout << "Available commands - [ROLL, NEXT, TRADE, IMPROVE, MORTGAGE, UNMORTGAGE, BANKRUPT, ASSETS, ALL, SAVE]" << endl;
         std::cin >> command;
