@@ -349,7 +349,7 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                 }
                 if (isAcademic(prop->getName())) {
                     rent = prop->amountToPay();
-                    cout<<rent <<"rent"<<endl;
+                    cout << "Rent for " << prop->getName() << ": $" << rent << endl;
                 }
                 // cout << prop->getGymLevel() << endl;
                 // int rent = prop->amountToPay();
