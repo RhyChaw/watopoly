@@ -74,6 +74,22 @@ int Player::getIndex() const {
     return index; 
 }
 
+void Player::setGymsOwned() {
+    int count = 0;
+    for (const auto& prop : ownedProperties) {
+        if (isGym(prop->getName())) count++;
+    }
+    ownedGyms = count;
+}
+
+int Player::countGymsOwned() {
+    int count = 0;
+    for (const auto& prop : ownedProperties) {
+        if (isGym(prop->getName())) count++;
+    }
+    return count;
+}
+
 double Player::getAsset() const { 
     int result = cash;
     int size = ownedProperties.size();

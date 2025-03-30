@@ -56,8 +56,10 @@ public:
     ~Player();
 
     //basic functions
+
     bool isResidence(std::string squareName);
     bool isGym(std::string squareName);
+    int countGymsOwned() ;
     bool isAcademic(std::string squareName);
     bool checkIfInMonopolyBlock(std::string name) ;
     bool ownThisProp(std::string name);
@@ -74,6 +76,8 @@ public:
     void loadUpdateAmountToPay();
     void printAsset();
     void printOwnedProp();
+void setGymsOwned();
+
 
     //getters
     char getSymbol() const;
