@@ -294,11 +294,14 @@ void Transactions::buyBuilding(std::string property_name, std::shared_ptr<Player
     owner->updateMonopolyBlock();
     ownedProperties.push_back(build);
     owner->pay(buycost);
+    owner->setGymsOwned();
+    owner->setResOwned();
+
 
     if (isGym(property_name)){
-	    build->setGymLevel(owner->getOwnedGyms() - 1);
+	    build->setGymLevel(owner->getOwnedGyms());
     } else if (isResidence(property_name)){
-	    build->setResLevel(owner->getOwnedResidences() - 1);
+	    build->setResLevel(owner->getOwnedResidences());
     } else if (isAcademic(property_name)){
         if (owner->checkIfInMonopolyBlock(property_name)){
 	        auto acad = std::dynamic_pointer_cast<Academic>(build);
