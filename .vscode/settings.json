@@ -52,6 +52,7 @@
         "d2": "cpp",
         "fstream": "cpp",
         "cstring": "cpp",
-        "ctime": "cpp"
+        "ctime": "cpp",
+        "list": "cpp"
     }
 }

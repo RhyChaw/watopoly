@@ -1,30 +1,19 @@
 #ifndef BOT_H
 #define BOT_H
 
+#include "Player.h"
+#include <cstdlib>
+#include <memory>
 #include <vector>
 
-// Forward declare the Game class or any other class representing the game state
-class Game;
-
-class Bot {
+class Bot : public Player {
 public:
-    Bot();
-    
-    // Function to decide the next move
-    int makeMove(Game &game);
-
-    // Optionally add a strategy method to decide moves (for future extensions)
-    int strategicMove(Game &game);
-
-private:
-    // Function to evaluate the best move (for example, using minimax or another algorithm)
-    int evaluateBestMove(Game &game);
-    
-    // Any other helper functions needed for decision-making (e.g., checking available moves)
-    std::vector<int> availableMoves(Game &game);
-    
-    // Optionally, add any bot attributes (e.g., strategy level, randomness factor)
-    int randomnessLevel;
+    // Constructor
+    Bot(std::string name, char symbol, int cash) : Player(name, symbol, cash) {}
 };
 
-#endif // BOT_H
+// Declare helper functions outside the class
+bool checkSelfValid(Bot *b);
+void buyBot(Bot *b);
+
+#endif  // BOTS_H
