@@ -281,6 +281,8 @@ void Player::updateMonopolyBlock() {
         } else if (block.second == 3) {
             cout << "You got a monopoly of " << block.first <<endl;
             monopolyBlocks.push_back(block.first);
+        } else if (block.second == 3) {
+            monopolyBlocks.push_back(block.first);
         }
     }
 }

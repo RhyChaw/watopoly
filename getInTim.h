@@ -12,7 +12,7 @@ class Player;
 class GetInTim: public nonbuilding {
     public:
         GetInTim(int ID, std::string name);   
-        void goToJail(std::shared_ptr<Player> p);
+        static void goToJail(std::shared_ptr<Player> currActingPlayer);
         ~GetInTim();
 };
 

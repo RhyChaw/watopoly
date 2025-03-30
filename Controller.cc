@@ -441,7 +441,6 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
         if (sq == "SLC"){
             std::cout << "You are at SLC" << endl;
             SLC::moveeee(currActingPlayer);
-            
             b->movePlayer(currActingPlayer->getSymbol(), currActingPlayer->getPosition());
             b->drawBoard();
             CommandRoll(group, currActingPlayer, testMode, b);
@@ -450,14 +449,9 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
             std::cout << "you are at DC Tim Line" << endl;
         } 
         else if (sq == "GO TO TIMS") {
-            std::cout << "Go to TIMS" << endl;
-            currActingPlayer->moveToDCTims();	
-            std::cout << currActingPlayer->getName() << " is being sent to DC Tims Line!" << endl;
-            currActingPlayer->setPos(10);
-            currActingPlayer->setIsInTimsLine(true);
-            currActingPlayer->resetTurnsInTims();
+            GetInTim::goToJail(currActingPlayer);
             b->movePlayer(currActingPlayer->getSymbol(), 10);
-            b->drawBoard();
+            b->update();
         } else if (sq == "NEEDLES HALL") {
             std::cout << "You are at Needles Hall." << endl;
             NeedlesHall::moveeee(currActingPlayer);
@@ -878,6 +872,24 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                 std::cout << "you have already rolled once, cant roll again"<< endl;
                 continue;
             }
+            cout << currActingPlayer->getadd_roll_for_jail() << endl;
+            if (currActingPlayer->getadd_roll_for_jail() == 0) {
+                currActingPlayer->setIsInTimsLine(true);
+                currActingPlayer->moveToDCTims();
+                currActingPlayer->setPos(10);
+                b->movePlayer(currActingPlayer->getSymbol(),currActingPlayer->getPosition());
+                b->update();
+                std::cout << currActingPlayer->getName() << ", you are in DC Tims Line (Turn " << currActingPlayer->getTurnsInTimsLine() << ")." << endl;
+                TimsLine::handleTimsTurn(currActingPlayer, dicee, b);
+                if (currActingPlayer->getisInTimsLine()) {  // there was a not before....
+                    std::cout << "You are now free! Moving forward." << endl;
+                } else {
+                    std::cout << "You are still in DC Tims Line. Your turn is over." << endl;
+                    currIndex = (currIndex + 1) % group.size();
+                    hasRolled = false;
+                    continue; 
+                }
+            }
             int rollValue = 0;
 
             while (!currActingPlayer->getisInTimsLine() && (currActingPlayer->getadd_roll_for_jail() != 0)) {
@@ -946,30 +958,14 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     }
                 }
             }
-            if (currActingPlayer->getadd_roll_for_jail() == 0) {
-                currActingPlayer->setIsInTimsLine(true);
-                std::cout << "you got double 3 times in a row, go to Tims Line" << endl;
-                currActingPlayer->moveToDCTims();
-                currActingPlayer->setPos(10);
-                b->movePlayer(currActingPlayer->getSymbol(),currActingPlayer->getPosition());
-                b->update();
-                std::cout << currActingPlayer->getName() << ", you are in DC Tims Line (Turn " << currActingPlayer->getTurnsInTimsLine() << ")." << endl;
-                TimsLine::handleTimsTurn(currActingPlayer, dicee);
-                if (currActingPlayer->getisInTimsLine()) {  // there was a not before....
-                    std::cout << "You are now free! Moving forward." << endl;
-                } else {
-                    std::cout << "You are still in DC Tims Line. Your turn is over." << endl;
-                    currIndex = (currIndex + 1) % group.size();
-                    hasRolled = false;
-                    continue; 
-                }
-            }
         } else if (command == "next" || command == "NEXT") {
             if (!hasRolled) {
                 std::cout << "You must roll the dice before ending your turn!" << endl;
                 continue;
             }
-            currActingPlayer->setRollForJail(3);
+            if (!currActingPlayer->getisInTimsLine())  {
+                currActingPlayer->setRollForJail(3);
+            }
             currIndex += 1;
             currIndex = currIndex % group.size();
             std::cout << "turn finished, going to the next player!" << endl << endl;
@@ -1080,6 +1076,6 @@ void Controller::letTheGameBegin(int argc, char **argv) {
         } else {
             std::cout << "Command not found, Please check again" << endl;
         }
-        b->printBoard();
+        // b->printBoard();
     }
 }
