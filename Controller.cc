@@ -780,6 +780,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             std::cout << " His Properties are " << currActingPlayer->getAsset() << endl;
             break;
         }
+        b->printBoard();
         std::cout << "Your turn " << currActingPlayer->getSymbol() << endl;
         std::cout << "Available commands - [ROLL, NEXT, TRADE, IMPROVE, MORTGAGE, UNMORTGAGE, BANKRUPT, ASSETS, ALL, SAVE]" << endl;
         std::cin >> command;
