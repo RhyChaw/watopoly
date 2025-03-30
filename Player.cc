@@ -106,36 +106,44 @@ int Player::countResOwned() {
     return count;
 }
 
-double Player::getAsset() const { 
+double Player::getAsset() {
     int result = cash;
-    int size = ownedProperties.size();
-    int cost = 0;
-    for (int i = 0; i < size; i++){
-	    std::string propName = ownedProperties[i]->getName();
+    
+    for (const auto& prop : ownedProperties) {
+        if (!prop) continue; // Skip if null
+        
+        std::string propName = prop->getName();
         int cost = 0;
-        for (int i = 0; i < 28; ++i) {
-            if (propName == OWNABLE[i][0]) {
-                std::stringstream ss(OWNABLE[i][2]);
+        
+        // Find property in OWNABLE
+        for (const auto& ownableProp : OWNABLE) {
+            if (propName == ownableProp[0]) {
+                // Base property value
+                std::stringstream ss(ownableProp[2]);
                 ss >> cost;
                 result += cost;
+                
+                // Handle improvements for academic buildings only
+                if (isAcademic(propName)) {
+                    int imprLevel = prop->getImprLevel();
+                    if (imprLevel > 0) {
+                        int improvementCost = 0;
+                        std::stringstream ssImp(ownableProp[3]);
+                        ssImp >> improvementCost;
+                        result += imprLevel * improvementCost;
+                    }
+                }
+                break; // Found the property, move to next
             }
         }
-	    int imprLevel = ownedProperties[i]->getImprLevel();
         
-
-	    if (imprLevel > 0){
-            for (int i = 0; i < 28; ++i) {
-                if (propName == OWNABLE[i][0]) {
-                    std::stringstream ss(OWNABLE[i][3]);
-                    ss >> cost;
-                    cost = imprLevel*cost;
-                    result += cost;
-                    break;
-                }
-            }
-	    }
+        // Add mortgage value if mortgaged
+        if (prop->getMortStatus()) {
+            result -= cost / 2; // Mortgage is half the purchase price
+        }
     }
-    return result; 
+    
+    return result;
 }
 
 bool Player::getisInTimsLine() const { 
@@ -268,8 +276,10 @@ void Player::updateMonopolyBlock() {
 
     for (auto &block: tracking) {
         if (block.second == 2 && (block.first == "Math" || block.first == "Arts1")) {
+            cout << "you got a monopoly of " << block.first <<endl;
             monopolyBlocks.push_back(block.first);
         } else if (block.second == 3) {
+            cout << "you got a monopoly of " << block.first <<endl;
             monopolyBlocks.push_back(block.first);
         }
     }

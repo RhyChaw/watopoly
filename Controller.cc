@@ -858,7 +858,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             std::cout << " His Properties are " << currActingPlayer->getAsset() << endl;
             break;
         }
-        b->printBoard();
+
         std::cout << "Your turn " << currActingPlayer->getSymbol() << endl;
         std::cout << "Available commands - [ROLL, NEXT, TRADE, IMPROVE, MORTGAGE, UNMORTGAGE, BANKRUPT, ASSETS, ALL, SAVE]" << endl;
         std::cin >> command;
@@ -1010,6 +1010,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                 for (unsigned int i = 0; i < group.size(); ++i)
                 {
                     group[i]->printAsset();
+
                     std::cout << "========================================" << endl;
                 }
             }
@@ -1069,5 +1070,6 @@ void Controller::letTheGameBegin(int argc, char **argv) {
         } else {
             std::cout << "Command not found, Please check again" << endl;
         }
+        b->printBoard();
     }
 }
