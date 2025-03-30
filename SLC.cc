@@ -14,9 +14,9 @@ int SLC::getRandomMovement(int n) {
 
 void SLC::moveeee(std::shared_ptr<Player> p) {
     srand(time(NULL));
-    std::cout << "we will determine first if you are the lucky winner to earn a TIMS CUP " << endl;
-    std::cout << "WHOAAAA EXCITING" << endl;
-    std::cout << " if you spin a "<< "48" << "then you win" << endl;
+    std::cout << "Let's determine if you are the lucky winner to earn a TIMS CUP!!!" << endl;
+    std::cout << "WHOAAAA EXCITING ISNT IT!" << endl;
+    std::cout << " if you spin a 48 then you win!" << endl;
     int timsRoll = getRandomMovement(100);
     cout << "Your Tims Roll is " << timsRoll << "." << endl;
     if (timsRoll == 48) {
@@ -24,44 +24,44 @@ void SLC::moveeee(std::shared_ptr<Player> p) {
 		p->addTimsCup();
 		return;
 	}
-	cout << "you did not recive, sad really sad" << endl;
-	cout << "now we spin again" << endl;
-	cout << "you have a 1 in 24 change for something to happen" << endl;
+	cout << "SAD. You did not recieve it, sad really sad :(" << endl;
+	cout << "Let's give you another chance, now we spin again..." << endl;
+	cout << "You have a 1 in 24 change for something to happen!" << endl;
     //list here what happens
     int  s = getRandomMovement(24);
     cout << "Your spin is " << s << "." << endl;
     int change = 0;
 	if (s >= 1 && s <= 3) {	
-		cout << "You move back 3 spaces." << endl;
+		cout << "WHOOSH! You move back 3 spaces." << endl;
 		change = -3;
 	} else if (s >= 4 && s <= 7) {	
-		cout << "You move back 2 spaces." << endl;
+		cout << "WHOOSH! You move back 2 spaces." << endl;
 		change = -2;
 	} else if (s >= 8 && s <= 11) {
-		cout << "You move back 1 space." << endl;
+		cout << "WHOOSH! You move back 1 space." << endl;
 		change = -1;
 	} else if (s >= 12 && s <= 14) {
-		cout << "You move forward 1 space." << endl;
+		cout << "WHOOSH! You move forward 1 space." << endl;
 		change = 1;
 	} else if (s >= 15 && s <= 18) {
-		cout << "You move forward 2 spaces." << endl;
+		cout << "WHOOSH! You move forward 2 spaces." << endl;
 		change = 2;
 	} else if (s >= 19 && s <= 22) {
-		cout << "You move forward 3 spaces." << endl;
+		cout << "WHOOSH! You move forward 3 spaces." << endl;
 		change = 3;
     } else if (s == 23) {
-		cout << "Go to DC Tims Line." << endl;
+		cout << "HAHA! Go to DC Tims Line." << endl;
 		p->moveToDCTims();
     } else if (s == 24) {
 		p->setPos(0);
-		cout << "You passed Collect OSAP! you get $200!" << endl;
+		cout << "CONGRATULATIONS! You passed Collect OSAP! you get $200!" << endl;
 		p->changeCash(200);
 	} 
     int pos = p->getPosition();
 	if (s != 24 && s != 23){
 	    if (pos + change > 40){
 	        p->changeCash(200);
-		    cout << "You passed Collect OSAP! Enjoy your $200!" << endl;
+		    cout << "CONGRATULATIONS! You passed Collect OSAP! Enjoy your $200!" << endl;
 	    }
 	    p->setPos((p->getPosition() + change)); 
 	}

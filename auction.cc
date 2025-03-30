@@ -8,17 +8,17 @@ Auction::Auction(std::vector<std::shared_ptr<Player>> people, std::shared_ptr<Pl
 
 void Auction::place(std::shared_ptr<Player> p, int amount) {
 	if (amount <= maxBid) {
-		cout << "bid is lower than the highest bid" << endl;
+		cout << "The bid you put is lower than the highest bid, please try again." << endl;
 		return;
 	}
 
 	if (p->getCash() < amount) {
-		cout << "You don't have enough fund to bid the current amount" << endl;
+		cout << "You don't have enough cash to bid the current amount, please withdraw." << endl;
 		return;
 	}
 	maxBid = amount;
 	maxBidder = p;
-	cout << "new highest bid set" << endl;
+	cout << "New highest bid has been set!" << endl;
 }
 
 //assuming maxbidder cant withdraw
@@ -41,8 +41,8 @@ void Auction::withdraw(std::shared_ptr<Player> p) {
     
     if (bidders == 1) {
         maxBidder = people[0];
-        std::cout << "Congratulation";
-        std::cout << maxBidder->getName() << " wins the property " << std::endl << std::endl;
+        std::cout << "Congratulations!";
+        std::cout << maxBidder->getName() << " wins the property! " << std::endl << std::endl;
         
         Transactions::addPropByAuction(build, maxBidder, maxBid);
         return;

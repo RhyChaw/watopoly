@@ -10,7 +10,7 @@ void Controller::commandTrade(std::vector<std::shared_ptr<Player>> group, std::s
     char piece;
     
     int groupSize = group.size();  // Renamed variable to avoid redeclaration
-    std::cout << "available players to trade with. ";
+    std::cout << "available players to trade with. " << endl;
     for (int i = 0; i < groupSize; i++) {
         if (group[i] == currActingPlayer) continue;
         std::cout << "name: " << group[i]->getName() << " piece: " << group[i]->getSymbol() << endl;
@@ -144,15 +144,15 @@ void Controller::commandAuction(std::vector<std::shared_ptr<Player>> group, std:
         std::cout << "Current bidder: " << currentBidder->getName() << endl;
         std::cout << "Current highest bid: $" << newAuction->getMaxBid() << endl;
         string action;
-        std::cout << "Do you want to (raise) or (withdraw)? ";
+        std::cout << "Do you want to [ RAISE ] or [ WITHDRAW ]? ";
         std::cin >> action;
-        if (action == "raise") {
+        if (action == "raise" || action == "RAISE") {
             int bidAmount;
             std::cout << "Enter your bid amount: ";
             std::cin >> bidAmount;
             newAuction->place(currentBidder, bidAmount);
         } 
-        else if (action == "withdraw") {
+        else if (action == "withdraw" || action == "WITHDRAW") {
             withdrawnPlayers[currentBidderIndex] = true;
             newAuction->withdraw(currentBidder);
         } 
@@ -189,25 +189,25 @@ void Controller::commandImprove(std::vector<std::shared_ptr<Player>> group, std:
     }
     std::cin >> prop;
 
-    std::cout << "do you wanna BUY/SELL?" << endl;
+    std::cout << "do you wanna [ BUY ]/[ SELL ]?" << endl;
 
     std::cin >> action;
 
     while (true) {
-        if (action == "buy" || action == "sell" || std::cin.fail()) break;
+        if (action == "buy" || action == "BUY" || action == "SELL"|| action == "sell" || std::cin.fail()) break;
         std::cout << "command not recognized" << endl;
         std::cout << "please select buy or sell" << endl;
         std::cin >> action;
     }
     shared_ptr<Building> p;
     p = Transactions::listProp(prop);
-    if (action == "buy") {
+    if (action == "buy" || action == "BUY") {
         if (Transactions::buyImprovement(p, currActingPlayer)) {
             b->addImpr(p->getName());
             b->drawBoard();
         }
     }
-    else if (action == "sell") {
+    else if (action == "sell" || action == "SELL") {
         if(Transactions::sellImprovement(p, currActingPlayer)) {
             b->removeImpr(p->getName());
             b->drawBoard();
@@ -295,7 +295,7 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
             if (owner == currActingPlayer) {
                 std::cout << "you own this property, no need to pay rent" << endl;
             } else if (owner != currActingPlayer && !prop->getMortStatus()) {
-                std::cout << "the property belongs to " << owner->getName();
+                std::cout << "the property belongs to " << owner->getName() << endl;
                 if (isGym(prop->getName())) {
                     std::cout << "landed on the gym, you have to roll to see what rent you will have to pay" << endl;
                     auto gym = std::dynamic_pointer_cast<Gym>(prop);
@@ -303,7 +303,7 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                     std::cout << "please type roll" << endl;
                     string command;
                     std::cin >> command;
-                    while (command != "roll") {
+                    while (command != "roll" || command != "ROLL") {
                         std::cout << "Sorry, you have to roll first." << endl;
                         std::cin >> command;
                     }
@@ -356,7 +356,7 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                 // cout << "rent" << rent <<endl;
                 while (!Transactions::payRent(currActingPlayer, owner, rent)) {
                     std::cout << "you must sell or trade something, or declare bankruptcy, you cant continue " << endl;
-                    std::cout << "Avaliable commands - trade, mortgage, improve, bankrupt" << endl;
+                    std::cout << "Avaliable commands - [ TRADE , MORTGAGE, IMPROVE, BANKRUPT ]" << endl;
                     string command;
                     std::cin >> command;
                     if (command == "bankrupt" || command == "BANKRUPT") {
@@ -382,18 +382,25 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
             }
         }
         else { 
-            std::cout << "this property is available to buy" << endl;
-            std::cout << "type buy or auction to proceed accordingly" << endl;
+            int howMuch = 0;
+            for (int i = 0; i < 28; i ++) {
+                if (OWNABLE[i][0] == sq) {
+                    howMuch = std::stoi(OWNABLE[i][2]);
+                }
+            }
+            std::cout << "You have landed on " << currActingPlayer->getPosition() << endl;
+            std::cout << "this property is available to buy, it costs: $" << howMuch << endl;
+            std::cout << "type [ BUY ] or [ AUCTION ] to proceed accordingly" << endl;
             string input;
             while (true) {
                 std::cin >> input;
-                if (input == "buy" || input == "auction") {
+                if (input == "buy" || input == "auction" || input == "BUY" || input == "AUCTION") {
                     break;
                 } else {
-                    std::cout <<"it has to be one of those commands - buy or auction" << endl;
+                    std::cout <<"it has to be one of those commands - [ BUY ] or [ AUCTION ]" << endl;
                 }
             }
-            if (input == "buy"){
+            if (input == "buy" || input == "BUY"){
                 if(currActingPlayer->getCash() < cost) {
                     while (true) {
                         std::cout << "you must auction, trade, mortgage, improve one of your properties, you cant afford it, you cant continue without choosing" << endl;
@@ -672,10 +679,11 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     std::cout << "Player " << i + 1 << " enter your symbol: ";
                     std::cout << "Please choose one from the available pieces: ";
                     
+                    std::cout << "[ " ;
                     for (char ch : arr) {
                         std::cout << ch << " ";
                     }
-                    std::cout << std::endl;
+                    std::cout << " ]" << std::endl;
             
                     std::cin >> piece;
                     auto it = std::find(arr.begin(), arr.end(), piece);
@@ -683,7 +691,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     if (it != arr.end()) {
                         arr.erase(it);
                         pieceCharTaken.push_back(piece);
-                        std::cout << piece << " has been taken" << std::endl;
+                        std::cout << "You just took" << piece << std::endl;
                         break;  // Exit the loop since a valid symbol was chosen
                     } else {
                         std::cout << "Please select a piece from the available ones.\n";
@@ -729,10 +737,12 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                 std::cout << "Player " << i + 1 << " enter your symbol: ";
                 std::cout << "Please choose one from the available pieces: ";
                 
+                std::cout << "[ ";
                 for (char ch : arr) {
                     std::cout << ch << " ";
                 }
                 std::cout << std::endl;
+                std::cout << "]";
         
                 std::cin >> piece;
                 auto it = std::find(arr.begin(), arr.end(), piece);
@@ -762,11 +772,11 @@ void Controller::letTheGameBegin(int argc, char **argv) {
     string BotName;
     char symSelect;
 
-    if (reply == "YES") {
+    if (reply == "YES" || reply == "yes") {
         std::cout << "Select from [ EASY ] and [ SMART ], and [ CANCEL ] to start the game directly." << endl;
         std::cin >> selection;
 
-        if (selection == "EASY") {
+        if (selection == "EASY" || selection == "easy") {
 
             // name
             std::cout << "Starting Bot creation, please give it a name" << endl;
@@ -793,7 +803,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             std::cout << "New Bot created, proceeding ahead!" << endl;
         }
 
-        if (selection == "SMART") { 
+        if (selection == "SMART" || selection == "smart") { 
             // name
             std::cout << "Starting Bot creation, please give it a name" << endl;
             std::cin >> BotName;
@@ -819,14 +829,14 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             std::cout << "New Bot created, proceeding ahead!" << endl;
         }
 
-        if (selection == "CANCEL") { 
+        if (selection == "CANCEL" || selection == "cancel") { 
             std::cout << "Bot creation cancelled, starting game." << endl;
             return;
         }
 
     }
 
-    if (reply == "NO") {
+    if (reply == "NO" || reply == "no") {
         std::cout << "Bot creation cancelled, starting game." << endl;
     }
 
@@ -958,7 +968,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             }
             currIndex += 1;
             currIndex = currIndex % group.size();
-            std::cout << "turn finished, going to the next player!" << endl;
+            std::cout << "turn finished, going to the next player!" << endl << endl;
             hasRolled = false;
         } else if (command == "trade" || command == "TRADE") {
             commandTrade(group, currActingPlayer);
@@ -997,7 +1007,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             }
             else
             {
-                std::cout << "You can not check your assets if you are paying tuition ";
+                std::cout << "You can not check your assets if you are paying tuition " << endl;
             }
         } else if (command == "all" || command == "ALL") {
             if (currActingPlayer->getPosition() != 4)
@@ -1012,7 +1022,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             }
             else
             {
-                std::cout << "You can not check your assets if you are paying tuition ";
+                std::cout << "You can not check your assets if you are paying tuition " << endl;
 
             }
         } else if (command == "save" || command == "SAVE") {

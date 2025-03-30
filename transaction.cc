@@ -25,7 +25,7 @@ bool Transactions::isGym(std::string squareName){
  
 bool Transactions::checkFund(std::shared_ptr<Player> p1, int amt) {
     if (p1->getCash() < amt) {
-        std::cout << "The player " << p1->getName() << " doesn't have enough funds to use" << std::endl;
+        std::cout << "The player " << p1->getName() << " doesn't have enough funds to use." << std::endl;
         return false;
     }
     return true;
@@ -53,7 +53,7 @@ bool Transactions::isAcademic(std::string squareName){
 void Transactions::transferProperty(std::shared_ptr<Building> building, std::shared_ptr<Player> from, std::shared_ptr<Player> to) {
     from->removeProp(building);
     to->addProp(building);
-    std::cout << "Transferred " << building->getName() << " from " << from->getName() << " to " << to->getName() << std::endl;
+    std::cout << "Transferred " << building->getName() << " from " << from->getName() << " to " << to->getName() << "." << std::endl;
 }
 
 bool Transactions::isOwned(std::string nameSquare) {
@@ -68,154 +68,177 @@ bool Transactions::isOwned(std::string nameSquare) {
 
 void Transactions::trade3(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, double money, std::shared_ptr<Building> build) {
     if (p1->getCash() < money) {
-        std::cout << "The player " << p1->getName() << " doesnt got money" << std::endl;
+        std::cout << "The player " << p1->getName() << " doesn't have enough money." << std::endl;
         return;
     }
     if (!(p2->ownThisProp(build->getName()))) {
-        std::cout << "The player " << p2->getName() << " doesn't own this property" << std::endl;
+        std::cout << "The player " << p2->getName() << " doesn't own this property." << std::endl;
         return;
     }
     if (build->getImprLevel() != 0) {
-        std::cout << "there are improvments on this property." << std::endl;
+        std::cout << "There are improvements on this property." << std::endl;
         return;
     }
 
     string choice;
-    cout << p2->getName() << ", do you accept this trade offer? (yes/no): ";
-    cin >> choice;
-    if (choice == "accept" || choice == "y" || choice == "yes") {
-    
-        for (int i = 0; i < 22; i++) {
-            if (OWNABLE[i][0] == build->getName()) {
-                auto acad = std::dynamic_pointer_cast<Academic>(build);
-                if (acad->getOwned()) {
-                    acad->setOwned(false);
+    while (true) {
+        std::cout << p2->getName() << ", do you accept this trade offer? [ YES / NO ]: ";
+        std::cin >> choice;
+
+        // Convert input to lowercase to handle case insensitivity
+        std::transform(choice.begin(), choice.end(), choice.begin(), ::tolower);
+
+        if (choice == "yes" || choice == "y") {
+            // Proceed with the trade
+            for (int i = 0; i < 22; i++) {
+                if (OWNABLE[i][0] == build->getName()) {
+                    auto acad = std::dynamic_pointer_cast<Academic>(build);
+                    if (acad->getOwned()) {
+                        acad->setOwned(false);
+                    }
                 }
             }
-        }
 
-        // the transaction occur if all checking pass
-        p1->pay(money);
-        p2->removeProp(build);
-        p1->addProp(build);
-        p2->changeCash(money);
-        std::cout << "Transferred " << build->getName() << " from " << p1->getName() << " to " << p2->getName() << std::endl;
+            // the transaction occurs if all checks pass
+            p1->pay(money);
+            p2->removeProp(build);
+            p1->addProp(build);
+            p2->changeCash(money);
+            std::cout << "Transferred " << build->getName() << " from " << p1->getName() << " to " << p2->getName() << std::endl;
 
-        // update Monopoly blocks of both players
-        p1->updateMonopolyBlock();
-        p2->updateMonopolyBlock();
+            // Update Monopoly blocks of both players
+            p1->updateMonopolyBlock();
+            p2->updateMonopolyBlock();
 
-        // set correct paylevel and tuition
-        if (isGym(build->getName())){
-            p2->changePropertyCount(0, -1, 0);
-            p1->changePropertyCount(0, 1, 0);
-            build->setGymLevel(p2->getOwnedGyms() - 1);
-        } else if (isResidence(build->getName())){
-            p2->changePropertyCount(-1, 0, 0);
-            p1->changePropertyCount(1, 0, 0);
-            build->setResLevel(p2->getOwnedResidences() - 1);
-        } else if (isAcademic(build->getName())){
-            p2->changePropertyCount(0, 0, -1);
-            p1->changePropertyCount(0, 0, 1);
-            if (p1->checkIfInMonopolyBlock(build->getName())){
-                auto acad = std::dynamic_pointer_cast<Academic>(build);
-                acad->setOwned(true);
+            // Set correct pay level and tuition
+            if (isGym(build->getName())) {
+                p2->changePropertyCount(0, -1, 0);
+                p1->changePropertyCount(0, 1, 0);
+                build->setGymLevel(p2->getOwnedGyms() - 1);
+            } else if (isResidence(build->getName())) {
+                p2->changePropertyCount(-1, 0, 0);
+                p1->changePropertyCount(1, 0, 0);
+                build->setResLevel(p2->getOwnedResidences() - 1);
+            } else if (isAcademic(build->getName())) {
+                p2->changePropertyCount(0, 0, -1);
+                p1->changePropertyCount(0, 0, 1);
+                if (p1->checkIfInMonopolyBlock(build->getName())) {
+                    auto acad = std::dynamic_pointer_cast<Academic>(build);
+                    acad->setOwned(true);
+                }
             }
+            std::cout << "The transaction is completed!" << std::endl;
+            break;  // Exit the loop once the transaction is completed
+        } else if (choice == "no" || choice == "n") {
+            std::cout << "The transaction was rejected!" << std::endl;
+            break;  // Exit the loop if the user rejects
+        } else {
+            // Invalid input, prompt again
+            std::cout << "Please select a valid option [ YES / NO ]!" << std::endl;
         }
-        std::cout << "The transaction is completed!" << std::endl;
-    } else {
-        std::cout << "The transaction was rejected!" << std::endl;
     }
 }
 
 void Transactions::trade1(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2, std::shared_ptr<Building> building1, std::shared_ptr<Building> building2) {
     if (!(p2->ownThisProp(building2->getName()))) {
-        std::cout << "The player " << p2->getName() << " doesn't own this property" << std::endl;
+        std::cout << "The player " << p2->getName() << " doesn't own this property." << std::endl;
         return;
     }
 
     if (!(p1->ownThisProp(building1->getName()))) {
-        std::cout << "The player " << p1->getName() << " doesn't own this property" << std::endl;
+        std::cout << "The player " << p1->getName() << " doesn't own this property." << std::endl;
         return;
     }
     if (building1->getImprLevel() != 0) {
-        std::cout << "there are improvments on this property." << std::endl;
+        std::cout << "There are improvements on this property." << std::endl;
         return;
     }
 
     if (building2->getImprLevel() != 0) {
-        std::cout << "there are improvments on this property." << std::endl;
+        std::cout << "There are improvements on this property." << std::endl;
         return;
     }
 
     string choice;
-    cout << p2->getName() << ", do you accept this trade offer? (yes/no): ";
-    cin >> choice;
-    if (choice == "accept" || choice == "y" || choice == "yes") {
+    while (true) {
+        std::cout << p2->getName() << ", do you accept this trade offer? [ YES / NO ]: ";
+        std::cin >> choice;
 
-        for (int i = 0; i < 22; i++) {
-            if (OWNABLE[i][0] == building1->getName()) {
-                auto acad = std::dynamic_pointer_cast<Academic>(building1);
-                if (acad->getOwned()) {
-                    acad->setOwned(false);
+        // Convert input to lowercase to handle case insensitivity
+        std::transform(choice.begin(), choice.end(), choice.begin(), ::tolower);
+
+        if (choice == "yes" || choice == "y") {
+            // Proceed with the trade
+
+            for (int i = 0; i < 22; i++) {
+                if (OWNABLE[i][0] == building1->getName()) {
+                    auto acad = std::dynamic_pointer_cast<Academic>(building1);
+                    if (acad->getOwned()) {
+                        acad->setOwned(false);
+                    }
                 }
             }
-        }
 
-        for (int i = 0; i < 22; i++) {
-            if (OWNABLE[i][0] == building2->getName()) {
-                auto acad = std::dynamic_pointer_cast<Academic>(building2);
-                if (acad->getOwned()) {
-                    acad->setOwned(false);
+            for (int i = 0; i < 22; i++) {
+                if (OWNABLE[i][0] == building2->getName()) {
+                    auto acad = std::dynamic_pointer_cast<Academic>(building2);
+                    if (acad->getOwned()) {
+                        acad->setOwned(false);
+                    }
                 }
             }
-        }
 
-        p2->removeProp(building2);
-        p1->addProp(building2);
-        p1->removeProp(building1);
-        p2->addProp(building1);
-        
-        // update Monopoly blocks of both players
-        p1->updateMonopolyBlock();
-        p2->updateMonopolyBlock();
+            p2->removeProp(building2);
+            p1->addProp(building2);
+            p1->removeProp(building1);
+            p2->addProp(building1);
 
-        if (isGym(building2->getName())){
-            p2->changePropertyCount(0, -1, 0);
-            p1->changePropertyCount(0, 1, 0);
-            building2->setGymLevel(p2->getOwnedGyms() - 1);
-        } else if (isResidence(building2->getName())){
-            p2->changePropertyCount(-1, 0, 0);
-            p1->changePropertyCount(1, 0, 0);
-            building2->setResLevel(p2->getOwnedResidences() - 1);
-        } else if (isAcademic(building2->getName())){
-            p2->changePropertyCount(0, 0, -1);
-            p1->changePropertyCount(0, 0, 1);
-            if (p2->checkIfInMonopolyBlock(building2->getName())){
-                auto acad = std::dynamic_pointer_cast<Academic>(building2);
-                acad->setOwned(true);
+            // Update Monopoly blocks of both players
+            p1->updateMonopolyBlock();
+            p2->updateMonopolyBlock();
+
+            if (isGym(building2->getName())) {
+                p2->changePropertyCount(0, -1, 0);
+                p1->changePropertyCount(0, 1, 0);
+                building2->setGymLevel(p2->getOwnedGyms() - 1);
+            } else if (isResidence(building2->getName())) {
+                p2->changePropertyCount(-1, 0, 0);
+                p1->changePropertyCount(1, 0, 0);
+                building2->setResLevel(p2->getOwnedResidences() - 1);
+            } else if (isAcademic(building2->getName())) {
+                p2->changePropertyCount(0, 0, -1);
+                p1->changePropertyCount(0, 0, 1);
+                if (p2->checkIfInMonopolyBlock(building2->getName())) {
+                    auto acad = std::dynamic_pointer_cast<Academic>(building2);
+                    acad->setOwned(true);
+                }
             }
-        }
 
-        if (isGym(building1->getName())){
-            p1->changePropertyCount(0, -1, 0);
-            p2->changePropertyCount(0, 1, 0);
-            building1->setGymLevel(p1->getOwnedGyms() - 1);
-        } else if (isResidence(building2->getName())){
-            p1->changePropertyCount(-1, 0, 0);
-            p2->changePropertyCount(1, 0, 0);
-            building1->setResLevel(p1->getOwnedResidences() - 1);
-        } else if (isAcademic(building1->getName())){
-            p1->changePropertyCount(0, 0, 1);
-            p2->changePropertyCount(0, 0, -1);
-            if (p1->checkIfInMonopolyBlock(building1->getName())){
-                auto acad = std::dynamic_pointer_cast<Academic>(building1);
-                acad->setOwned(true);
+            if (isGym(building1->getName())) {
+                p1->changePropertyCount(0, -1, 0);
+                p2->changePropertyCount(0, 1, 0);
+                building1->setGymLevel(p1->getOwnedGyms() - 1);
+            } else if (isResidence(building1->getName())) {
+                p1->changePropertyCount(-1, 0, 0);
+                p2->changePropertyCount(1, 0, 0);
+                building1->setResLevel(p1->getOwnedResidences() - 1);
+            } else if (isAcademic(building1->getName())) {
+                p1->changePropertyCount(0, 0, 1);
+                p2->changePropertyCount(0, 0, -1);
+                if (p1->checkIfInMonopolyBlock(building1->getName())) {
+                    auto acad = std::dynamic_pointer_cast<Academic>(building1);
+                    acad->setOwned(true);
+                }
             }
+            std::cout << "The transaction is completed!" << std::endl;
+            break;  // Exit the loop once the transaction is completed
+        } else if (choice == "no" || choice == "n") {
+            std::cout << "The transaction was rejected!" << std::endl;
+            break;  // Exit the loop if the user rejects
+        } else {
+            // Invalid input, prompt again
+            std::cout << "Please select a valid option [ YES / NO ]!" << std::endl;
         }
-        std::cout << "The transaction is completed!" << std::endl;
-    } else {
-        std::cout << "The transaction was rejected!" << std::endl;
     }
 }
 
@@ -240,7 +263,7 @@ bool Transactions::payRent(std::shared_ptr<Player> p1, std::shared_ptr<Player> p
 
 bool Transactions::payBank(std::shared_ptr<Player> p1, int rent) {
     if(!checkFund(p1, rent)) {
-        std::cout << "doesnt have money" << std::endl;
+        std::cout << "doesnt have money!" << std::endl;
 
         return false;
     }

@@ -268,9 +268,9 @@ void GameBoard::addImpr(const std::string& square, int count) {
         squareImprovements[square] = newCount;
         display->setImprovements(position, newCount);
         std::cout << "Added " << actualAdded << " improvement(s) to " << square
-                  << " (Total: " << newCount << ")" << std::endl;
+                  << " (Total: " << newCount << ")." << std::endl;
     } else {
-        std::cout << square << " already has maximum improvements (5)" << std::endl;
+        std::cout << square << " already has maximum improvements(5)." << std::endl;
     }
 }
 
