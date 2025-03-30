@@ -963,91 +963,105 @@ void Controller::letTheGameBegin(int argc, char **argv) {
 
         if (command == "roll" || command == "ROLL") {
             if (hasRolled) {
-                std::cout << "you have already rolled once, cant roll again"<< endl;
+                std::cout << "you have already rolled once, cant roll again" << endl;
                 continue;
             }
             int rollValue = 0;
-
-            while (!currActingPlayer->getisInTimsLine() && (currActingPlayer->getadd_roll_for_jail() != 0)) {
+        
+            // Handle jail turn first
+            if (currActingPlayer->getisInTimsLine() || (currActingPlayer->getadd_roll_for_jail() == 0)) {
+                std::cout << "Processing DC Tims Line turn..." << endl;
+                TimsLine::handleTimsTurn(currActingPlayer, dicee, b);
+                
+                if (!currActingPlayer->getisInTimsLine()) {
+                    // Player got out - move normally
+                    dicee->roll();
+                    std::cout << "Rolling your dice..." << endl
+                    << dicee->getFirstDie() << " + "
+                    << dicee->getSecondDie() << " = "
+                    << dicee->getSum() << "!" << endl;
+                    rollValue = dicee->getSum();
+                    currActingPlayer->movePlayer(rollValue);
+                    b->movePlayer(currActingPlayer->getSymbol(), currActingPlayer->getPosition());
+                    CommandRoll(group, currActingPlayer, testMode, b);
+                }
+                
+                hasRolled = false;
+                currIndex = (currIndex + 1) % group.size();
+                continue;
+            }
+        
+            // Normal roll handling
+            while (currActingPlayer->getadd_roll_for_jail() != 0) {
                 bool overload = false;
-                std::string d1;
-                std::string d2;
+                std::string d1, d2;
+                
                 if (testMode) {
                     std::cout << "first die" << endl;
-                    
-                    // Validate first die is a number
                     while (true) {
                         std::cin >> d1;
-                        if (!d1.empty() && std::all_of(d1.begin(), d1.end(), ::isdigit)) {
-                            break;
-                        }
+                        if (!d1.empty() && std::all_of(d1.begin(), d1.end(), ::isdigit)) break;
                         std::cout << "Invalid input. Please enter a number for first die: ";
                     }
-                
-                    std::cout << "second die" << endl;
                     
-                    // Validate second die is a number
+                    std::cout << "second die" << endl;
                     while (true) {
                         std::cin >> d2;
-                        if (!d2.empty() && std::all_of(d2.begin(), d2.end(), ::isdigit)) {
-                            break;
-                        }
+                        if (!d2.empty() && std::all_of(d2.begin(), d2.end(), ::isdigit)) break;
                         std::cout << "Invalid input. Please enter a number for second die: ";
                     }
-                
+                    
                     rollValue = std::stoi(d1) + std::stoi(d2);
                     overload = true;
                 }
+                
                 if (!overload) {
                     dicee->roll();
-                    std::cout << "Rolling your dice..." << endl;
-                    std::cout << dicee->getFirstDie() << " + ";
-                    std::cout << dicee->getSecondDie() << " = ";
-                    std::cout << dicee->getSum() << "!" << endl;
+                    std::cout << "Rolling your dice..." << endl
+                              << dicee->getFirstDie() << " + "
+                              << dicee->getSecondDie() << " = "
+                              << dicee->getSum() << "!" << endl;
                 }
-                if ((dicee->getFirstDie() != dicee->getSecondDie()) && (d1 != d2)){
-                    if (!overload) {
-                        rollValue = dicee->getSum();
-                    }
-                    hasRolled = true;
+        
+                bool isDouble = overload ? (d1 == d2) : (dicee->getFirstDie() == dicee->getSecondDie());
+                
+                if (!isDouble) {
+                    if (!overload) rollValue = dicee->getSum();
+                    
                     currActingPlayer->movePlayer(rollValue);
                     b->drawBoard();
-                    b->movePlayer(currActingPlayer->getSymbol(),
-                    currActingPlayer->getPosition());
+                    b->movePlayer(currActingPlayer->getSymbol(), currActingPlayer->getPosition());
                     b->update();
                     CommandRoll(group, currActingPlayer, testMode, b);
-                    break;
-                } else {
-                    if (!overload) {
-                        rollValue = dicee->getSum();
-                    }
+                    currActingPlayer->setRollForJail(3);  // Reset double counter
                     hasRolled = true;
+                    break;
+                }
+                else {
+                    if (!overload) rollValue = dicee->getSum();
+                    
                     currActingPlayer->movePlayer(rollValue);
-                    b->movePlayer(currActingPlayer->getSymbol(),
-                    currActingPlayer->getPosition());
+                    b->movePlayer(currActingPlayer->getSymbol(), currActingPlayer->getPosition());
                     b->update();
                     CommandRoll(group, currActingPlayer, testMode, b);
-                    std::cout << currActingPlayer->getadd_roll_for_jail() <<endl;
-                    if (!currActingPlayer->getisInTimsLine()) {
-                        std::cout << "you rolled doubles! you can roll again" << endl;
-                        currActingPlayer->add_roll_for_jail();
-                    }
-                }
-                if (currActingPlayer->getadd_roll_for_jail() == 0) {
-                    currActingPlayer->setIsInTimsLine(true);
-                    currActingPlayer->moveToDCTims();
-                    currActingPlayer->setPos(10);
-                    b->movePlayer(currActingPlayer->getSymbol(),currActingPlayer->getPosition());
-                    b->update();
-                    std::cout << currActingPlayer->getName() << ", you are in DC Tims Line (Turn " << currActingPlayer->getTurnsInTimsLine() << ")." << endl;
-                    TimsLine::handleTimsTurn(currActingPlayer, dicee, b);
-                    if (!currActingPlayer->getisInTimsLine()) {  // there was a not before....
-                        std::cout << "You are now free! Moving forward." << endl;
-                    } else {
-                        std::cout << "You are still in DC Tims Line. Your turn is over." << endl;
-                        currIndex = (currIndex + 1) % group.size();
+                    
+                    currActingPlayer->add_roll_for_jail();
+                    std::cout << "Double roll count: " << currActingPlayer->getadd_roll_for_jail() << endl;
+                    
+                    if (currActingPlayer->getadd_roll_for_jail() == 0) {
+                        currActingPlayer->setIsInTimsLine(true);
+                        currActingPlayer->moveToDCTims();
+                        currActingPlayer->setPos(10);
+                        b->movePlayer(currActingPlayer->getSymbol(), 10);
+                        b->update();
+                        std::cout << "Three doubles! Sent to DC Tims Line." << endl;
+                        currIndex += 1;
+                        currIndex = currIndex % group.size();
                         hasRolled = false;
-                        continue; 
+                        break;
+                    }
+                    else {
+                        std::cout << "you rolled doubles! you can roll again" << endl;
                     }
                 }
             }
@@ -1177,6 +1191,6 @@ void Controller::letTheGameBegin(int argc, char **argv) {
         } else {
             std::cout << "Command not found, Please check again" << endl;
         }
-        b->printBoard();
+       // b->printBoard();
     }
 }
