@@ -58,9 +58,9 @@ public:
     //basic functions
 
     bool isResidence(std::string squareName);
+    bool isAcademic(std::string squareName);
     bool isGym(std::string squareName);
     int countGymsOwned() ;
-    bool isAcademic(std::string squareName);
     bool checkIfInMonopolyBlock(std::string name) ;
     bool ownThisProp(std::string name);
     void pay(int amount);
@@ -95,7 +95,7 @@ int countResOwned();
     std::vector<std::shared_ptr<Building>> getOwnedPropList();
 
     int getIndex() const;
-    double getAsset() const; 
+    double getAsset() ; 
     bool getisInTimsLine() const;
     int getTurnsInTimsLine() const;
     int getadd_roll_for_jail() const;
