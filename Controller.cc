@@ -471,7 +471,7 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                     howMuch = std::stoi(OWNABLE[i][2]);
                 }
             }
-            std::cout << "You have landed on " << currActingPlayer->getPosition() << endl;
+            std::cout << "You have landed on " << sq << endl;
             std::cout << "this property is available to buy, it costs: $" << howMuch << endl;
             std::cout << "type [ BUY ] or [ AUCTION ] to proceed accordingly" << endl;
             string input;
@@ -487,6 +487,7 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                 if(currActingPlayer->getCash() < cost) {
                     while (true) {
                         std::cout << "you must auction, trade, mortgage, improve one of your properties, you cant afford it, you cant continue without choosing" << endl;
+                        std::cout << "you can write, [ALL] to see your net worth" << endl;
                         string cand;
                         std::cin >> cand;
                         if (cand == "auction" || cand == "AUCTION") {
@@ -508,7 +509,9 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                         {
                             commandImprove(group, currActingPlayer, b);
                             break;
-                        } 
+                        } else if (cand == "all" || cand == "ALL") {
+                            currActingPlayer->printAsset();
+                        }
                     }
                 } else {
                     Transactions::buyBuilding(sq, currActingPlayer);
@@ -610,9 +613,10 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     bool in;
                     f >> in;
                     if (in) {
-                        b->movePlayer(piece, 10);
                         int turn;
                         f >> turn;
+                        p->setTurnsInTims(turn);
+                        b->movePlayer(piece, 10);
                         p->moveToDCTims();
                     } else {
                         p->movePlayer(pos); 
@@ -772,7 +776,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     if (it != arr.end()) {
                         arr.erase(it);
                         pieceCharTaken.push_back(piece);
-                        std::cout << "You just took" << piece << std::endl;
+                        std::cout << "You just took " << piece << std::endl;
                         break;  // Exit the loop since a valid symbol was chosen
                     } else {
                         std::cout << "Please select a piece from the available ones.\n";
@@ -939,7 +943,10 @@ void Controller::letTheGameBegin(int argc, char **argv) {
         numberOfPlayer = group.size();
 
         if (currActingPlayer->getisBankrupt()) {
+            cout << currActingPlayer->getName() << "has declared bankruptcy" << endl;
             group.erase(group.begin() + currIndex);
+            b->removePlayer(currActingPlayer->getSymbol());
+            b->update();
             currIndex = (currIndex + 1) % group.size();
             continue;
         }
@@ -950,7 +957,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             break;
         }
 
-        std::cout << "Your turn " << currActingPlayer->getSymbol() << endl;
+        std::cout << "Your turn " << currActingPlayer->getSymbol() <<" " << currActingPlayer->getName() <<  endl;
         std::cout << "Available commands - [ROLL, NEXT, TRADE, IMPROVE, MORTGAGE, UNMORTGAGE, BANKRUPT, ASSETS, ALL, SAVE]" << endl;
         std::cin >> command;
 
@@ -958,23 +965,6 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             if (hasRolled) {
                 std::cout << "you have already rolled once, cant roll again"<< endl;
                 continue;
-            }
-            if (currActingPlayer->getadd_roll_for_jail() == 0) {
-                currActingPlayer->setIsInTimsLine(true);
-                currActingPlayer->moveToDCTims();
-                currActingPlayer->setPos(10);
-                b->movePlayer(currActingPlayer->getSymbol(),currActingPlayer->getPosition());
-                b->update();
-                std::cout << currActingPlayer->getName() << ", you are in DC Tims Line (Turn " << currActingPlayer->getTurnsInTimsLine() << ")." << endl;
-                TimsLine::handleTimsTurn(currActingPlayer, dicee, b);
-                if (currActingPlayer->getisInTimsLine()) {  // there was a not before....
-                    std::cout << "You are now free! Moving forward." << endl;
-                } else {
-                    std::cout << "You are still in DC Tims Line. Your turn is over." << endl;
-                    currIndex = (currIndex + 1) % group.size();
-                    hasRolled = false;
-                    continue; 
-                }
             }
             int rollValue = 0;
 
@@ -1015,7 +1005,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     std::cout << dicee->getSecondDie() << " = ";
                     std::cout << dicee->getSum() << "!" << endl;
                 }
-                if ((dicee->getFirstDie() != dicee->getSecondDie()) || (d1 != d2)){
+                if ((dicee->getFirstDie() != dicee->getSecondDie()) && (d1 != d2)){
                     if (!overload) {
                         rollValue = dicee->getSum();
                     }
@@ -1041,6 +1031,23 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     if (!currActingPlayer->getisInTimsLine()) {
                         std::cout << "you rolled doubles! you can roll again" << endl;
                         currActingPlayer->add_roll_for_jail();
+                    }
+                }
+                if (currActingPlayer->getadd_roll_for_jail() == 0) {
+                    currActingPlayer->setIsInTimsLine(true);
+                    currActingPlayer->moveToDCTims();
+                    currActingPlayer->setPos(10);
+                    b->movePlayer(currActingPlayer->getSymbol(),currActingPlayer->getPosition());
+                    b->update();
+                    std::cout << currActingPlayer->getName() << ", you are in DC Tims Line (Turn " << currActingPlayer->getTurnsInTimsLine() << ")." << endl;
+                    TimsLine::handleTimsTurn(currActingPlayer, dicee, b);
+                    if (!currActingPlayer->getisInTimsLine()) {  // there was a not before....
+                        std::cout << "You are now free! Moving forward." << endl;
+                    } else {
+                        std::cout << "You are still in DC Tims Line. Your turn is over." << endl;
+                        currIndex = (currIndex + 1) % group.size();
+                        hasRolled = false;
+                        continue; 
                     }
                 }
             }
@@ -1130,6 +1137,12 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     f << group[i]->getCups() << " ";
                     f << group[i]->getCash() << " ";
                     f << group[i]->getPosition();
+                    if (group[i]->getPosition() == 10) {
+                        f << group[i]->getisInTimsLine()<< " ";
+                        if (group[i]->getisInTimsLine()) {
+                            f << group[i]->getTurnsInTimsLine()<< " ";
+                        }
+                    }
                     if (group[i]->getPosition() == 4) {
 		                f << " " << 0 << endl;
                     }
@@ -1164,6 +1177,6 @@ void Controller::letTheGameBegin(int argc, char **argv) {
         } else {
             std::cout << "Command not found, Please check again" << endl;
         }
-        // b->printBoard();
+        b->printBoard();
     }
 }

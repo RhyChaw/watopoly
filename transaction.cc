@@ -409,16 +409,16 @@ bool Transactions::buyImprovement(std::shared_ptr<Building> property_name, std::
         std::cout << "The player " << owner->getName() << " doesn't own this property" << std::endl;
         return false;
     }
-    int cost = getPropertyCost(property_name->getName());
-    if(!checkFund(owner, cost)) {
-        return false;
-    }
     if (isGym(property_name->getName())){
         std::cout << "You can't improve a gym!" << std::endl;
         return false;
     }
     if (isResidence(property_name->getName())){
         std::cout << "You can't improve a Residence!" << std::endl;
+        return false;
+    }
+    int cost = getPropertyCost(property_name->getName());
+    if(!checkFund(owner, cost)) {
         return false;
     }
     auto acad = std::dynamic_pointer_cast<Academic>(property_name);

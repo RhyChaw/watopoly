@@ -1,5 +1,5 @@
 2
-manit S 1 1000 10 0
+manit S 1 1000 100
 vansh G 0 1000 0
 AL vansh 0
 ML BANK 0

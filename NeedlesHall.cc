@@ -47,10 +47,10 @@ void NeedlesHall::moveeee(std::shared_ptr<Player> p) {
 
 	} else if (s >= 13 && s <= 15) {
 		cout << "WOAH! You win $50!" << endl;
-		p->changeCash(-50);
+		p->changeCash(50);
 	} else if (s >= 16 && s <= 17) {
 		cout << "WOAH! You win $100!" << endl;
-	    p->changeCash(-100);
+	    p->changeCash(100);
 	} else if (s == 18) {
 		cout << "WOAH! Your win $200!" << endl;
 		p->changeCash(200);
