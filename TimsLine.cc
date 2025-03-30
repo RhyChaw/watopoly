@@ -60,8 +60,9 @@ void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> d
     while (true) {
         cout << "Enter your choice [ 1 / 2 / 3 ]: ";
         cin >> choice;
+        
         if (cin.fail() || (choice < 1 || choice > 3)) {
-            cout << "Invalid choice. Please enter '1', '2', or '3' ." << endl;
+            cout << "Invalid choice. Please enter '1', '2', or '3'." << endl;
             cin.clear();
             cin.ignore(10000, '\n');
         } else {
