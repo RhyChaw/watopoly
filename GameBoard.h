@@ -21,6 +21,8 @@ public:
     ~GameBoard();
 
     // Display control
+    void printBoardToTerminal();  // DECLARE THIS FIRST
+    void printBoard() { printBoardToTerminal(); }  // Then the wrapper can use it
     void drawBoard();
     void update();
 
