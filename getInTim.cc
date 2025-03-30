@@ -7,6 +7,10 @@ GetInTim::GetInTim(int ID, std::string name) : nonbuilding(ID, name) {}
 
 GetInTim::~GetInTim() {}
 
-void GetInTim::goToJail(std::shared_ptr<Player> p) {
-    p->moveToDCTims();
+void GetInTim::goToJail(std::shared_ptr<Player> currActingPlayer) {
+    std::cout << "Go to TIMS" << endl;
+    currActingPlayer->setIsInTimsLine(true);
+    currActingPlayer->resetTurnsInTims();
+    currActingPlayer->setPos(10);
+    currActingPlayer->setRollForJail(0);
 }

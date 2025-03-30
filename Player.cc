@@ -276,10 +276,8 @@ void Player::updateMonopolyBlock() {
 
     for (auto &block: tracking) {
         if (block.second == 2 && (block.first == "Math" || block.first == "Arts1")) {
-            cout << "you got a monopoly of " << block.first <<endl;
             monopolyBlocks.push_back(block.first);
         } else if (block.second == 3) {
-            cout << "you got a monopoly of " << block.first <<endl;
             monopolyBlocks.push_back(block.first);
         }
     }

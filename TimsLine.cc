@@ -13,7 +13,7 @@ void TimsLine::sendToJail(std::shared_ptr<Player> p) {
     cout << p->getName() << " has been sent to DC Tims Line!" << endl;
 }
 
-void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> dice) {
+void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> dice, std::shared_ptr<GameBoard> b) {
     if (!p->getisInTimsLine()) return; 
 
     cout << "you will roll again, to get out you have to roll doubles"<< endl;
@@ -30,6 +30,7 @@ void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> d
         p->resetTurnsInTims();
         p->setRollForJail(3);
         p->movePlayer(rollSum);
+        b->movePlayer(p->getSymbol(), p->getPosition());
         return;
     }
 
@@ -85,6 +86,8 @@ void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> d
     }
 
 }
+
+
 
 int TimsLine::turns(std::shared_ptr<Player> p) {
     return p->getadd_roll_for_jail();
