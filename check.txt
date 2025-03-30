@@ -1,7 +1,7 @@
 2
 manit S 1 1500 0
 vansh G 0 1500 0
-AL vansh 1
+AL vansh 2
 ML vansh 0
 ECH BANK 0
 PAS BANK 0
@@ -23,7 +23,7 @@ ESC BANK 0
 C2 BANK 0
 MC BANK 0
 DC BANK 0
-PAC vansh 0
+PAC BANK 0
 CIF BANK 0
 MKV BANK 0
 UWP BANK 0
