@@ -74,6 +74,22 @@ int Player::getIndex() const {
     return index; 
 }
 
+void Player::setGymsOwned() {
+    int count = 0;
+    for (const auto& prop : ownedProperties) {
+        if (isGym(prop->getName())) count++;
+    }
+    ownedGyms = count;
+}
+
+int Player::countGymsOwned() {
+    int count = 0;
+    for (const auto& prop : ownedProperties) {
+        if (isGym(prop->getName())) count++;
+    }
+    return count;
+}
+
 double Player::getAsset() const { 
     int result = cash;
     int size = ownedProperties.size();
@@ -125,7 +141,9 @@ void Player::setCups(int n) {
 
 void Player::setPos(int pos) { 
     if (pos < 0) {
-        pos = position - pos + 40;
+        pos = (pos + 40) % 40;  // Ensure it wraps around correctly
+    } else {
+        pos = pos % 40;  // Ensure valid board position
     }
     position = pos; 
 }
@@ -155,7 +173,7 @@ void Player::setTurnsInTimsLine(int turns) {
 }
 
 void Player::changeTurnsInTimsLine() {
-    turnsInTimsLine++;
+    turnsInTimsLine--;
 }
 
 void Player::setRollForJail(int n) {
@@ -166,7 +184,7 @@ void Player::useCups() {
     cups--;
 }
 
-void Player::resetTurnsInTims() { turnsInTimsLine = 0; }
+void Player::resetTurnsInTims() { turnsInTimsLine = 3; }
 
 bool Player::checkIfInMonopolyBlock(std::string name) {
     std::string monoBlockOfSquare = monoBlockOfProp(name);
@@ -466,7 +484,7 @@ void Player::removeCup() {
 }
 
 void Player::add_roll_for_jail() {
-    ++roll_for_jail;
+    --roll_for_jail;
 }
 
 std::string Player::monoBlockOfProp(std::string name) {

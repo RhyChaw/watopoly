@@ -170,8 +170,13 @@ void Controller::commandAuction(std::vector<std::shared_ptr<Player>> group, std:
 
 void Controller::commandImprove(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, std::shared_ptr<GameBoard> b) {
     string prop, action;
-    std::cout << currActingPlayer->getSymbol() << " please choose a property to improve" << endl;
     int size = currActingPlayer->getOwnedPropList().size();
+    if (size == 0) {
+        cout << "you dont have any properties to improve" << endl;
+        cout << endl;
+        return;
+    }
+    std::cout << currActingPlayer->getSymbol() << " please choose a property to improve" << endl;
     for (int i = 0; i < size; i++) {
         std::cout << currActingPlayer->getOwnedPropList()[i]->getName() << endl; 
     }
@@ -297,12 +302,17 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                     }
                     bool overload = false;
                     if (testMode) {
+                        std::cout << "first die" << endl;
+
                         std::string d1;
                         std::string d2;
                         std::cin >> d1;
+                        std::cout << "second die" << endl;
+
                         std::cin >> d2;
                         rollValue = std::stoi(d1) + std::stoi(d2);
                         overload = true;
+                        gym->setRoll(rollValue);
                     }
                     if (!overload) {
                         auto twoDices = make_unique<Dice>();
@@ -314,7 +324,17 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                         gym->setRoll(twoDices->getSum());
                     }
                 }
-                while (!Transactions::payRent(currActingPlayer, owner, prop->amountToPay())) {
+                int rent;
+                if (isGym(prop->getName())) {
+                    auto gym = std::dynamic_pointer_cast<Gym>(prop);
+                    int gymsOwned = owner->countGymsOwned();
+                    rent = (gymsOwned == 1) ? (rollValue * 4) : (rollValue * 10);
+                    cout << "Rent for " << gym->getName() << ": $" << rent << endl;
+                }
+                // cout << prop->getGymLevel() << endl;
+                // int rent = prop->amountToPay();
+                // cout << "rent" << rent <<endl;
+                while (!Transactions::payRent(currActingPlayer, owner, rent)) {
                     std::cout << "you must sell or trade something, or declare bankruptcy, you cant continue " << endl;
                     std::cout << "Avaliable commands - trade, mortgage, improve, bankrupt" << endl;
                     string command;
@@ -542,11 +562,11 @@ void Controller::letTheGameBegin(int argc, char **argv) {
 
                     char owner_symbol = group[playerIndex]->getSymbol();
                     std::shared_ptr<Building> build;
-                    
                     // Create the building object based on the property type
                     if (isGym(property_name)) {
                         auto production = std::make_shared<Gym>(propertyIndex, property_name, buycost, owner_symbol);	
                         build = std::dynamic_pointer_cast<Building>(production);
+                        group[playerIndex]->setGymsOwned();
                     } else if (isResidence(property_name)) {
                         auto production = std::make_shared<Residence>(propertyIndex, property_name, buycost, owner_symbol);
                         build = std::dynamic_pointer_cast<Building>(production);
@@ -564,6 +584,20 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                         build->setImprLevel(imp); 
                     }
                     b->addImpr(property_name, imp);
+                }
+
+                for (auto& player : group) {
+                    int gymCount = 0;
+                    // First count gyms
+                    for (const auto& prop : player->getOwnedPropList()) {
+                        if (isGym(prop->getName())) gymCount++;
+                    }
+                    // Then set the count for each gym
+                    for (auto& prop : player->getOwnedPropList()) {
+                        if (isGym(prop->getName())) {
+                            prop->setGymLevel(gymCount);
+                        }
+                    }
                 }
 
                 // Update every player's monopoly block and the amount they need to pay
@@ -725,17 +759,6 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             std::cout << " His Properties are " << currActingPlayer->getAsset() << endl;
             break;
         }
-        if (currActingPlayer->getisInTimsLine()) {
-            std::cout << currActingPlayer->getName() << ", you are in DC Tims Line (Turn " << currActingPlayer->getTurnsInTimsLine() + 1 << ")." << endl;
-            TimsLine::handleTimsTurn(currActingPlayer, dicee);
-            if (!currActingPlayer->getisInTimsLine()) { 
-                std::cout << "You are now free! Moving forward." << endl;
-            } else {
-                std::cout << "You are still in DC Tims Line. Your turn is over." << endl;
-            }
-            currIndex = (currIndex + 1) % group.size();
-            continue; 
-        }
         std::cout << "Your turn " << currActingPlayer->getSymbol() << endl;
         std::cout << "Available commands - [ROLL, NEXT, TRADE, IMPROVE, MORTGAGE, UNMORTGAGE, BANKRUPT, ASSETS, ALL, SAVE]" << endl;
         std::cin >> command;
@@ -747,8 +770,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             }
             int rollValue = 0;
 
-            while (dicee->getDoubles() > 0)
-            {
+            while (!currActingPlayer->getisInTimsLine() && (currActingPlayer->getadd_roll_for_jail() != 0)) {
                 bool overload = false;
                 std::string d1;
                 std::string d2;
@@ -767,7 +789,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     std::cout << dicee->getSecondDie() << " = ";
                     std::cout << dicee->getSum() << "!" << endl;
                 }
-                if (d1 != d2){
+                if ((dicee->getFirstDie() != dicee->getSecondDie()) || (d1 != d2)){
                     if (!overload) {
                         rollValue = dicee->getSum();
                     }
@@ -776,15 +798,10 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     b->drawBoard();
                     b->movePlayer(currActingPlayer->getSymbol(),
                     currActingPlayer->getPosition());
-                    b->drawBoard();
+                    b->update();
                     CommandRoll(group, currActingPlayer, testMode, b);
                     break;
                 } else {
-                    if (dicee->getDoubles() == 0) {
-                        std::cout << "you got double 3 times in a row, go to Tims Line" << endl;
-                        currActingPlayer->moveToDCTims();
-                        break;
-                    }
                     if (!overload) {
                         rollValue = dicee->getSum();
                     }
@@ -794,8 +811,29 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     currActingPlayer->getPosition());
                     b->update();
                     CommandRoll(group, currActingPlayer, testMode, b);
-                    std::cout << "you rolled doubles! you can roll again" << endl;
-                    dicee->changeDouble();
+                    std::cout << currActingPlayer->getadd_roll_for_jail() <<endl;
+                    if (!currActingPlayer->getisInTimsLine()) {
+                        std::cout << "you rolled doubles! you can roll again" << endl;
+                        currActingPlayer->add_roll_for_jail();
+                    }
+                }
+            }
+            if (currActingPlayer->getadd_roll_for_jail() == 0) {
+                currActingPlayer->setIsInTimsLine(true);
+                std::cout << "you got double 3 times in a row, go to Tims Line" << endl;
+                currActingPlayer->moveToDCTims();
+                currActingPlayer->setPos(10);
+                b->movePlayer(currActingPlayer->getSymbol(),currActingPlayer->getPosition());
+                b->update();
+                std::cout << currActingPlayer->getName() << ", you are in DC Tims Line (Turn " << currActingPlayer->getTurnsInTimsLine() << ")." << endl;
+                TimsLine::handleTimsTurn(currActingPlayer, dicee);
+                if (currActingPlayer->getisInTimsLine()) {  // there was a not before....
+                    std::cout << "You are now free! Moving forward." << endl;
+                } else {
+                    std::cout << "You are still in DC Tims Line. Your turn is over." << endl;
+                    currIndex = (currIndex + 1) % group.size();
+                    hasRolled = false;
+                    continue; 
                 }
             }
         } else if (command == "next" || command == "NEXT") {
@@ -803,6 +841,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                 std::cout << "You must roll the dice before ending your turn!" << endl;
                 continue;
             }
+            currActingPlayer->setRollForJail(3);
             currIndex += 1;
             currIndex = currIndex % group.size();
             std::cout << "turn finished, going to the next player!" << endl;
