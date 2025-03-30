@@ -18,7 +18,7 @@ void Tuition::pay(std::shared_ptr<Player> p) {
         std::cout << p->getName() << " landed on Tuition." << std::endl;
         std::cout << "Options: \n\tA) Pay $300 or \n\tB) Pay 10% of your total net worth!" << std::endl;
         cin >> option;
-        std::cout << "Please select an option!"
+        std::cout << "Please select an option!" << endl;
         if (option == 'A' || option == 'B') {
             break;
         }
