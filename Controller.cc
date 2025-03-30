@@ -116,6 +116,13 @@ void Controller::commandAuction(std::vector<std::shared_ptr<Player>> group, std:
 
     std::cout << "========== PROPERTY AUCTION ==========" << endl;
     std::cout << "Auctioning: " << prop << endl;
+    int cost;
+    for (int i = 0; i < 28; i ++) {
+        if (OWNABLE[i][0] == prop) {
+            cost = std::stoi(OWNABLE[i][2]);
+        }
+    }
+    std::cout << "Original Price: " << cost << endl;
     std::cout << "Starting auction process..." << endl;
     std::vector<bool> withdrawnPlayers(group.size(), false);
     int currentPlayerIndex = std::find(group.begin(), group.end(), currActingPlayer) - group.begin();
@@ -330,6 +337,19 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                     int gymsOwned = owner->countGymsOwned();
                     rent = (gymsOwned == 1) ? (rollValue * 4) : (rollValue * 10);
                     cout << "Rent for " << gym->getName() << ": $" << rent << endl;
+                }
+                if (isResidence(prop->getName())) {
+                    auto res = std::dynamic_pointer_cast<Residence>(prop);
+                    int resOwned = owner->countResOwned();
+                    rent = 25;
+                    for (int i = 0; i < resOwned - 1;i ++) {
+                        rent*=2;
+                    }
+                    cout << "Rent for " << res->getName() << ": $" << rent << endl;
+                }
+                if (isAcademic(prop->getName())) {
+                    rent = prop->amountToPay();
+                    cout<<rent <<"rent"<<endl;
                 }
                 // cout << prop->getGymLevel() << endl;
                 // int rent = prop->amountToPay();
@@ -570,6 +590,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     } else if (isResidence(property_name)) {
                         auto production = std::make_shared<Residence>(propertyIndex, property_name, buycost, owner_symbol);
                         build = std::dynamic_pointer_cast<Building>(production);
+                        group[playerIndex]->setResOwned();
                     } else if (isAcademic(property_name)) {
                         auto production = std::make_shared<Academic>(propertyIndex, property_name, buycost, owner_symbol);
                         build = std::dynamic_pointer_cast<Building>(production);
@@ -775,10 +796,28 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                 std::string d1;
                 std::string d2;
                 if (testMode) {
-                    std::cout << "Enter the first dice number" << endl;
-                    std::cin >> d1;
-                    std::cout << "Enter the second dice number" << endl;
-                    std::cin >> d2;
+                    std::cout << "first die" << endl;
+                    
+                    // Validate first die is a number
+                    while (true) {
+                        std::cin >> d1;
+                        if (!d1.empty() && std::all_of(d1.begin(), d1.end(), ::isdigit)) {
+                            break;
+                        }
+                        std::cout << "Invalid input. Please enter a number for first die: ";
+                    }
+                
+                    std::cout << "second die" << endl;
+                    
+                    // Validate second die is a number
+                    while (true) {
+                        std::cin >> d2;
+                        if (!d2.empty() && std::all_of(d2.begin(), d2.end(), ::isdigit)) {
+                            break;
+                        }
+                        std::cout << "Invalid input. Please enter a number for second die: ";
+                    }
+                
                     rollValue = std::stoi(d1) + std::stoi(d2);
                     overload = true;
                 }
@@ -875,6 +914,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             currIndex = currIndex % group.size();
             std::cout << "Moving to the next player!" << endl;
             b->removePlayer(currActingPlayer->getSymbol());
+            b->update();
         } else if (command == "assets" || command == "ASSETS") {
             if (currActingPlayer->getPosition() != 4)
             {

@@ -295,6 +295,8 @@ void Transactions::buyBuilding(std::string property_name, std::shared_ptr<Player
     ownedProperties.push_back(build);
     owner->pay(buycost);
     owner->setGymsOwned();
+    owner->setResOwned();
+
 
     if (isGym(property_name)){
 	    build->setGymLevel(owner->getOwnedGyms());
