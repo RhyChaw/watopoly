@@ -49,6 +49,9 @@ void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> d
         cout << "This is your third turn. You must leave DC Tims Line." << endl;
         cout << "You have to pay 50 now!" << endl;
         p->changeCash(-50);
+        p->setIsInTimsLine(false);
+        p->resetTurnsInTims();
+        p->setRollForJail(3);
         return;
     }
     cout << "You did not roll doubles. You may:" << endl;
