@@ -33,7 +33,7 @@ void Tuition::pay(std::shared_ptr<Player> p) {
         money = 300;
     } else if (option == 'B') {
         money = p->getAsset() * 0.1;
-        p->changeAsset(p->getAsset() * 0.1);
+        p->changeCash(-(p->getAsset() * 0.1));
     }
 
     std::cout << p->getName() << " pays $" << money << " for tuition." << std::endl;
