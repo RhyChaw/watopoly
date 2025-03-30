@@ -89,7 +89,7 @@ void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> d
             p->resetTurnsInTims();
             p->setRollForJail(3);
         } else {
-            cout << "You have no Rim cups. You must stay in jail :(" << endl;
+            cout << "You have no Tim cups. You must stay in jail :(" << endl;
         }
     } else { // Stay in jail
         cout << "You chose to stay in jail. Try again next turn..." << endl;

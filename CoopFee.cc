@@ -9,5 +9,6 @@ CoopFee::~CoopFee() {}
 
 void CoopFee::pay(std::shared_ptr<Player> p) {
     std::cout << p->getName() << " Has landed on Co-op Fee and must pay $" << "150!" << std::endl;
+    std::cout << p->getName() << "has paid " << "150!" << std::endl;
     p->changeCash(-150);
 }

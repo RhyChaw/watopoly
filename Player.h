@@ -80,6 +80,7 @@ public:
 void setGymsOwned();
 void setResOwned();
 int countResOwned();
+void setTurnsInTims(int n);
 
 
     //getters

@@ -209,6 +209,8 @@ void Player::useCups() {
 }
 
 void Player::resetTurnsInTims() { turnsInTimsLine = 3; }
+void Player::setTurnsInTims(int n) { turnsInTimsLine = n; }
+
 
 bool Player::checkIfInMonopolyBlock(std::string name) {
     std::string monoBlockOfSquare = monoBlockOfProp(name);
@@ -276,10 +278,10 @@ void Player::updateMonopolyBlock() {
 
     for (auto &block: tracking) {
         if (block.second == 2 && (block.first == "Math" || block.first == "Arts1")) {
-            cout << "You got a monopoly of " << block.first <<endl;
+            cout << "Monopolies you have: " << block.first <<endl;
             monopolyBlocks.push_back(block.first);
         } else if (block.second == 3) {
-            cout << "You got a monopoly of " << block.first <<endl;
+            cout << "Monopolies you have: " << block.first <<endl;
             monopolyBlocks.push_back(block.first);
         } else if (block.second == 3) {
             monopolyBlocks.push_back(block.first);
