@@ -1,4 +1,5 @@
 #include "GameBoard.h"
+#include <set>
 #include <iostream>
 
 GameBoard::GameBoard() : display(std::make_shared<WatopolyDisplay>()) {
@@ -6,6 +7,166 @@ GameBoard::GameBoard() : display(std::make_shared<WatopolyDisplay>()) {
 }
 
 GameBoard::~GameBoard() {}
+
+void GameBoard::printBoardToTerminal() {
+    // Make a copy of the board that we can modify
+    const std::set<int> improvementPositions = {
+        1,3,6,8,9,11,13,14,16,18,19,21,23,24,26,27,29,31,32,34,37,39
+    };
+    std::vector<std::string> terminalBoard = {
+    "_________________________________________________________________________________________",
+    "|Goose  |       |NEEDLES|       |       |V1     |       |       |CIF    |       |GO TO  |",
+    "|Nesting|-------|HALL   |-------|-------|       |-------|-------|       |-------|TIMS   |",
+    "|       |EV1    |       |EV2    |EV3    |       |PHYS   |B1     |       |B2     |       |",
+    "|       |       |       |       |       |       |       |       |       |       |       |",
+    "|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|",
+    "|       |                                                                       |       |",
+    "|-------|                                                                       |-------|",
+    "|OPT    |                                                                       |EIT    |",
+    "|       |                                                                       |       |",
+    "|_______|                                                                       |_______|",
+    "|       |                                                                       |       |",
+    "|-------|                                                                       |-------|",
+    "|BMH    |                                                                       |ESC    |",
+    "|       |                                                                       |       |",
+    "|_______|                                                                       |_______|",
+    "|SLC    |                                                                       |SLC    |",
+    "|       |                                                                       |       |",
+    "|       |                                                                       |       |",
+    "|       |                                                                       |       |",
+    "|_______|                                                                       |_______|",
+    "|       |                                                                       |       |",
+    "|-------|                                                                       |-------|",
+    "|LHI    |                                                                       |C2     |",
+    "|       |             _____________________________________________             |       |",
+    "|_______|            |                                             |            |_______|",
+    "|UWP    |            | #   #  ##  #####  ###  ###   ###  #   #   # |            |REV    |",
+    "|       |            | #   # #  #   #   #   # #  # #   # #   #   # |            |       |",
+    "|       |            | # # # ####   #   #   # ###  #   # #    # #  |            |       |",
+    "|       |            | # # # #  #   #   #   # #    #   # #     #   |            |       |",
+    "|_______|            | ##### #  #   #    ###  #     ###  ## #  #   |            |_______|",
+    "|       |            |_____________________________________________|            |NEEDLES|",
+    "|-------|                                                                       |HALL   |",
+    "|CPH    |                                                                       |       |",
+    "|       |                                                                       |       |",
+    "|_______|                                                                       |_______|",
+    "|       |                                                                       |       |",
+    "|-------|                                                                       |-------|",
+    "|DWE    |                                                                       |MC     |",
+    "|       |                                                                       |       |",
+    "|_______|                                                                       |_______|",
+    "|PAC    |                                                                       |COOP   |",
+    "|       |                                                                       |FEE    |",
+    "|       |                                                                       |       |",
+    "|_______|                                                                       |_______|",
+    "|       |                                                                       |       |",
+    "|-------|                                                                       |-------|",
+    "|RCH    |                                                                       |DC     |",
+    "|       |                                                                       |       |",
+    "|_______|_______________________________________________________________________|_______|",
+    "|DC Tims|       |       |NEEDLES|       |MKV    |TUITION|       |SLC    |       |COLLECT|",
+    "|Line   |-------|-------|HALL   |-------|       |       |-------|       |-------|OSAP   |",
+    "|       |HH     |PAS    |       |ECH    |       |       |ML     |       |AL     |       |",
+    "|       |       |       |       |       |       |       |       |       |       |       |",
+    "|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|"
+    };
+
+    // Map board positions to terminal board coordinates (line, column)
+    std::map<int, std::pair<int, int>> posToTerminal = {
+    // Top row (left to right, positions 0-10)
+    {0, {53, 81}},  // COLLECT OSAP (bottom right)
+    {1, {53, 73}},  // AL
+    {2, {53, 65}},  // SLC
+    {3, {53, 57}},  // ML
+    {4, {53, 49}},  // TUITION
+    {5, {53, 41}},  // MKV
+    {6, {53, 33}},  // ECH
+    {7, {53, 25}},  // NEEDLES HALL
+    {8, {53, 17}},  // PAS
+    {9, {53, 9}},  // HH
+    {10, {53, 1}},  // DC Tims Line (bottom left)
+    
+    // Right side (bottom to top, positions 11-19)
+    {11, {48, 1}},  // RCH
+    {12, {42, 1}},  // PAC
+    {13, {38, 1}},  // DWE
+    {14, {33, 1}},  // CPH
+    {15, {28, 1}},  // UWP
+    {16, {23, 1}},  // LHI
+    {17, {18, 1}},  // SLC
+    {18, {13, 1}},  // BMH
+    {19, {8, 1}},  // OPT
+    
+    // Bottom row (right to left, positions 20-30)
+    {20, {3, 1}},  // Goose Nesting (top left)
+    {21, {3, 9}}, // EV1
+    {22, {3, 17}}, // NEEDLES HALL
+    {23, {3, 25}}, // EV2
+    {24, {3, 33}}, // EV3
+    {25, {3, 41}}, // V1
+    {26, {3, 49}}, // PHYS
+    {27, {3, 57}}, // B1
+    {28, {3, 65}}, // CIF
+    {29, {3, 73}}, // B2
+    {30, {3, 81}}, // GO TO TIMS (top right)
+    
+    // Left side (top to bottom, positions 31-39)
+    {31, {8, 81}}, // EIT
+    {32, {13, 81}}, // ESC
+    {33, {18, 81}}, // SLC
+    {34, {23, 81}}, // C2
+    {35, {28, 81}}, // REV
+    {36, {33, 81}}, // NEEDLES HALL
+    {37, {38, 81}}, // MC
+    {38, {42, 81}}, // COOP FEES
+    {39, {48, 81}}  // DC
+};
+
+    // Track how many players are at each position for offsetting
+    std::map<int, int> positionCounts;
+
+    // Add players to the board copy
+    for (const auto& player : playerPositions) {
+        int pos = player.second;
+        if (posToTerminal.find(pos) == posToTerminal.end()) continue;
+
+        auto [line, col] = posToTerminal[pos];
+        int offset = positionCounts[pos]++ * 1; // Offset players by 2 columns
+        
+        // Ensure we don't overflow the cell
+        if (col + offset < terminalBoard[line].length()) {
+            terminalBoard[line][col + offset] = player.first;
+        }
+    }
+    for (const auto& imp : squareImprovements) {
+        auto posIt = squareToPosition.find(imp.first);
+        if (posIt == squareToPosition.end()) continue;
+        
+        int pos = posIt->second;
+        if (improvementPositions.find(pos) == improvementPositions.end()) continue;
+        if (imp.second == 0) continue;
+
+        auto [line, col] = posToTerminal[pos];
+        line -= 2; // Apply Y-offset of 3 lines up
+
+        // Draw improvements (max 5)
+        int improvementsToShow = std::min(imp.second, 5);
+        for (int i = 0; i < improvementsToShow; i++) {
+            int impCol = col + i; // Space improvements 2 columns apart
+            if (line >= 0 && line < terminalBoard.size() && 
+                impCol >= 0 && impCol < terminalBoard[line].length()) {
+                char impChar = (i == 4) ? 'C' : 'B';
+                terminalBoard[line][impCol] = impChar; // Using 'I' to represent improvements
+            }
+        }
+    }
+
+    // Print the modified board
+    for (const auto& line : terminalBoard) {
+        std::cout << line << "\n";
+    }
+}
+
 
 void GameBoard::initializeSquareMap() {
     // Map square names to their board positions (0-39)
