@@ -52,6 +52,8 @@ void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> d
         p->setIsInTimsLine(false);
         p->resetTurnsInTims();
         p->setRollForJail(3);
+        p->movePlayer(rollSum);
+        b->movePlayer(p->getSymbol(), p->getPosition());
         return;
     }
     cout << "You did not roll doubles. You may:" << endl;
@@ -80,6 +82,8 @@ void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> d
             p->setIsInTimsLine(false);
             p->resetTurnsInTims();
             p->setRollForJail(3);
+            p->movePlayer(rollSum);
+            b->movePlayer(p->getSymbol(), p->getPosition());
 
         } else {
             cout << "You don't have enough money to pay. You must stay in jail. try to sell something in your next turn..." << endl;
@@ -91,6 +95,8 @@ void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> d
             p->setIsInTimsLine(false);
             p->resetTurnsInTims();
             p->setRollForJail(3);
+            p->movePlayer(rollSum);
+            b->movePlayer(p->getSymbol(), p->getPosition());
         } else {
             cout << "You have no Tim cups. You must stay in jail :(" << endl;
         }

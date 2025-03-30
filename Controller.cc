@@ -975,14 +975,6 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                 
                 if (!currActingPlayer->getisInTimsLine()) {
                     // Player got out - move normally
-                    dicee->roll();
-                    std::cout << "Rolling your dice..." << endl
-                    << dicee->getFirstDie() << " + "
-                    << dicee->getSecondDie() << " = "
-                    << dicee->getSum() << "!" << endl;
-                    rollValue = dicee->getSum();
-                    currActingPlayer->movePlayer(rollValue);
-                    b->movePlayer(currActingPlayer->getSymbol(), currActingPlayer->getPosition());
                     CommandRoll(group, currActingPlayer, testMode, b);
                 }
                 
@@ -1055,6 +1047,14 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                         b->movePlayer(currActingPlayer->getSymbol(), 10);
                         b->update();
                         std::cout << "Three doubles! Sent to DC Tims Line." << endl;
+                        cout << R"(
+                            ┌─┬─┬─┬─┬─┬─┐
+                            │ │ │ │ │ │ │
+                            │(╥_╥)│ │ │ │
+                            │ │ │ │ │ │ │
+                            └─┴─┴─┴─┴─┴─┘
+                               "Let me out!"
+                              )" << endl;
                         currIndex += 1;
                         currIndex = currIndex % group.size();
                         hasRolled = false;
@@ -1150,7 +1150,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     f << group[i]->getSymbol() << " ";
                     f << group[i]->getCups() << " ";
                     f << group[i]->getCash() << " ";
-                    f << group[i]->getPosition();
+                    f << group[i]->getPosition() << " ";
                     if (group[i]->getPosition() == 10) {
                         f << group[i]->getisInTimsLine()<< " ";
                         if (group[i]->getisInTimsLine()) {
