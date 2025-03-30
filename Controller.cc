@@ -295,7 +295,7 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
             if (owner == currActingPlayer) {
                 std::cout << "you own this property, no need to pay rent" << endl;
             } else if (owner != currActingPlayer && !prop->getMortStatus()) {
-                std::cout << "the property belongs to " << owner->getName();
+                std::cout << "the property belongs to " << owner->getName() << endl;
                 if (isGym(prop->getName())) {
                     std::cout << "landed on the gym, you have to roll to see what rent you will have to pay" << endl;
                     auto gym = std::dynamic_pointer_cast<Gym>(prop);
@@ -382,15 +382,22 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
             }
         }
         else { 
-            std::cout << "this property is available to buy" << endl;
-            std::cout << "type buy or auction to proceed accordingly" << endl;
+            int howMuch = 0;
+            for (int i = 0; i < 28; i ++) {
+                if (OWNABLE[i][0] == sq) {
+                    howMuch = std::stoi(OWNABLE[i][2]);
+                }
+            }
+            std::cout << "You have landed on " << currActingPlayer->getPosition() << endl;
+            std::cout << "this property is available to buy, it costs: $" << howMuch << endl;
+            std::cout << "type [ BUY ] or [ AUCTION ] to proceed accordingly" << endl;
             string input;
             while (true) {
                 std::cin >> input;
                 if (input == "buy" || input == "auction" || input == "BUY" || input == "AUCTION") {
                     break;
                 } else {
-                    std::cout <<"it has to be one of those commands - buy or auction" << endl;
+                    std::cout <<"it has to be one of those commands - [ BUY ] or [ AUCTION ]" << endl;
                 }
             }
             if (input == "buy" || input == "BUY"){
@@ -690,7 +697,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                     if (it != arr.end()) {
                         arr.erase(it);
                         pieceCharTaken.push_back(piece);
-                        std::cout << piece << " has been taken" << std::endl;
+                        std::cout << "You just took" << piece << std::endl;
                         break;  // Exit the loop since a valid symbol was chosen
                     } else {
                         std::cout << "Please select a piece from the available ones.\n";

@@ -25,7 +25,7 @@ bool Transactions::isGym(std::string squareName){
  
 bool Transactions::checkFund(std::shared_ptr<Player> p1, int amt) {
     if (p1->getCash() < amt) {
-        std::cout << "The player " << p1->getName() << " doesn't have enough funds to use" << std::endl;
+        std::cout << "The player " << p1->getName() << " doesn't have enough funds to use." << std::endl;
         return false;
     }
     return true;
@@ -53,7 +53,7 @@ bool Transactions::isAcademic(std::string squareName){
 void Transactions::transferProperty(std::shared_ptr<Building> building, std::shared_ptr<Player> from, std::shared_ptr<Player> to) {
     from->removeProp(building);
     to->addProp(building);
-    std::cout << "Transferred " << building->getName() << " from " << from->getName() << " to " << to->getName() << std::endl;
+    std::cout << "Transferred " << building->getName() << " from " << from->getName() << " to " << to->getName() << "." << std::endl;
 }
 
 bool Transactions::isOwned(std::string nameSquare) {
@@ -72,7 +72,7 @@ void Transactions::trade3(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2
         return;
     }
     if (!(p2->ownThisProp(build->getName()))) {
-        std::cout << "The player " << p2->getName() << " doesn't own this property" << std::endl;
+        std::cout << "The player " << p2->getName() << " doesn't own this property." << std::endl;
         return;
     }
     if (build->getImprLevel() != 0) {
@@ -81,9 +81,9 @@ void Transactions::trade3(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2
     }
 
     string choice;
-    cout << p2->getName() << ", do you accept this trade offer? (yes/no): ";
+    cout << p2->getName() << ", do you accept this trade offer? [ YES / NO ]: ";
     cin >> choice;
-    if (choice == "accept" || choice == "y" || choice == "yes") {
+    if (choice == "accept" || choice == "y" || choice == "yes" || choice == "YES") {
     
         for (int i = 0; i < 22; i++) {
             if (OWNABLE[i][0] == build->getName()) {
@@ -149,9 +149,9 @@ void Transactions::trade1(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2
     }
 
     string choice;
-    cout << p2->getName() << ", do you accept this trade offer? (yes/no): ";
+    cout << p2->getName() << ", do you accept this trade offer? [ YES / NO ]: ";
     cin >> choice;
-    if (choice == "accept" || choice == "y" || choice == "yes") {
+    if (choice == "accept" || choice == "y" || choice == "yes" || choice == "YES") {
 
         for (int i = 0; i < 22; i++) {
             if (OWNABLE[i][0] == building1->getName()) {
@@ -240,7 +240,7 @@ bool Transactions::payRent(std::shared_ptr<Player> p1, std::shared_ptr<Player> p
 
 bool Transactions::payBank(std::shared_ptr<Player> p1, int rent) {
     if(!checkFund(p1, rent)) {
-        std::cout << "doesnt have money" << std::endl;
+        std::cout << "doesnt have money!" << std::endl;
 
         return false;
     }

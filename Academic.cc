@@ -61,7 +61,7 @@ bool Academic::getOwned() const {
 
 int Academic::amountToPay() {
     if (this->getImprLevel() == 0 && owned) {
-        std::cout <<"since monopoly have to pay double" <<endl;
+        std::cout <<"This is a Monopoly without improvements, hence you will be required to pay double the rent on this building." <<endl;
         return 2 * costTogen(this->getName());
     }
     return costToimp(this->getName(), this->getImprLevel());

@@ -237,12 +237,12 @@ bool Player::ownThisProp(std::string name) {
 
 void Player::pay(int amount) {
     if (isBankrupt) {
-        std::cout << "this player is bankrupted" << std::endl;
+        std::cout << "This player is bankrupted..." << std::endl;
         return;
     }
 
     if (cash < amount) {
-        std::cout << " insufficient fund to pay" << std::endl;
+        std::cout << "Insufficient fund to pay!" << std::endl;
         return;
     }
 
@@ -276,10 +276,10 @@ void Player::updateMonopolyBlock() {
 
     for (auto &block: tracking) {
         if (block.second == 2 && (block.first == "Math" || block.first == "Arts1")) {
-            cout << "you got a monopoly of " << block.first <<endl;
+            cout << "You got a monopoly of " << block.first <<endl;
             monopolyBlocks.push_back(block.first);
         } else if (block.second == 3) {
-            cout << "you got a monopoly of " << block.first <<endl;
+            cout << "You got a monopoly of " << block.first <<endl;
             monopolyBlocks.push_back(block.first);
         }
     }
@@ -323,7 +323,7 @@ bool Player::unmortgageProp(std::shared_ptr<Building> prop) {
     cost = cost * 0.6;
     
     if (cost > cash) {
-        std::cout << "you don't have enough money to unmortgage" << std::endl;
+        std::cout << "You don't have enough money to unmortgage, try something else." << std::endl;
         return false;
     }
 
@@ -342,7 +342,10 @@ bool Player::unmortgageProp(std::shared_ptr<Building> prop) {
 void Player::movePlayer(int roll) {
     position += roll;
     if (position >= 40) {
-        std::cout << "***You receive OSAP SALARY for landing or passing it!***" << std::endl;
+        std::cout << "**********************************************************" << std::endl;
+        std::cout << "*** You receive OSAP SALARY for landing or passing it! ***" << std::endl;
+        std::cout << "**********************************************************" << std::endl;
+
         position %= 40;
         this->changeCash(200);
     }
@@ -355,7 +358,7 @@ void Player::moveToDCTims() {
 }
 
 void Player::printAsset() {
-    cout << "Player : " << name << endl;
+    cout << "PRINTING ASSETS FOR PLAYER: " << name << endl;
     cout << "Money Owned : $" << cash << endl;
     printOwnedProp();
     cout << "The Number of Tims Cups Owned : " << cups << endl;
@@ -453,7 +456,7 @@ void Player::loadUpdateAmountToPay() {
 
 void Player::removeProp(std::shared_ptr<Building> property_name) {
     if (!ownThisProp(property_name->getName())) {
-        std::cout << "this props is nnowned" << std::endl;
+        std::cout << "This property is not owned!" << std::endl;
         return;
     }
 
@@ -468,7 +471,7 @@ void Player::removeProp(std::shared_ptr<Building> property_name) {
 
 void Player::addProp(std::shared_ptr<Building> property_name) {
     if (ownThisProp(property_name->getName())) {
-        std::cout << "this props is owned" << std::endl;
+        std::cout << "This property is owned!" << std::endl;
         return;
     }
 
@@ -551,7 +554,7 @@ void Player::declareBankruptcy() {
     }
 
 
-    cout << getName() << " has declared bankruptcy!" << endl;
+    cout << getName() << " has declared bankruptcy! :(" << endl;
 }
 
 bool Player::checkBankrupt() const {
