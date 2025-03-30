@@ -44,7 +44,7 @@ public:
     void commandImprove(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, std::shared_ptr<GameBoard> b);
     void commandMortgage(std::shared_ptr<Player> currActingPlayer);
     void commandUnmortgage(std::shared_ptr<Player> currActingPlayer);
-void commandBankrupt(std::shared_ptr<Player> currActingPlayer, std::shared_ptr<Player> owner);
+void commandBankrupt(std::shared_ptr<Player> currActingPlayer, std::shared_ptr<Player> owner, std::vector<std::shared_ptr<Player>> group);
 void commandAuction(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, std::string prop);
 
 void CommandRoll(std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, bool testMode, std::shared_ptr<GameBoard> b);
