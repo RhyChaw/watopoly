@@ -705,6 +705,82 @@ void Controller::letTheGameBegin(int argc, char **argv) {
         }
     }
 
+    string reply;
+    std::cout << "Would you like to add a bot to the game? [ YES ] or [ NO ]? " << endl;
+    std::cin >> reply;
+
+    string selection;
+    string BotName;
+    char symSelect;
+
+    if (reply == "YES") {
+        std::cout << "Select from [ EASY ] and [ SMART ], and [ CANCEL ] to start the game directly." << endl;
+        std::cin >> selection;
+
+        if (selection == "EASY") {
+
+            // name
+            std::cout << "Starting Bot creation, please give it a name" << endl;
+            std::cin >> BotName;
+
+            // symbol
+            std::cout << "Please choose a symbol for it" << endl;
+            std::cin >> symSelect;
+
+            // auto it = std::find(arr.begin(), arr.end(), symSelect);
+        
+            //     if (it != arr.end()) {
+            //         arr.erase(it);
+            //         symSelectCharTaken.push_back(symSelect);
+            //         std::cout << symSelect << " has been taken" << std::endl;
+            //         break;  // Exit the loop since a valid symbol was chosen
+            //     } else {
+            //         std::cout << "Please select a piece from the available ones.\n";
+            //     }
+
+            auto bot = std::make_shared<Bot>(BotName, symSelect, 1500);
+            group.push_back(bot);
+            b->addPlayer(symSelect);
+            std::cout << "New Bot created, proceeding ahead!" << endl;
+        }
+
+        if (selection == "SMART") { 
+            // name
+            std::cout << "Starting Bot creation, please give it a name" << endl;
+            std::cin >> BotName;
+
+            // symbol
+            std::cout << "Please choose a symbol for it" << endl;
+            std::cin >> symSelect;
+
+            // auto it = std::find(arr.begin(), arr.end(), symSelect);
+        
+            //     if (it != arr.end()) {
+            //         arr.erase(it);
+            //         symSelectCharTaken.push_back(symSelect);
+            //         std::cout << symSelect << " has been taken" << std::endl;
+            //         break;  // Exit the loop since a valid symbol was chosen
+            //     } else {
+            //         std::cout << "Please select a piece from the available ones.\n";
+            //     }
+
+            auto bot = std::make_shared<BotSmart>(BotName, symSelect, 1500);
+            group.push_back(bot);
+            b->addPlayer(symSelect);
+            std::cout << "New Bot created, proceeding ahead!" << endl;
+        }
+
+        if (selection == "CANCEL") { 
+            std::cout << "Bot creation cancelled, starting game." << endl;
+            return;
+        }
+
+    }
+
+    if (reply == "NO") {
+        std::cout << "Bot creation cancelled, starting game." << endl;
+    }
+
     std::cout << "++++++++++++  GAME START  ++++++++++++" << endl;
     int currIndex = 0;
     
@@ -716,6 +792,8 @@ void Controller::letTheGameBegin(int argc, char **argv) {
 
     while (true) {
         currActingPlayer = group[currIndex];
+        // add a logic for bot here!
+
         if (currActingPlayer->getisBankrupt()) {
             currIndex = (currIndex + 1) % group.size();
             continue;

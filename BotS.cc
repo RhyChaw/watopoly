@@ -1,27 +1,30 @@
 #include "BotS.h"
 #include "Player.h"
+#include <iostream>
+
 using namespace std;
 
-BotS::BotS(std::string name, char symbol, int cash) : Player(name, symbol, cash) {}
-
-void botSController(BotS *b, int roll) {
-    std::cout << "I am rolling yay!" << endl;
+void botSController(BotSmart *b, int roll) {
+    cout << "I am rolling yay!" << endl;
     b->movePlayer(roll);
-
     b->getSquareAtCurrPos();
 
-    if (checkSelfValid(b)) {
+    if (checkSelfValidS(b)) {
         buyBotS(b);
     }
 }
 
-bool checkSelfValid(BotS *b) {
+bool checkSelfValidS(BotSmart *b) {
     return (b->getAsset() > 0);
 }
 
-void buyBotS(BotS *b) {
+void buyBotS(BotSmart *b) {
     int idx = b->getPosition();
     vector<shared_ptr<Building>> prop = b->getOwnedPropList();
-    b->addProp(prop[idx]);
-}
 
+    if (idx >= 0 && idx < prop.size()) {  // Prevent out-of-bounds errors
+        b->addProp(prop[idx]);
+    } else {
+        cout << "Error: Invalid property index!" << endl;
+    }
+}

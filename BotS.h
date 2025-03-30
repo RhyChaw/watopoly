@@ -1,22 +1,20 @@
-#ifndef BOT_H
-#define BOT_H
+#ifndef BOTS_H
+#define BOTS_H
 
 #include "Player.h"
 #include <cstdlib>
+#include <memory>
+#include <vector>
 
-// this is the smart bot
-
-class BotS : public Player {
+// Smart Bot class
+class BotSmart : public Player {
 public:
-    // ctor
-    BotS(std::string name, char symbol, int cash) : Player(name, symbol, cash) {}
-
-    // void functions
-    void botSController(BotS *b);
-    void checkSelfValid(BotS *b);
-    void buyBotS(BotS *b, std::shared_ptr<Building> property_name);
+    BotSmart(std::string name, char symbol, int cash) : Player(name, symbol, cash) {}
 };
 
-#endif
- 
-// here prob of buy higher
+// Declare free functions
+bool checkSelfValidS(BotSmart *b);
+void buyBotS(BotSmart *b);
+void botSController(BotSmart *b, int roll);
+
+#endif  // BOTS_H

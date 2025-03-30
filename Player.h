@@ -30,6 +30,7 @@ private:
     std::string name;  // Name of the player
     char symbol; // Symbol of the player
     double cash; // Player's money
+    bool isBot = false;
     int position = 0; // Dice rolling position
     int cups = 0; // Number of "Get Out of Jail Free" cards
     bool isBankrupt = false; // Whether the player is bankrupt

@@ -1,13 +1,12 @@
 #include "Bot.h"
 #include "Player.h"
+#include <iostream>
+
 using namespace std;
 
-Bot::Bot(std::string name, char symbol, int cash) : Player(name, symbol, cash) {}
-
 void botController(Bot *b, int roll) {
-    std::cout << "I am rolling yay!" << endl;
+    cout << "I am rolling yay!" << endl;
     b->movePlayer(roll);
-
     b->getSquareAtCurrPos();
 
     if (checkSelfValid(b)) {
@@ -22,6 +21,8 @@ bool checkSelfValid(Bot *b) {
 void buyBot(Bot *b) {
     int idx = b->getPosition();
     vector<shared_ptr<Building>> prop = b->getOwnedPropList();
-    b->addProp(prop[idx]);
+    
+    if (idx >= 0 && idx < prop.size()) {  // Prevent out-of-bounds errors
+        b->addProp(prop[idx]);
+    }
 }
-
