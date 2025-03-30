@@ -437,6 +437,8 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                 while (!Transactions::payRent(currActingPlayer, owner, rent)) {
                     std::cout << "you must sell or trade something, or declare bankruptcy, you cant continue " << endl;
                     std::cout << "Avaliable commands - [ TRADE , MORTGAGE, IMPROVE, BANKRUPT ]" << endl;
+                    std::cout << "you can write, [ALL] to see your net worth" << endl;
+                    std::cout << endl;
                     string command;
                     std::cin >> command;
                     if (command == "bankrupt" || command == "BANKRUPT") {
@@ -455,6 +457,8 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                     else if (command == "improve" || command == "IMPROVE")
                     {
                         commandImprove(group, currActingPlayer, b);
+                    } else if (command == "all" || command == "ALL") {
+                        currActingPlayer->printAsset();
                     } else {
                         std::cout << "invalid command, please try again" << endl; 
                     }
@@ -525,7 +529,7 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
     else { 
         if (sq == "SLC"){
             std::cout << "You are at SLC" << endl;
-            SLC::moveeee(currActingPlayer);
+            SLC::moveeee(currActingPlayer, group);
             b->movePlayer(currActingPlayer->getSymbol(), currActingPlayer->getPosition());
             b->drawBoard();
             CommandRoll(group, currActingPlayer, testMode, b);
@@ -539,7 +543,7 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
             b->update();
         } else if (sq == "NEEDLES HALL") {
             std::cout << "You are at Needles Hall." << endl;
-            NeedlesHall::moveeee(currActingPlayer);
+            NeedlesHall::moveeee(currActingPlayer, group);
         } else {  
             if (sq == "TUITION"){
                 Tuition::pay(currActingPlayer);

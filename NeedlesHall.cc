@@ -12,20 +12,29 @@ int NeedlesHall::getRandomMovement(int n) {
     return spin;
 }
 
-void NeedlesHall::moveeee(std::shared_ptr<Player> p) {
+void NeedlesHall::moveeee(std::shared_ptr<Player> p, std::vector<std::shared_ptr<Player>> group) {
     srand(time(NULL));
-    std::cout << "Let's determine if you are the lucky winner to earn a TIMS CUP!!" << endl;
-    std::cout << "WHOAAAA EXCITING!!! DRUMROLLS!!!...." << endl;
-    std::cout << "If you spin a 48 then you win" << endl;
-    int timsRoll = getRandomMovement(100);
-    cout << "Your Tims Roll is " << timsRoll << "!" << endl;
-    if (timsRoll == 48) {
-		cout << "Congratulations! You have won a TimsCup" << endl;
-		p->addTimsCup();
-		return;
+	int c = 0;
+	for (int i = 0; i < group.size(); i++) {
+		c += group[i]->getCups();
 	}
-	cout << "Oh noo!!! You did not recive, that's sad, really sad :(" << endl;
-	cout << "Let's give you another chance! Now we spin again :D" << endl;
+	if (c <= 4) { 
+		std::cout << "Let's determine if you are the lucky winner to earn a TIMS CUP!!" << endl;
+		std::cout << "WHOAAAA EXCITING!!! DRUMROLLS!!!...." << endl;
+		std::cout << "If you spin a 48 then you win " << endl;
+		int timsRoll = getRandomMovement(100);
+		cout << "Your Tims Roll is " << timsRoll << "!" << endl;
+		if (timsRoll == 48) {
+			cout << "Congratulations! You have won a TimsCup" << endl;
+			p->addTimsCup();
+			return;
+		}
+		cout << "Oh noo!!! You did not recive, that's sad, really sad :(" << endl;
+		cout << "Let's give you another chance! Now we spin again :D" << endl;
+	} else {
+		std::cout << "There are more than 4 cups present at the moment on the table" << endl;
+		std::cout << "Cant roll for tims cups!!!!" << endl;
+	}
 	cout << "You have a 1 in 18 change for something to happen!" << endl;
     //list here what happens
     int  s = getRandomMovement(18);
