@@ -259,7 +259,7 @@ void WatopolyDisplay::drawBoard() {
     XClearWindow(display, window);
     
     // Draw board text
-    for (int i = 0; i < sizeof(board)/sizeof(board[0]); i++) {
+    for (unsigned int i = 0; i < sizeof(board)/sizeof(board[0]); i++) {
         XDrawString(display, window, gc, TEXT_X, TEXT_Y + (i * LINE_HEIGHT), 
                    board[i], strlen(board[i]));
     }
