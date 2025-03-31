@@ -60,7 +60,7 @@ void SLC::moveeee(std::shared_ptr<Player> p, std::vector<std::shared_ptr<Player>
 		change = 3;
     } else if (s == 23) {
 		cout << "HAHA! Go to DC Tims Line." << endl;
-		p->moveToDCTims();
+		GetInTim::goToJail(p);
     } else if (s == 24) {
 		p->setPos(0);
 		cout << "CONGRATULATIONS! You passed Collect OSAP! you get $200!" << endl;
