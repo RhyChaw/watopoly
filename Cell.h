@@ -14,4 +14,4 @@ class Cell {
     void setName(std::string name);
 };
 
-#endif
+#endif // CELL_H

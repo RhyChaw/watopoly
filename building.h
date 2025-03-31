@@ -9,15 +9,15 @@ class Building : public Cell {
     int price;
     bool mortgageStatus = false;
     int imprLevel;
-    int GymLevel = 0;  // number of gyms owned by a player
+    int GymLevel = 0; // number of gyms owned by a player
     int ResLevel = 0; // number of res owned by a player
     std::string monopolyBlock;
 
   public:
     std::string monoBlockOfProp(std::string squareName);
-    //big 5 as many as needed
+    //big 5
     Building(int ID, std::string name, int price, char owner);
-    virtual ~Building() = default; // Use default if no special cleanup needed
+    virtual ~Building() = default;
     
     //setter
     void setOwner(char owner);
@@ -35,10 +35,9 @@ class Building : public Cell {
     int getCostToBuy() const;
     std::string getMonoBlock() const;
 
-
     //other functions needed for the bottom classes
     virtual int amountToPay() = 0; 
 
 };
 
-#endif
+#endif // BUILDING_H

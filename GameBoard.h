@@ -9,9 +9,9 @@
 
 class GameBoard {
     std::shared_ptr<WatopolyDisplay> display;
-    std::map<char, int> playerPositions;  // symbol to board position (0-39)
-    std::map<std::string, int> squareImprovements; // square name to improvement count
-    std::map<std::string, int> squareToPosition; // maps square names to board positions
+    std::map<char, int> playerPositions;
+    std::map<std::string, int> squareImprovements;
+    std::map<std::string, int> squareToPosition;
     std::map<char, int> totalSteps;
 
     void initializeSquareMap();
@@ -21,15 +21,15 @@ public:
     ~GameBoard();
 
     // Display control
-    void printBoardToTerminal();  // DECLARE THIS FIRST
-    void printBoard() { printBoardToTerminal(); }  // Then the wrapper can use it
+    void printBoardToTerminal();
+    void printBoard() { printBoardToTerminal(); }
     void drawBoard();
     void update();
 
     // Player management
     void addPlayer(char symbol);
     void removePlayer(char symbol);
-    void movePlayer(char symbol, int absolutePosition); // Change parameter name to be clear
+    void movePlayer(char symbol, int absolutePosition);
     int getPlayerPosition(char symbol) const;
 
     // Improvement management
@@ -37,6 +37,7 @@ public:
     void removeImpr(const std::string& square);
     int getSquareImprovements(const std::string& square) const;
     int getTotalSteps(char symbol) const;
+    
     // Game state
     void loadGame(const std::string& filename);
     void saveGame(const std::string& filename) const;
