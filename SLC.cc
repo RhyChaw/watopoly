@@ -17,7 +17,6 @@ void SLC::moveeee(std::shared_ptr<Player> p, std::vector<std::shared_ptr<Player>
 	int c = 0;
 	for (int i = 0; i < group.size(); i++) {
 		c += group[i]->getCups();
-		cout << c <<endl;
 	}
 	if (c <= 4) {
 		std::cout << "Let's determine if you are the lucky winner to earn a TIMS CUP!!!" << endl;

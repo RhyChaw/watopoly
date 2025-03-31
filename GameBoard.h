@@ -22,7 +22,7 @@ public:
 
     // Display control
     void printBoardToTerminal();
-    void printBoard() { printBoardToTerminal(); }
+    void printBoard();
     void drawBoard();
     void update();
 
