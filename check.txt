@@ -1,7 +1,8 @@
-2
-manit S 1 0 0 
+3
+manit S 1 100 0 
 vansh G 0 1000 0
-AL vansh 0
+rhythm $ 0 1000 0
+AL manit 0
 ML BANK 0
 ECH manit 0
 PAS BANK 0
