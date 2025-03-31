@@ -185,6 +185,10 @@ void GameBoard::initializeSquareMap() {
     };
 }
 
+void printBoard() { 
+    printBoardToTerminal(); 
+}
+
 void GameBoard::drawBoard() {
     display->draw();
 }
