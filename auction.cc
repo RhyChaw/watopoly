@@ -44,6 +44,7 @@ void Auction::withdraw(std::shared_ptr<Player> p) {
         std::cout << "Congratulations!";
         std::cout << maxBidder->getName() << " wins the property! " << std::endl << std::endl;
         
+        
         Transactions::addPropByAuction(build, maxBidder, maxBid);
         return;
     }

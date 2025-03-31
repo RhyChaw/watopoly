@@ -488,36 +488,35 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                 }
             }
             if (input == "buy" || input == "BUY"){
-                if(currActingPlayer->getCash() < cost) {
-                    while (true) {
-                        std::cout << "you must auction, trade, mortgage, improve one of your properties, you cant afford it, you cant continue without choosing" << endl;
-                        std::cout << "you can write, [ALL] to see your net worth" << endl;
-                        string cand;
-                        std::cin >> cand;
-                        if (cand == "auction" || cand == "AUCTION") {
-                            commandAuction(group, currActingPlayer, sq);
-                        }
-                        else if (cand == "trade" || cand == "TRADE")
-                        {
-                            commandTrade(group, currActingPlayer);
-                            break;
-
-                        }
-                        else if (cand == "mortgage" || cand == "MORTGAGE")
-                        {
-                            commandMortgage(currActingPlayer);
-                            break;
-
-                        }
-                        else if (cand == "improve" || cand == "IMPROVE")
-                        {
-                            commandImprove(group, currActingPlayer, b);
-                            break;
-                        } else if (cand == "all" || cand == "ALL") {
-                            currActingPlayer->printAsset();
-                        }
+                while (currActingPlayer->getCash() < howMuch) {
+                    std::cout << "you must auction, trade, mortgage, improve one of your properties, you cant afford it, you cant continue without choosing" << endl;
+                    std::cout << "Available commands: [AUCTION, TRADE, MORTGAGE, IMPROVE, ALL]" << endl;
+                    string cand;
+                    std::cin >> cand;
+                    if (cand == "auction" || cand == "AUCTION") {
+                        commandAuction(group, currActingPlayer, sq);
+                        break;
                     }
-                } else {
+                    else if (cand == "trade" || cand == "TRADE")
+                    {
+                        commandTrade(group, currActingPlayer);
+
+                    }
+                    else if (cand == "mortgage" || cand == "MORTGAGE")
+                    {
+                        commandMortgage(currActingPlayer);
+
+                    }
+                    else if (cand == "improve" || cand == "IMPROVE")
+                    {
+                        commandImprove(group, currActingPlayer, b);
+                    } else if (cand == "all" || cand == "ALL") {
+                        cout <<endl;
+                        currActingPlayer->printAsset();
+                        cout <<endl;
+                    }
+                }
+                if (currActingPlayer->getCash() > howMuch) {
                     Transactions::buyBuilding(sq, currActingPlayer);
                 }
             }
@@ -556,27 +555,49 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
     }
     if (currActingPlayer->getCash() < 0) {
         std::cout<< "your cash after the move is in negative now" << endl;
-        while (true) {
+        while (currActingPlayer->getCash() < 0) {
             std::cout<< "you must trade, mortgage, improve one of your properties, you cant continue without choosing" << endl;
+            std::cout<< "you can write, [ALL] to see your net worth " << endl;
+            std::cout<< "you can write, [BANKRUPT] to get out " << endl;
+
             string cand;
             std::cin >> cand;
             if (cand == "trade" || cand == "TRADE")
             {
                 commandTrade(group, currActingPlayer);
-                break;
 
             }
             else if (cand == "mortgage" || cand == "MORTGAGE")
             {
                 commandMortgage(currActingPlayer);
-                break;
 
             }
             else if (cand == "improve" || cand == "IMPROVE")
             {
                 commandImprove(group, currActingPlayer, b);
+            } else if (cand == "all" || cand == "ALL") {
+                cout <<endl;
+                currActingPlayer->printAsset();
+                cout <<endl;
+            } else if (cand == "bankrupt" || cand == "BANKRUPT") {
+                currActingPlayer->setBankrupt(true);
+                auto it = std::remove_if(group.begin(), group.end(),
+                    [currActingPlayer](const std::shared_ptr<Player>& p) {
+                        return p == currActingPlayer;
+                    });
+                group.erase(it, group.end());
+                vector<shared_ptr<Building>> props = currActingPlayer->getOwnedPropList();
+                for (auto& prop : props) {
+                    if (!group.empty()) {
+                        // Start auction with first valid player
+                        commandAuction(group, group[0], prop->getName()); 
+                    }
+                }
+
+                b->removePlayer(currActingPlayer->getSymbol());
+                std::cout << "Moving to next player!" << endl;
                 break;
-            } 
+            }
         }
     } 
 }
@@ -952,6 +973,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             b->removePlayer(currActingPlayer->getSymbol());
             b->update();
             currIndex = (currIndex + 1) % group.size();
+            hasRolled = false;
             continue;
         }
         numberOfPlayer = group.size();
@@ -984,6 +1006,8 @@ void Controller::letTheGameBegin(int argc, char **argv) {
                 
                 hasRolled = false;
                 currIndex = (currIndex + 1) % group.size();
+                std::cout << "Moving to the next player!" << endl;
+                std::cout << endl;
                 continue;
             }
         
@@ -1111,6 +1135,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             std::cout << "Moving to the next player!" << endl;
             b->removePlayer(currActingPlayer->getSymbol());
             b->update();
+            hasRolled = false;
         } else if (command == "assets" || command == "ASSETS") {
             if (currActingPlayer->getPosition() != 4)
             {

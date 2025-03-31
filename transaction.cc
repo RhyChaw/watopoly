@@ -529,7 +529,6 @@ void Transactions::unmortgage(std::shared_ptr<Building> property_name, std::shar
 std::shared_ptr<Building> Transactions::listProp(std::string property_name) {
     std::shared_ptr<Building> result;
     int size = ownedProperties.size();
-    std::cout << size;
     for (int i = 0; i < size; i++) {
         if (ownedProperties[i]->getName() == property_name) {
             return ownedProperties[i];
@@ -575,6 +574,13 @@ void Transactions::addPropByAuction(std::string build, std::shared_ptr<Player> p
     p->updateMonopolyBlock();
     ownedProperties.push_back(ownable);
     p->pay(amount);
+    ownable->setOwner(p->getSymbol());
+    int size = ownedProperties.size();
+    for (int i = 0; i < size; i++) {
+        if (ownedProperties[i]->getName() == build) {
+            ownedProperties[i]->setOwner(p->getSymbol());
+        }
+    }
 
     if (isGym(build)){
         ownable->setGymLevel(p->getOwnedGyms() - 1);
