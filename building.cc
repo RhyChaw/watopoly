@@ -5,8 +5,8 @@ using namespace std;
 std::string Building::monoBlockOfProp(std::string squareName) {
     std::string result = "";
 
-    //this loop os determined on how manit wrote the array in gameboard
-    //ownamble is the array name
+    // this loop is determined on how manit wrote the array in gameboard
+    // ownamble is the array name
     for (int i = 0; i < 28; i++) {
         if (OWNABLE[i][0] == squareName) {
             result = OWNABLE[i][1];

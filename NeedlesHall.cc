@@ -36,7 +36,8 @@ void NeedlesHall::moveeee(std::shared_ptr<Player> p, std::vector<std::shared_ptr
 		std::cout << "Cant roll for tims cups!!!!" << endl;
 	}
 	cout << "You have a 1 in 18 change for something to happen!" << endl;
-    //list here what happens
+    
+	//list here what happens
     int  s = getRandomMovement(18);
     cout << "Your spin is " << s << "." << endl;
     if (s == 1) {

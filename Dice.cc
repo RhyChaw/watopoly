@@ -1,8 +1,7 @@
 #include "Dice.h"
 
-// Define the static members (REQUIRED for linking)
-int Dice::lastRoll1 = 0;    // <--- ADD THIS
-int Dice::lastRoll2 = 0;    // <--- ADD THIS
+int Dice::lastRoll1 = 0;
+int Dice::lastRoll2 = 0;
 
 Dice::Dice() { srand(time(0)); }
 

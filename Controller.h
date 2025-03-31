@@ -21,8 +21,6 @@
 #include "NeedlesHall.h"
 #include "Tuition.h"
 #include "CoopFee.h"
-#include "Bot.h"
-#include "BotS.h"
 #include "GooseNesting.h"
 
 using namespace std;

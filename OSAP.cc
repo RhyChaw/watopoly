@@ -4,8 +4,7 @@
 
 using namespace std;
 
-OSAP::OSAP(int ID, std::string name) : nonbuilding(ID, name){
-}
+OSAP::OSAP(int ID, std::string name) : nonbuilding(ID, name){}
 
 OSAP::~OSAP() {}
 

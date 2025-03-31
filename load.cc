@@ -8,7 +8,6 @@ void Load::loadGame (std::vector<std::shared_ptr<Player>> group, std::shared_ptr
     std::ifstream f;
     int num;
     f >> num;
-
     for (int i = 0; i < num; i++) {
         string name;
         char piece;
@@ -50,7 +49,6 @@ void Load::loadGame (std::vector<std::shared_ptr<Player>> group, std::shared_ptr
         f >> property_name;
         f >> owner;
         f >> imp;
-
         if (owner != "BANK") {
             int playerIndex = -1;
             // Use a different loop variable (playerIndex) to find the player with the matching name

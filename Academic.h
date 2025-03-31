@@ -5,7 +5,6 @@
 #include "Player.h"
 #include "propertyArray.h"
 
-
 using namespace std;
 
 class building;

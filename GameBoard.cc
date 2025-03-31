@@ -9,7 +9,6 @@ GameBoard::GameBoard() : display(std::make_shared<WatopolyDisplay>()) {
 GameBoard::~GameBoard() {}
 
 void GameBoard::printBoardToTerminal() {
-    // Make a copy of the board that we can modify
     const std::set<int> improvementPositions = {
         1,3,6,8,9,11,13,14,16,18,19,21,23,24,26,27,29,31,32,34,37,39
     };
@@ -71,7 +70,6 @@ void GameBoard::printBoardToTerminal() {
     "|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|"
     };
 
-    // Map board positions to terminal board coordinates (line, column)
     std::map<int, std::pair<int, int>> posToTerminal = {
     // Top row (left to right, positions 0-10)
     {0, {53, 81}},  // COLLECT OSAP (bottom right)
@@ -83,7 +81,7 @@ void GameBoard::printBoardToTerminal() {
     {6, {53, 33}},  // ECH
     {7, {53, 25}},  // NEEDLES HALL
     {8, {53, 17}},  // PAS
-    {9, {53, 9}},  // HH
+    {9, {53, 9}},   // HH
     {10, {53, 1}},  // DC Tims Line (bottom left)
     
     // Right side (bottom to top, positions 11-19)
@@ -95,7 +93,7 @@ void GameBoard::printBoardToTerminal() {
     {16, {23, 1}},  // LHI
     {17, {18, 1}},  // SLC
     {18, {13, 1}},  // BMH
-    {19, {8, 1}},  // OPT
+    {19, {8, 1}},   // OPT
     
     // Bottom row (right to left, positions 20-30)
     {20, {3, 1}},  // Goose Nesting (top left)
@@ -122,18 +120,15 @@ void GameBoard::printBoardToTerminal() {
     {39, {48, 81}}  // DC
 };
 
-    // Track how many players are at each position for offsetting
     std::map<int, int> positionCounts;
 
-    // Add players to the board copy
     for (const auto& player : playerPositions) {
         int pos = player.second;
         if (posToTerminal.find(pos) == posToTerminal.end()) continue;
 
         auto [line, col] = posToTerminal[pos];
-        int offset = positionCounts[pos]++ * 1; // Offset players by 2 columns
+        int offset = positionCounts[pos]++ * 1;
         
-        // Ensure we don't overflow the cell
         if (col + offset < terminalBoard[line].length()) {
             terminalBoard[line][col + offset] = player.first;
         }
@@ -147,21 +142,20 @@ void GameBoard::printBoardToTerminal() {
         if (imp.second == 0) continue;
 
         auto [line, col] = posToTerminal[pos];
-        line -= 2; // Apply Y-offset of 3 lines up
+        line -= 2;
 
         // Draw improvements (max 5)
         int improvementsToShow = std::min(imp.second, 5);
         for (int i = 0; i < improvementsToShow; i++) {
-            int impCol = col + i; // Space improvements 2 columns apart
+            int impCol = col + i;
             if (line >= 0 && line < terminalBoard.size() && 
                 impCol >= 0 && impCol < terminalBoard[line].length()) {
                 char impChar = (i == 4) ? 'C' : 'B';
-                terminalBoard[line][impCol] = impChar; // Using 'I' to represent improvements
+                terminalBoard[line][impCol] = impChar;
             }
         }
     }
 
-    // Print the modified board
     for (const auto& line : terminalBoard) {
         std::cout << line << "\n";
     }
@@ -169,7 +163,6 @@ void GameBoard::printBoardToTerminal() {
 
 
 void GameBoard::initializeSquareMap() {
-    // Map square names to their board positions (0-39)
     squareToPosition = {
     {"COLLECT OSAP", 0}, {"AL", 1}, {"SLC", 2}, {"ML", 3}, 
     {"TUITION", 4}, {"MKV", 5}, {"ECH", 6}, {"NEEDLES HALL", 7}, 
@@ -197,12 +190,10 @@ void GameBoard::drawBoard() {
 }
 
 void GameBoard::update() {
-    // Update player positions
     for (const auto& player : playerPositions) {
         display->movePlayer(player.first, player.second);
     }
 
-    // Update improvements
     for (const auto& imp : squareImprovements) {
         auto pos = squareToPosition.find(imp.first);
         if (pos != squareToPosition.end()) {
@@ -215,7 +206,7 @@ void GameBoard::update() {
 
 void GameBoard::addPlayer(char symbol) {
     playerPositions[symbol] = 0;
-    totalSteps[symbol] = 0; // Initialize step counter
+    totalSteps[symbol] = 0;
     display->addPlayer(symbol, 0);
 }
 void GameBoard::removePlayer(char symbol) {
@@ -230,8 +221,7 @@ int GameBoard::getTotalSteps(char symbol) const {
 
 void GameBoard::movePlayer(char symbol, int absolutePosition) {
     if (playerPositions.find(symbol) != playerPositions.end()) {
-        // Directly set absolute position (0-39)
-        playerPositions[symbol] = absolutePosition % 40; // Safety wrap-around
+        playerPositions[symbol] = absolutePosition % 40;
         display->movePlayer(symbol, absolutePosition % 40);
     }
 }
@@ -242,12 +232,11 @@ int GameBoard::getPlayerPosition(char symbol) const {
 }
 
 void GameBoard::addImpr(const std::string& square, int count) {
-    // Validate input count
     if (count==0){
         return;
     }
-    if (count < 1) count = 1;          // Minimum 1 improvement
-    else if (count > 5) count = 5;     // Maximum 5 improvements
+    if (count < 1) count = 1;          // Min 1 imprv
+    else if (count > 5) count = 5;     // Max 5 imprv
     
     auto posIt = squareToPosition.find(square);
     if (posIt == squareToPosition.end()) {
@@ -258,7 +247,6 @@ void GameBoard::addImpr(const std::string& square, int count) {
     int position = posIt->second;
     int current = squareImprovements[square];
     
-    // Calculate new count with bounds
     int newCount = current + count;
     if (newCount > 5) newCount = 5;
     
@@ -292,4 +280,3 @@ std::shared_ptr<WatopolyDisplay> GameBoard::getDisplay() const {
     return display;
 }
 
-// addimptr removeimprovemnt drawboard moveplayer addplayer removeplayer

@@ -2,7 +2,6 @@
 #include "Player.h"
 #include <sstream>
 
-// Define the static rent array
 const int Residence::RENT_RATES[4] = {25, 50, 100, 200};
 
 Residence::Residence(int ID, std::string name, int price, char owner)
