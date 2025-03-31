@@ -93,8 +93,6 @@ WatopolyDisplay::WatopolyDisplay() {
                                 WhitePixel(display, screen), BlackPixel(display, screen)); // Swapped colors
     XSelectInput(display, window, ExposureMask);
     XMapWindow(display, window);
-
-    // Process initial events
     XFlush(display);
     XEvent event;
     while (XPending(display)) {
@@ -124,14 +122,13 @@ WatopolyDisplay::WatopolyDisplay() {
         {"Math", "gold3"}
     };
 
-    // Load font
     font = XLoadFont(display, "6x13");
     if (!font) font = XLoadFont(display, "fixed");
 
     gc = XCreateGC(display, window, 0, NULL);
     XSetFont(display, gc, font);
-    XSetForeground(display, gc, WhitePixel(display, screen)); // Set default text to white
-    XSetBackground(display, gc, BlackPixel(display, screen)); // Set background to black
+    XSetForeground(display, gc, WhitePixel(display, screen)); 
+    XSetBackground(display, gc, BlackPixel(display, screen)); 
 }
 
 WatopolyDisplay::~WatopolyDisplay() {
@@ -141,7 +138,7 @@ WatopolyDisplay::~WatopolyDisplay() {
 
 void WatopolyDisplay::draw() {
     drawBoard();
-    XSync(display, False);  // Force immediate display update
+    XSync(display, False);  
 }
 
 void WatopolyDisplay::reset() {
@@ -162,8 +159,8 @@ void WatopolyDisplay::removePlayer(char symbol) {
 
 void WatopolyDisplay::movePlayer(char symbol, int absolutePosition) {
     if (players.find(symbol) != players.end()) {
-        players[symbol] = absolutePosition % 40; // Ensure valid position
-        draw(); // Trigger redraw
+        players[symbol] = absolutePosition % 40; 
+        draw(); 
     }
 }
 
@@ -193,25 +190,21 @@ void WatopolyDisplay::setImprovements(int position, int count) {
 }
 
 void WatopolyDisplay::drawPlayers() {
-    std::map<int, int> position_counts; // Tracks how many players are at each position
+    std::map<int, int> position_counts; 
     
     XSetForeground(display, gc, WhitePixel(display, DefaultScreen(display)));
     
     for (const auto &player : players) {
         if (player.second < 0 || player.second >= 40) continue;
         
-        // Count players at this position
         int count = position_counts[player.second]++;
-        if (count >= 6) continue; // Max 6 players per position
+        if (count >= 6) continue; 
         
-        // Calculate offset for this player
         int x_offset = count * PLAYER_OFFSET;
-        
-        // Get base coordinates
+
         int x = BOARD_COORDS[player.second].first + x_offset;
         int y = BOARD_COORDS[player.second].second;
         
-        // Draw player symbol
         char symbolStr[2] = {player.first, '\0'};
         XDrawString(display, window, gc, x, y, symbolStr, 1);
     }
@@ -226,19 +219,17 @@ void WatopolyDisplay::drawImprovements() {
         
         if (count == 0) continue;
         
-        // Get base coordinates for the building
         int x = BOARD_COORDS[position].first;
-        int y = BOARD_COORDS[position].second - 15; // 15 pixels above the building
+        int y = BOARD_COORDS[position].second - 15; 
         
-        // Draw each improvement
         for (int i = 0; i < count; i++) {
             int x_offset = i * IMPROVEMENT_SPACING;
             
-            if (i == 4) { // 5th improvement (index 4) is filled square
+            if (i == 4) { 
                 XFillRectangle(display, window, gc, 
                               x + x_offset, y - IMPROVEMENT_SIZE, 
                               IMPROVEMENT_SIZE+1, IMPROVEMENT_SIZE+1);
-            } else { // First 4 improvements are empty squares
+            } else { 
                 XDrawRectangle(display, window, gc, 
                               x + x_offset, y - IMPROVEMENT_SIZE, 
                               IMPROVEMENT_SIZE, IMPROVEMENT_SIZE);
@@ -248,14 +239,12 @@ void WatopolyDisplay::drawImprovements() {
 }
 void WatopolyDisplay::drawColorBlocks() {
     for (const auto& group : colorGroups) {
-        // Get color
         XColor xcolor, exact;
         Colormap cmap = DefaultColormap(display, 0);
         XAllocNamedColor(display, cmap, colorNames[group.first].c_str(), &xcolor, &exact);
         
         XSetForeground(display, gc, xcolor.pixel);
         
-        // Draw blocks for each position in group
         for (int pos : group.second) {
             if (pos < 0 || pos >= 40) continue;
             
@@ -271,11 +260,7 @@ void WatopolyDisplay::drawColorBlocks() {
 
 void WatopolyDisplay::drawBoard() {
     XClearWindow(display, window);
-    
-    // Set text color
     XSetForeground(display, gc, WhitePixel(display, DefaultScreen(display)));
-    
-    // Draw board ASCII art
     for (int i = 0; i < sizeof(board)/sizeof(board[0]); i++) {
         XDrawString(display, window, gc, 
                    TEXT_X, 
@@ -283,13 +268,8 @@ void WatopolyDisplay::drawBoard() {
                    board[i], 
                    strlen(board[i]));
     }
-    
-    // Draw color blocks first (underneath other elements)
     drawColorBlocks();
-    
-    // Then draw other elements
     drawPlayers();
     drawImprovements();
-    
     XFlush(display);
 }

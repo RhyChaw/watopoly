@@ -334,7 +334,6 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                 return group[i];
             }
         }
-        std::cout << "why trackingPiece is not in this player group? hmmm..." << endl;
         return result;
     };
 
