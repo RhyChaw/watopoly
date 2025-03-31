@@ -6,6 +6,13 @@ GameBoard::GameBoard() : display(std::make_shared<WatopolyDisplay>()) {
     initializeSquareMap();
 }
 
+void GameBoard::setBoardColor(const std::string &mode) {
+    if (mode == "dark" || mode == "light") {
+        display->setColorMode(mode);
+        drawBoard();
+    }
+}
+
 GameBoard::~GameBoard() {}
 
 void GameBoard::printBoardToTerminal() {
@@ -86,14 +93,14 @@ void GameBoard::printBoardToTerminal() {
     
     // Right side (bottom to top, positions 11-19)
     {11, {48, 1}},  // RCH
-    {12, {42, 1}},  // PAC
-    {13, {38, 1}},  // DWE
-    {14, {33, 1}},  // CPH
-    {15, {28, 1}},  // UWP
-    {16, {23, 1}},  // LHI
-    {17, {18, 1}},  // SLC
-    {18, {13, 1}},  // BMH
-    {19, {8, 1}},   // OPT
+    {12, {43, 1}},  // PAC
+    {13, {39, 1}},  // DWE
+    {14, {34, 1}},  // CPH
+    {15, {29, 1}},  // UWP
+    {16, {24, 1}},  // LHI
+    {17, {19, 1}},  // SLC
+    {18, {14, 1}},  // BMH
+    {19, {9, 1}},   // OPT
     
     // Bottom row (right to left, positions 20-30)
     {20, {3, 1}},  // Goose Nesting (top left)
@@ -109,15 +116,15 @@ void GameBoard::printBoardToTerminal() {
     {30, {3, 81}}, // GO TO TIMS (top right)
     
     // Left side (top to bottom, positions 31-39)
-    {31, {8, 81}}, // EIT
-    {32, {13, 81}}, // ESC
-    {33, {18, 81}}, // SLC
-    {34, {23, 81}}, // C2
-    {35, {28, 81}}, // REV
-    {36, {33, 81}}, // NEEDLES HALL
-    {37, {38, 81}}, // MC
-    {38, {42, 81}}, // COOP FEES
-    {39, {48, 81}}  // DC
+    {31, {9, 81}}, // EIT
+    {32, {14, 81}}, // ESC
+    {33, {19, 81}}, // SLC
+    {34, {24, 81}}, // C2
+    {35, {29, 81}}, // REV
+    {36, {34, 81}}, // NEEDLES HALL
+    {37, {39, 81}}, // MC
+    {38, {43, 81}}, // COOP FEES
+    {39, {49, 81}}  // DC
 };
 
     std::map<int, int> positionCounts;
@@ -129,7 +136,7 @@ void GameBoard::printBoardToTerminal() {
         auto [line, col] = posToTerminal[pos];
         int offset = positionCounts[pos]++ * 1;
         
-        if (col + offset < terminalBoard[line].length()) {
+        if (col + offset < static_cast<int>(terminalBoard[line].length())) {
             terminalBoard[line][col + offset] = player.first;
         }
     }
@@ -142,14 +149,14 @@ void GameBoard::printBoardToTerminal() {
         if (imp.second == 0) continue;
 
         auto [line, col] = posToTerminal[pos];
-        line -= 2;
+        line -= 3;
 
         // Draw improvements (max 5)
         int improvementsToShow = std::min(imp.second, 5);
         for (int i = 0; i < improvementsToShow; i++) {
             int impCol = col + i;
-            if (line >= 0 && line < terminalBoard.size() && 
-                impCol >= 0 && impCol < terminalBoard[line].length()) {
+            if (line >= 0 && line < static_cast<int>(terminalBoard.size()) &&
+                impCol >= 0 && impCol < static_cast<int>(terminalBoard[line].length())) {
                 char impChar = (i == 4) ? 'C' : 'B';
                 terminalBoard[line][impCol] = impChar;
             }
@@ -185,10 +192,6 @@ void GameBoard::initializeSquareMap() {
     };
 }
 
-void printBoard() { 
-    printBoardToTerminal(); 
-}
-
 void GameBoard::drawBoard() {
     display->draw();
 }
@@ -207,6 +210,7 @@ void GameBoard::update() {
     
     display->draw();
 }
+
 
 void GameBoard::addPlayer(char symbol) {
     playerPositions[symbol] = 0;
@@ -283,4 +287,3 @@ int GameBoard::getSquareImprovements(const std::string& square) const {
 std::shared_ptr<WatopolyDisplay> GameBoard::getDisplay() const {
     return display;
 }
-

@@ -15,7 +15,7 @@ int NeedlesHall::getRandomMovement(int n) {
 void NeedlesHall::moveeee(std::shared_ptr<Player> p, std::vector<std::shared_ptr<Player>> group) {
     srand(time(NULL));
 	int c = 0;
-	for (int i = 0; i < group.size(); i++) {
+	for (unsigned int i = 0; i < group.size(); i++) {
 		c += group[i]->getCups();
 	}
 	if (c <= 4) { 

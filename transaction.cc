@@ -117,16 +117,10 @@ void Transactions::trade3(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2
 
             // Set correct pay level and tuition
             if (isGym(build->getName())) {
-                p2->changePropertyCount(0, -1, 0);
-                p1->changePropertyCount(0, 1, 0);
                 build->setGymLevel(p2->getOwnedGyms() - 1);
             } else if (isResidence(build->getName())) {
-                p2->changePropertyCount(-1, 0, 0);
-                p1->changePropertyCount(1, 0, 0);
                 build->setResLevel(p2->getOwnedResidences() - 1);
             } else if (isAcademic(build->getName())) {
-                p2->changePropertyCount(0, 0, -1);
-                p1->changePropertyCount(0, 0, 1);
                 if (p1->checkIfInMonopolyBlock(build->getName())) {
                     auto acad = std::dynamic_pointer_cast<Academic>(build);
                     acad->setOwned(true);
@@ -213,16 +207,10 @@ void Transactions::trade1(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2
             }
 
             if (isGym(building2->getName())) {
-                p2->changePropertyCount(0, -1, 0);
-                p1->changePropertyCount(0, 1, 0);
                 building2->setGymLevel(p2->getOwnedGyms() - 1);
             } else if (isResidence(building2->getName())) {
-                p2->changePropertyCount(-1, 0, 0);
-                p1->changePropertyCount(1, 0, 0);
                 building2->setResLevel(p2->getOwnedResidences() - 1);
             } else if (isAcademic(building2->getName())) {
-                p2->changePropertyCount(0, 0, -1);
-                p1->changePropertyCount(0, 0, 1);
                 if (p2->checkIfInMonopolyBlock(building2->getName())) {
                     auto acad = std::dynamic_pointer_cast<Academic>(building2);
                     acad->setOwned(true);
@@ -230,16 +218,10 @@ void Transactions::trade1(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2
             }
 
             if (isGym(building1->getName())) {
-                p1->changePropertyCount(0, -1, 0);
-                p2->changePropertyCount(0, 1, 0);
                 building1->setGymLevel(p1->getOwnedGyms() - 1);
             } else if (isResidence(building1->getName())) {
-                p1->changePropertyCount(-1, 0, 0);
-                p2->changePropertyCount(1, 0, 0);
                 building1->setResLevel(p1->getOwnedResidences() - 1);
             } else if (isAcademic(building1->getName())) {
-                p1->changePropertyCount(0, 0, 1);
-                p2->changePropertyCount(0, 0, -1);
                 if (p1->checkIfInMonopolyBlock(building1->getName())) {
                     auto acad = std::dynamic_pointer_cast<Academic>(building1);
                     acad->setOwned(true);
@@ -312,18 +294,15 @@ void Transactions::buyBuilding(std::string property_name, std::shared_ptr<Player
 
     std::shared_ptr<Building> build;
     if (isGym(property_name)){
-        owner->changePropertyCount(0, 1, 0);
         auto production = std::make_shared<Gym>(indexResult, property_name, buycost, owner_symbol);	
         build = std::dynamic_pointer_cast<Building>(production);
     }
 
     else if (isResidence(property_name)){
-        owner->changePropertyCount(1, 0, 0);
 	    auto production = std::make_shared<Residence>(indexResult, property_name, buycost, owner_symbol);
         build = std::dynamic_pointer_cast<Building>(production);
     }
     else if (isAcademic(property_name)){
-        owner->changePropertyCount(0, 0, 1);
 	    auto production = std::make_shared<Academic>(indexResult, property_name, buycost, owner_symbol);
         build = std::dynamic_pointer_cast<Building>(production);
     }
@@ -375,19 +354,16 @@ void Transactions::sellBuilding(std::string property_name, std::shared_ptr<Playe
     }
     std::shared_ptr<Building> build;
     if (isGym(property_name)){
-        owner->changePropertyCount(0, -1, 0);
         auto production = std::make_shared<Gym>(indexResult, property_name, buycost, owner_symbol);	
         build = std::dynamic_pointer_cast<Building>(production);
 
     }
     else if (isResidence(property_name)){
-        owner->changePropertyCount(-1, 0, 0);
 	    auto production = std::make_shared<Residence>(indexResult, property_name, buycost, owner_symbol);
         build = std::dynamic_pointer_cast<Building>(production);
 
     }
     else if (isAcademic(property_name)){
-        owner->changePropertyCount(0, 0, -1);
 	    auto production = std::make_shared<Academic>(indexResult, property_name, buycost, owner_symbol);
         build = std::dynamic_pointer_cast<Building>(production);
 

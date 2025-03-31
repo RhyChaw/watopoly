@@ -47,7 +47,7 @@ private:
 
 public:
     //big five
-    Player(std::string name, char symbol, int Cash);
+    Player(std::string name, char symbol, double Cash);
     
     Player(std::string name, char symbol, int ownedCups, double cash, int index, 
         bool isTimLine, int turnsInTimsLine, int position_initial, 
@@ -116,7 +116,6 @@ public:
     void leaveTimsLine();
     void changeTurnsInTimsLine();
     void changeAsset(double c);
-    void changePropertyCount(int residences, int gyms, int academics);
     void receive(int amount);
     void removeCup();
     void add_roll_for_jail();

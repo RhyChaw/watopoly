@@ -4,7 +4,7 @@
 #include <sstream>
 using namespace std;
 
-Player::Player(std::string name, char symbol, int Cash) : name{name}, symbol{symbol}, cash{Cash} {};
+Player::Player(std::string name, char symbol, double Cash) : name{name}, symbol{symbol}, cash{Cash} {};
 
 
 // Player::Player(std::string name, char symbol, int ownedCups, double cash, int index, 
@@ -497,11 +497,7 @@ void Player::changeAsset(double c) {
     assets += c; 
 }
 
-void Player::changePropertyCount(int residences, int gyms, int academics) {
-    int r = residences;
-    int g = gyms;
-    int a = academics;
-}
+
 
 void Player::receive(int amount) {
     cash += amount;

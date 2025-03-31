@@ -81,55 +81,44 @@ const std::pair<int, int> WatopolyDisplay::BOARD_COORDS[40] = {
     {506, 468}, {506, 543}, {506, 618}, {506, 679}, {506, 754}
 };
 
-WatopolyDisplay::WatopolyDisplay() {
+WatopolyDisplay::WatopolyDisplay() : colorMode("dark") {
     display = XOpenDisplay(NULL);
-    if (!display) {
-        throw std::runtime_error("Cannot open display");
-    }
+    if (!display) throw std::runtime_error("Cannot open display");
 
     int screen = DefaultScreen(display);
     window = XCreateSimpleWindow(display, RootWindow(display, screen),
                                 100, 100, WIN_WIDTH, WIN_HEIGHT, 1,
-                                WhitePixel(display, screen), BlackPixel(display, screen)); // Swapped colors
+                                BlackPixel(display, screen), WhitePixel(display, screen));
     XSelectInput(display, window, ExposureMask);
     XMapWindow(display, window);
-    XFlush(display);
-    XEvent event;
-    while (XPending(display)) {
-        XNextEvent(display, &event);
-    }
-
-    // Initialize color groups
-    colorGroups = {
-        {"Arts1", {1, 3}},       // AL, ML
-        {"Arts2", {6, 8, 9}},    // ECH, PAS, HH
-        {"Eng", {11, 13, 14}},   // RCH, DWE, CPH
-        {"Health", {16, 18, 19}},// LHI, BMH, OPT
-        {"Env", {21, 23, 24}},   // EV1, EV2, EV3
-        {"Sci1", {26, 27, 29}},  // PHYS, B1, B2
-        {"Sci2", {31, 32, 34}},  // EIT, ESC, C2
-        {"Math", {37, 39}}       // MC, DC
-    };
-
-    colorNames = {
-        {"Arts1", "navy blue"},
-        {"Arts2", "teal"},
-        {"Eng", "maroon"},
-        {"Health", "dark goldenrod"},
-        {"Env", "firebrick"},
-        {"Sci1", "dark khaki"},
-        {"Sci2", "forest green"},
-        {"Math", "gold3"}
-    };
-
-    font = XLoadFont(display, "6x13");
-    if (!font) font = XLoadFont(display, "fixed");
-
+    
+    font = XLoadFont(display, "6x13") ?: XLoadFont(display, "fixed");
     gc = XCreateGC(display, window, 0, NULL);
     XSetFont(display, gc, font);
-    XSetForeground(display, gc, WhitePixel(display, screen)); 
-    XSetBackground(display, gc, BlackPixel(display, screen)); 
+    
+    // Initialize color groups
+    colorGroups = {
+        {"Arts1", {1, 3}}, {"Arts2", {6, 8, 9}}, 
+        {"Eng", {11, 13, 14}}, {"Health", {16, 18, 19}},
+        {"Env", {21, 23, 24}}, {"Sci1", {26, 27, 29}},
+        {"Sci2", {31, 32, 34}}, {"Math", {37, 39}}
+    };
+    
+    colorNames = {
+        {"Arts1", "navy blue"}, {"Arts2", "teal"},
+        {"Eng", "maroon"}, {"Health", "dark goldenrod"},
+        {"Env", "firebrick"}, {"Sci1", "dark khaki"},
+        {"Sci2", "forest green"}, {"Math", "gold3"}
+    };
 }
+
+void WatopolyDisplay::setColorMode(const std::string &mode) {
+    if (mode == "dark" || mode == "light") {
+        colorMode = mode;
+        draw();
+    }
+}
+
 
 WatopolyDisplay::~WatopolyDisplay() {
     XFreeGC(display, gc);
@@ -190,19 +179,18 @@ void WatopolyDisplay::setImprovements(int position, int count) {
 }
 
 void WatopolyDisplay::drawPlayers() {
-    std::map<int, int> position_counts; 
+    int screen = DefaultScreen(display);
+    XSetForeground(display, gc, 
+        colorMode == "dark" ? WhitePixel(display, screen) : BlackPixel(display, screen));
     
-    XSetForeground(display, gc, WhitePixel(display, DefaultScreen(display)));
-    
+    std::map<int, int> position_counts;
     for (const auto &player : players) {
         if (player.second < 0 || player.second >= 40) continue;
         
         int count = position_counts[player.second]++;
-        if (count >= 6) continue; 
+        if (count >= 6) continue;
         
-        int x_offset = count * PLAYER_OFFSET;
-
-        int x = BOARD_COORDS[player.second].first + x_offset;
+        int x = BOARD_COORDS[player.second].first + (count * PLAYER_OFFSET);
         int y = BOARD_COORDS[player.second].second;
         
         char symbolStr[2] = {player.first, '\0'};
@@ -211,32 +199,30 @@ void WatopolyDisplay::drawPlayers() {
 }
 
 void WatopolyDisplay::drawImprovements() {
-    XSetForeground(display, gc, WhitePixel(display, DefaultScreen(display)));
+    int screen = DefaultScreen(display);
+    XSetForeground(display, gc, 
+        colorMode == "dark" ? WhitePixel(display, screen) : BlackPixel(display, screen));
     
     for (const auto &imp : improvements) {
-        int position = imp.first;
-        int count = imp.second;
+        if (imp.second == 0) continue;
         
-        if (count == 0) continue;
+        int x = BOARD_COORDS[imp.first].first;
+        int y = BOARD_COORDS[imp.first].second - 15;
         
-        int x = BOARD_COORDS[position].first;
-        int y = BOARD_COORDS[position].second - 15; 
-        
-        for (int i = 0; i < count; i++) {
-            int x_offset = i * IMPROVEMENT_SPACING;
-            
-            if (i == 4) { 
+        for (int i = 0; i < std::min(imp.second, 5); i++) {
+            if (i == 4) {
                 XFillRectangle(display, window, gc, 
-                              x + x_offset, y - IMPROVEMENT_SIZE, 
-                              IMPROVEMENT_SIZE+1, IMPROVEMENT_SIZE+1);
-            } else { 
+                    x + (i * IMPROVEMENT_SPACING), y - IMPROVEMENT_SIZE, 
+                    IMPROVEMENT_SIZE+1, IMPROVEMENT_SIZE+1);
+            } else {
                 XDrawRectangle(display, window, gc, 
-                              x + x_offset, y - IMPROVEMENT_SIZE, 
-                              IMPROVEMENT_SIZE, IMPROVEMENT_SIZE);
+                    x + (i * IMPROVEMENT_SPACING), y - IMPROVEMENT_SIZE, 
+                    IMPROVEMENT_SIZE, IMPROVEMENT_SIZE);
             }
         }
     }
 }
+
 void WatopolyDisplay::drawColorBlocks() {
     for (const auto& group : colorGroups) {
         XColor xcolor, exact;
@@ -259,17 +245,28 @@ void WatopolyDisplay::drawColorBlocks() {
 }
 
 void WatopolyDisplay::drawBoard() {
-    XClearWindow(display, window);
-    XSetForeground(display, gc, WhitePixel(display, DefaultScreen(display)));
-    for (int i = 0; i < sizeof(board)/sizeof(board[0]); i++) {
-        XDrawString(display, window, gc, 
-                   TEXT_X, 
-                   TEXT_Y + (i * LINE_HEIGHT), 
-                   board[i], 
-                   strlen(board[i]));
+    int screen = DefaultScreen(display);
+    if (colorMode == "dark") {
+        XSetForeground(display, gc, WhitePixel(display, screen));
+        XSetBackground(display, gc, BlackPixel(display, screen));
+        XSetWindowBackground(display, window, BlackPixel(display, screen));
+    } else { // light mode
+        XSetForeground(display, gc, BlackPixel(display, screen));
+        XSetBackground(display, gc, WhitePixel(display, screen));
+        XSetWindowBackground(display, window, WhitePixel(display, screen));
     }
+    
+    XClearWindow(display, window);
+    
+    // Draw board text
+    for (unsigned int i = 0; i < sizeof(board)/sizeof(board[0]); i++) {
+        XDrawString(display, window, gc, TEXT_X, TEXT_Y + (i * LINE_HEIGHT), 
+                   board[i], strlen(board[i]));
+    }
+    
     drawColorBlocks();
     drawPlayers();
     drawImprovements();
     XFlush(display);
 }
+
