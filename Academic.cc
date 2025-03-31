@@ -39,8 +39,6 @@ int Academic::costToimp(std::string squareName, int imprLevel) {
     return result;
 }
 
-
-
 Academic::~Academic() {}
 
 std::string Academic::getBlock() const {

@@ -7,7 +7,6 @@
 
 class Residence : public Building {
 private:
-    // Rent rates based on number of residences owned
     static const int RENT_RATES[4];
 
 public:

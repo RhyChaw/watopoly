@@ -14,7 +14,6 @@ GameState Load::loadGame(const string& filename) {
     GameState state;
     string line;
     
-    // Read number of players
     if (!getline(file, line)) {
         throw runtime_error("Save file is empty or missing player count.");
     }
@@ -26,7 +25,6 @@ GameState Load::loadGame(const string& filename) {
         throw invalid_argument("Invalid number of players.");
     }
 
-    // Read player data
     for (int i = 0; i < numPlayers; ++i) {
         if (!getline(file, line)) {
             throw runtime_error("Unexpected end of file while reading players.");
@@ -34,12 +32,10 @@ GameState Load::loadGame(const string& filename) {
         state.players.push_back(parsePlayerLine(line));
     }
     
-    // Read building data
     while (getline(file, line)) {
         state.buildings.push_back(parseBuildingLine(line));
     }
 
-    // Validate game state
     validateGameState(state);
 
     return state;

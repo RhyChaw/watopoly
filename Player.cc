@@ -110,20 +110,17 @@ double Player::getAsset() {
     int result = cash;
     
     for (const auto& prop : ownedProperties) {
-        if (!prop) continue; // Skip if null
+        if (!prop) continue;
         
         std::string propName = prop->getName();
         int cost = 0;
         
-        // Find property in OWNABLE
         for (const auto& ownableProp : OWNABLE) {
             if (propName == ownableProp[0]) {
-                // Base property value
                 std::stringstream ss(ownableProp[2]);
                 ss >> cost;
                 result += cost;
                 
-                // Handle improvements for academic buildings only
                 if (isAcademic(propName)) {
                     int imprLevel = prop->getImprLevel();
                     if (imprLevel > 0) {
@@ -133,13 +130,12 @@ double Player::getAsset() {
                         result += imprLevel * improvementCost;
                     }
                 }
-                break; // Found the property, move to next
+                break;
             }
         }
         
-        // Add mortgage value if mortgaged
         if (prop->getMortStatus()) {
-            result -= cost / 2; // Mortgage is half the purchase price
+            result -= cost / 2;
         }
     }
     
@@ -165,9 +161,9 @@ void Player::setCups(int n) {
 
 void Player::setPos(int pos) { 
     if (pos < 0) {
-        pos = (pos + 40) % 40;  // Ensure it wraps around correctly
+        pos = (pos + 40) % 40;
     } else {
-        pos = pos % 40;  // Ensure valid board position
+        pos = pos % 40;
     }
     position = pos; 
 }
@@ -252,7 +248,6 @@ void Player::pay(int amount) {
 }
 
 void Player::changeCash(double c) {
-    //check for bankcruptcy;
     cash += c;
     changeAsset(c);
 }
@@ -402,7 +397,7 @@ void Player::printOwnedProp() {
     int size = ownedProperties.size();
     
     for (int i = 0; i < size; i++) {
-        if (!ownedProperties[i]) {  // Check for nullptr before accessing
+        if (!ownedProperties[i]) {
             std::cerr << "Error: Null property found at index " << i << std::endl;
             continue;
         }
@@ -410,11 +405,11 @@ void Player::printOwnedProp() {
         cout << ownedProperties[i]->getName() << "\t";
 
         int cost = 0;
-        for (int j = 0; j < 28; ++j) {  // Loop through OWNABLE, not ownedProperties
+        for (int j = 0; j < 28; ++j) {
             if (OWNABLE[j][0] == ownedProperties[i]->getName()) {
                 std::stringstream ss(OWNABLE[j][2]);
                 ss >> cost;
-                break;  // Stop once we find the matching property
+                break;
             }
         }
 

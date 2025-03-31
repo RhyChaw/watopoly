@@ -29,5 +29,5 @@ class Auction {
     int getMaxBid() const;
 };
 
-#endif
+#endif // AUCTION_H
 

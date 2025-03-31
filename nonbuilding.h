@@ -11,4 +11,4 @@ class nonbuilding: public Cell {
 	    nonbuilding(int ID, std::string name);
 };
 
-#endif
+#endif // NON_BUILDING_H

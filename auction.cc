@@ -55,5 +55,3 @@ void Auction::withdraw(std::shared_ptr<Player> p) {
 int Auction::getMaxBid() const {
     return maxBid;
 }
-
-

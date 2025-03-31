@@ -20,6 +20,7 @@ void TimsLine::sendToJail(std::shared_ptr<Player> p) {
         └─┴─┴─┴─┴─┴─┘
            "Let me out!"
           )" << endl;
+          // MADE A FUNNY JAIL HAHA :)
 }
 
 void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> dice, std::shared_ptr<GameBoard> b) {
@@ -100,13 +101,11 @@ void TimsLine::handleTimsTurn(std::shared_ptr<Player> p, std::shared_ptr<Dice> d
         } else {
             cout << "You have no Tim cups. You must stay in jail :(" << endl;
         }
-    } else { // Stay in jail
+    } else {
         cout << "You chose to stay in jail. Try again next turn..." << endl;
     }
 
 }
-
-
 
 int TimsLine::turns(std::shared_ptr<Player> p) {
     return p->getadd_roll_for_jail();
@@ -119,4 +118,3 @@ bool TimsLine::jail(std::shared_ptr<Player> p) {
 void TimsLine::add(std::shared_ptr<Player> p){
     p->add_roll_for_jail();
 }
-

@@ -30,7 +30,6 @@ private:
     std::string name;  // Name of the player
     char symbol; // Symbol of the player
     double cash; // Player's money
-    bool isBot = false;
     int position = 0; // Dice rolling position
     int cups = 0; // Number of "Get Out of Jail Free" cards
     bool isBankrupt = false; // Whether the player is bankrupt
@@ -38,7 +37,7 @@ private:
     int ownedResidence = 0;
     int ownedAcademic = 0;
     std::vector<std::shared_ptr<Building>> ownedProperties;
-    std::vector<std::string> monopolyBlocks; // ie: {"Sci1", "Math", "Eng"}
+    std::vector<std::string> monopolyBlocks; // EG: {"Sci1", "Math", "Eng"}
     
     int index = 0; // Index on the board [0-39]
     double assets = 0; // Player's total assets
@@ -57,7 +56,6 @@ public:
     ~Player();
 
     //basic functions
-
     bool isResidence(std::string squareName);
     bool isAcademic(std::string squareName);
     bool isGym(std::string squareName);
@@ -77,11 +75,10 @@ public:
     void loadUpdateAmountToPay();
     void printAsset();
     void printOwnedProp();
-void setGymsOwned();
-void setResOwned();
-int countResOwned();
-void setTurnsInTims(int n);
-
+    void setGymsOwned();
+    void setResOwned();
+    int countResOwned();
+    void setTurnsInTims(int n);
 
     //getters
     char getSymbol() const;
@@ -95,7 +92,6 @@ void setTurnsInTims(int n);
     int getOwnedGyms() const;
     int getOwnedAcademic() const;
     std::vector<std::shared_ptr<Building>> getOwnedPropList();
-
     int getIndex() const;
     double getAsset() ; 
     bool getisInTimsLine() const;
@@ -130,4 +126,4 @@ void setTurnsInTims(int n);
     bool checkBankrupt() const;
 };
 
-#endif 
+#endif // PLAYER_H
