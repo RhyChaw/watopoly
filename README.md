@@ -79,23 +79,26 @@ make
 
 ./watopoly
 
--------------------------------------------------------------------------------------
-# 📜 License
-This project was developed for educational purposes and is open for learning and modification. Feel free to fork it, improve it, and experiment with it!
+To run in test mode,
 
+./watopoly test
+
+If you want to run with custom commands, follow this:
+1) To load,
+
+./watopoly load <filename>.txt
+./watopoly load <filename>.txt test # for test
+
+2) To save a game, just use the save command and follow further instructions
 -------------------------------------------------------------------------------------
 # 🤝 Meet the Team
 We are a group of University of Waterloo CS students passionate about software development! 🚀
 
-Name	Role
-[Your Name]	Project Lead & Game Logic
-[Team Member]	UI & Input Handling
-[Team Member]	File I/O & Save System
-[Team Member]	Auction & Trade System
-Connect with us on LinkedIn if you’re interested in discussing OOP, game development, or software engineering!
-
+Manit Rhythm and Vansh :)
 -------------------------------------------------------------------------------------
 # 🎉 Enjoy Playing Watopoly!
 We hope you have fun playing Watopoly – and maybe even relive your Waterloo experience in a Monopoly-style game! If you have any feedback or ideas, we’d love to hear from you.
 
 Happy coding & happy gaming! 🎲🚀
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
