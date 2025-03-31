@@ -4,35 +4,15 @@
 #include <string>
 #include <vector>
 #include <fstream>
-
-struct PlayerInfo {
-    char playerChar;
-    int timsCups;
-    int money;
-    int position;
-    bool inDC;
-    int turnsInDC;
-};
-
-struct BuildingInfo {
-    std::string name;
-    std::string owner;
-    int improvements;
-};
-
-struct GameState {
-    std::vector<PlayerInfo> players;
-    std::vector<BuildingInfo> buildings;
-};
+#include "Player.h"
+#include "GameBoard.h"
 
 class Load {
 public:
-    static GameState loadGame(const std::string& filename);
-
+    
 private:
-    static PlayerInfo parsePlayerLine(const std::string& line);
-    static BuildingInfo parseBuildingLine(const std::string& line);
-    static void validateGameState(const GameState& state);
+    static void loadGame (std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, bool testMode, std::shared_ptr<GameBoard> b);
+    static void saveGame (std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, bool testMode, std::shared_ptr<GameBoard> b);
 };
 
 #endif // LOAD_H

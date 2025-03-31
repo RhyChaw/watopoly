@@ -27,8 +27,8 @@ class WatopolyDisplay {
     static const int COLOR_BLOCK_WIDTH = 40;
     
     // Game state
-    std::map<char, int> players; // symbol to position
-    std::map<int, int> improvements; // position to count
+    std::map<char, int> players; 
+    std::map<int, int> improvements; 
     std::map<std::string, std::vector<int>> colorGroups;
     std::map<std::string, std::string> colorNames;
     
@@ -51,7 +51,7 @@ public:
     void reset();
     void addPlayer(char symbol, int position = 0);
     void removePlayer(char symbol);
-    void movePlayer(char symbol, int absolutePosition); // Update declaration
+    void movePlayer(char symbol, int absolutePosition); 
     void addImprovement(int position);
     void removeImprovement(int position);
     void setImprovements(int position, int count);

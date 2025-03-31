@@ -1,15 +1,10 @@
 #include "Tuition.h"
-#include "Player.h"
-#include <iostream>
-
 
 Tuition::Tuition(int ID, std::string name) : nonbuilding(ID, name) {
 
 }
 
-Tuition::~Tuition() {
-    // Nothing to clean up
-}
+Tuition::~Tuition() {}
 
 void Tuition::pay(std::shared_ptr<Player> p) {
     char option;

@@ -11,7 +11,7 @@ int Transactions::getPropertyCost(const std::string &property_name) {
             return cost;
         }
     }
-    return -1; // Return -1 if property not found
+    return -1; 
 }
 
 bool Transactions::isGym(std::string squareName){
@@ -85,7 +85,6 @@ void Transactions::trade3(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2
         std::cout << p2->getName() << ", do you accept this trade offer? [ YES / NO ]: ";
         std::cin >> choice;
 
-        // Convert input to lowercase to handle case insensitivity
         std::transform(choice.begin(), choice.end(), choice.begin(), ::tolower);
 
         if (choice == "yes" || choice == "y") {
@@ -109,6 +108,12 @@ void Transactions::trade3(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2
             // Update Monopoly blocks of both players
             p1->updateMonopolyBlock();
             p2->updateMonopolyBlock();
+            int size = ownedProperties.size();
+            for (int i = 0; i < size; i++) {
+                if (ownedProperties[i]->getName() == build->getName()) {
+                    ownedProperties[i]->setOwner(p1->getSymbol());
+                }
+            }
 
             // Set correct pay level and tuition
             if (isGym(build->getName())) {
@@ -128,12 +133,11 @@ void Transactions::trade3(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2
                 }
             }
             std::cout << "The transaction is completed!" << std::endl;
-            break;  // Exit the loop once the transaction is completed
+            break;  
         } else if (choice == "no" || choice == "n") {
             std::cout << "The transaction was rejected!" << std::endl;
-            break;  // Exit the loop if the user rejects
+            break; 
         } else {
-            // Invalid input, prompt again
             std::cout << "Please select a valid option [ YES / NO ]!" << std::endl;
         }
     }
@@ -196,6 +200,17 @@ void Transactions::trade1(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2
             // Update Monopoly blocks of both players
             p1->updateMonopolyBlock();
             p2->updateMonopolyBlock();
+            int size = ownedProperties.size();
+            for (int i = 0; i < size; i++) {
+                if (ownedProperties[i]->getName() == building1->getName()) {
+                    ownedProperties[i]->setOwner(p2->getSymbol());
+                }
+            }
+            for (int i = 0; i < size; i++) {
+                if (ownedProperties[i]->getName() == building2->getName()) {
+                    ownedProperties[i]->setOwner(p1->getSymbol());
+                }
+            }
 
             if (isGym(building2->getName())) {
                 p2->changePropertyCount(0, -1, 0);
@@ -231,10 +246,10 @@ void Transactions::trade1(std::shared_ptr<Player> p1, std::shared_ptr<Player> p2
                 }
             }
             std::cout << "The transaction is completed!" << std::endl;
-            break;  // Exit the loop once the transaction is completed
+            break;  
         } else if (choice == "no" || choice == "n") {
             std::cout << "The transaction was rejected!" << std::endl;
-            break;  // Exit the loop if the user rejects
+            break;  
         } else {
             // Invalid input, prompt again
             std::cout << "Please select a valid option [ YES / NO ]!" << std::endl;
@@ -380,7 +395,6 @@ void Transactions::sellBuilding(std::string property_name, std::shared_ptr<Playe
     owner->removeProp(build);
     owner->updateMonopolyBlock();
 
-    // added a change here
     auto it = std::find_if(ownedProperties.begin(), ownedProperties.end(),
     [&build](const std::shared_ptr<Building>& prop) {
         return prop == build;
@@ -472,7 +486,7 @@ void Transactions::mortgage(std::shared_ptr<Building> property_name, std::shared
 
     int cost = 0;
     for (int i = 0; i < 28; i++) {
-        if (OWNABLE[i][0] == property_name->getName()) { // FIXED COMPARISON
+        if (OWNABLE[i][0] == property_name->getName()) { 
             std::stringstream ss(OWNABLE[i][2]);
             ss >> cost;
         }

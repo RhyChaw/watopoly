@@ -8,6 +8,7 @@
 #include <ctime>
 #include "nonbuilding.h"
 #include "Player.h"
+#include <iostream>
 
 class Tuition: public nonbuilding {
     public:

@@ -3,107 +3,196 @@
 #include <stdexcept>
 #include <iostream>
 
-using namespace std;
+void Load::loadGame (std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, bool testMode, std::shared_ptr<GameBoard> b) {
+    std::cout << "loading a saved game " << endl;
+    std::ifstream f;
+    int num;
+    f >> num;
 
-GameState Load::loadGame(const string& filename) {
-    ifstream file(filename);
-    if (!file.is_open()) {
-        throw runtime_error("Could not open file: " + filename);
-    }
-
-    GameState state;
-    string line;
-    
-    // Read number of players
-    if (!getline(file, line)) {
-        throw runtime_error("Save file is empty or missing player count.");
-    }
-    
-    int numPlayers;
-    try {
-        numPlayers = stoi(line);
-    } catch (exception& e) {
-        throw invalid_argument("Invalid number of players.");
-    }
-
-    // Read player data
-    for (int i = 0; i < numPlayers; ++i) {
-        if (!getline(file, line)) {
-            throw runtime_error("Unexpected end of file while reading players.");
+    for (int i = 0; i < num; i++) {
+        string name;
+        char piece;
+        int cup;
+        int cash;
+        int pos;
+        f >> name;
+        f >> piece;
+        f >> cup;
+        f >> cash;
+        f >> pos;
+        auto p = std::make_shared<Player>(name, piece, cash);
+        p->setCups(cup);
+        b->addPlayer(piece);
+        if (pos == 10) {
+            bool in;
+            f >> in;
+            if (in) {
+                int turn;
+                f >> turn;
+                p->setTurnsInTims(turn);
+                b->movePlayer(piece, 10);
+                p->moveToDCTims();
+            } else {
+                p->movePlayer(pos); 
+                b->movePlayer(piece, pos);
+            }
+        } else {
+            p->movePlayer(pos); 
+            b->movePlayer(piece, pos);
         }
-        state.players.push_back(parsePlayerLine(line));
-    }
-    
-    // Read building data
-    while (getline(file, line)) {
-        state.buildings.push_back(parseBuildingLine(line));
+        group.push_back(p);
     }
 
-    // Validate game state
-    validateGameState(state);
+    for (int i = 0; i < 28; i++) {  // Outer loop for properties
+        string property_name;
+        string owner;
+        int imp;
+        f >> property_name;
+        f >> owner;
+        f >> imp;
 
-    return state;
-}
+        if (owner != "BANK") {
+            int playerIndex = -1;
+            // Use a different loop variable (playerIndex) to find the player with the matching name
+            for (int j = 0; j < num; j++) {
+                if (group[j]->getName() == owner) {
+                    playerIndex = j;
+                    break;  // Found the player, no need to continue the loop
+                }
+            }
 
-PlayerInfo Load::parsePlayerLine(const string& line) {
-    istringstream iss(line);
-    vector<string> tokens;
-    string token;
-    
-    while (iss >> token) {
-        tokens.push_back(token);
-    }
-    
-    if (tokens.size() < 5 || tokens[0] != "player") {
-        throw invalid_argument("Invalid player line format: " + line);
-    }
-    
-    PlayerInfo info;
-    info.playerChar = tokens[1][0];
-    info.timsCups = stoi(tokens[2]);
-    info.money = stoi(tokens[3]);
-    info.position = stoi(tokens[4]);
-    info.inDC = false;
-    info.turnsInDC = 0;
-    
-    if (info.position == 10 && tokens.size() == 7) {
-        if (tokens[5] != "1") {
-            throw invalid_argument("Invalid DC Tims Line flag: " + tokens[5]);
+            int propertyIndex = -1;
+            // Use a different loop variable (propertyIndex) to find the property
+            for (int k = 0; k < 40; k++) {
+                if (property_name == OWNABLE[k][0]) {
+                    propertyIndex = k;
+                    break;  // Found the property, no need to continue the loop
+                }
+            }
+
+            int buycost = 0;
+            // Look for the property in OWNABLE array to get the buy cost
+            for (int l = 0; l < 28; l++) {
+                if (OWNABLE[l][0] == property_name) {
+                    std::stringstream ss(OWNABLE[l][2]);
+                    ss >> buycost;
+                    break;  // Found the buy cost, no need to continue the loop
+                }
+            }
+
+            char owner_symbol = group[playerIndex]->getSymbol();
+            std::shared_ptr<Building> build;
+            // Create the building object based on the property type
+            if (isGym(property_name)) {
+                auto production = std::make_shared<Gym>(propertyIndex, property_name, buycost, owner_symbol);	
+                build = std::dynamic_pointer_cast<Building>(production);
+                group[playerIndex]->setGymsOwned();
+            } else if (isResidence(property_name)) {
+                auto production = std::make_shared<Residence>(propertyIndex, property_name, buycost, owner_symbol);
+                build = std::dynamic_pointer_cast<Building>(production);
+                group[playerIndex]->setResOwned();
+            } else if (isAcademic(property_name)) {
+                auto production = std::make_shared<Academic>(propertyIndex, property_name, buycost, owner_symbol);
+                build = std::dynamic_pointer_cast<Building>(production);
+            }
+
+            // Add the property to the player's assets and update the building status
+            group[playerIndex]->addProp(build);
+            Transactions::setowned(build);
+            if (imp == -1) {
+                build->setMortStatus(true);
+            } else {
+                build->setImprLevel(imp); 
+            }
+            b->addImpr(property_name, imp);
         }
-        info.inDC = true;
-        info.turnsInDC = stoi(tokens[6]);
-        if (info.turnsInDC < 0 || info.turnsInDC > 2) {
-            throw invalid_argument("Invalid turns in DC Tims Line: " + tokens[6]);
+
+        for (auto& player : group) {
+            int gymCount = 0;
+            // First count gyms
+            for (const auto& prop : player->getOwnedPropList()) {
+                if (isGym(prop->getName())) gymCount++;
+            }
+            // Then set the count for each gym
+            for (auto& prop : player->getOwnedPropList()) {
+                if (isGym(prop->getName())) {
+                    prop->setGymLevel(gymCount);
+                }
+            }
         }
-    } else if (info.position == 10 && tokens.size() != 5) {
-        throw invalid_argument("Malformed DC Tims Line player entry: " + line);
-    }
 
-    return info;
-}
+        // Update every player's monopoly block and the amount they need to pay
+        for (int m = 0; m < num; m++) {
+            group[m]->updateMonopolyBlock();
+            group[m]->loadUpdateAmountToPay();
+        }
 
-BuildingInfo Load::parseBuildingLine(const string& line) {
-    istringstream iss(line);
-    string name, owner;
-    int improvements;
+        // Display assets of every player
+        std::cout << "Displaying assets of every player, so everyone is on track" << std::endl;
+        for (int m = 0; m < num; m++) {
+            group[m]->getAsset();
+        }
 
-    if (!(iss >> name >> owner >> improvements)) {
-        throw invalid_argument("Invalid building line format: " + line);
-    }
-
-    if (improvements < -1 || improvements > 5) {
-        throw invalid_argument("Invalid improvement value for " + name + ": " + to_string(improvements));
-    }
-
-    return {name, owner, improvements};
-}
-
-void Load::validateGameState(const GameState& state) {
-    int totalTimsCups = 0;
-    for (const auto& player : state.players) {
-        totalTimsCups += player.timsCups;
-    }
-    if (totalTimsCups > 4) {
-        throw runtime_error("Invalid game state: Exceeded max Tims Cups.");
+        // Draw the game board
+        b->drawBoard();
     }
 }
+
+void Load::saveGame (std::vector<std::shared_ptr<Player>> group, std::shared_ptr<Player> currActingPlayer, bool testMode, std::shared_ptr<GameBoard> b) {
+    std::cout << "saving the game. are you sure?(y/n)" << endl;
+    char c;
+    std::cin >> c;
+    std::ofstream f;
+    if(c == 'y') {
+        std::cout << "enter the name of the file you want to save in" << endl;
+        string file;
+        std::cin >> file;
+        file+=".txt";
+        f.open(file);
+        int size = group.size();
+        f << size << endl;
+        for (int i = 0; i < size; i++) {
+            f << group[i]->getName() << " ";
+            f << group[i]->getSymbol() << " ";
+            f << group[i]->getCups() << " ";
+            f << group[i]->getCash() << " ";
+            f << group[i]->getPosition() << " ";
+            if (group[i]->getPosition() == 10) {
+                f << group[i]->getisInTimsLine()<< " ";
+                if (group[i]->getisInTimsLine()) {
+                    f << group[i]->getTurnsInTimsLine()<< " ";
+                }
+            }
+            if (group[i]->getPosition() == 4) {
+                f << " " << 0 << endl;
+            }
+            else {
+                f << endl;
+            }
+        }
+        for (int i = 0; i < 28; i++) {
+            f << OWNABLE[i][0] << " ";
+            int size = group.size();
+            bool owned = false;
+            for (int j = 0; j < size; j++)
+            {
+                if (group[j]->ownThisProp(OWNABLE[i][0]))
+                {
+                    f << group[j]->getName() << " ";
+                    owned = true;
+                    break;
+                }
+            }
+
+            if (!owned)
+            {
+                f << "BANK" << " ";
+            }
+            f << b->getSquareImprovements(OWNABLE[i][0]) << endl;
+        }
+        return;
+    } else {
+        std::cout << "file not saved......" << endl;
+    }
+}
+
