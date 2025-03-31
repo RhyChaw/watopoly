@@ -136,7 +136,7 @@ void GameBoard::printBoardToTerminal() {
         auto [line, col] = posToTerminal[pos];
         int offset = positionCounts[pos]++ * 1;
         
-        if (col + offset < terminalBoard[line].length()) {
+        if (col + offset < static_cast<int>(terminalBoard[line].length())) {
             terminalBoard[line][col + offset] = player.first;
         }
     }
@@ -155,8 +155,8 @@ void GameBoard::printBoardToTerminal() {
         int improvementsToShow = std::min(imp.second, 5);
         for (int i = 0; i < improvementsToShow; i++) {
             int impCol = col + i;
-            if (line >= 0 && line < terminalBoard.size() && 
-                impCol >= 0 && impCol < terminalBoard[line].length()) {
+            if (line >= 0 && line < static_cast<int>(terminalBoard.size()) &&
+                impCol >= 0 && impCol < static_cast<int>(terminalBoard[line].length())) {
                 char impChar = (i == 4) ? 'C' : 'B';
                 terminalBoard[line][impCol] = impChar;
             }
@@ -190,10 +190,6 @@ void GameBoard::initializeSquareMap() {
     {"REV", 35}, {"NEEDLES HALL", 36}, {"MC", 37}, {"COOP FEES", 38}, 
     {"DC", 39}
     };
-}
-
-void printBoard() { 
-    printBoardToTerminal(); 
 }
 
 void GameBoard::drawBoard() {

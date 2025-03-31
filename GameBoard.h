@@ -21,7 +21,9 @@ public:
     ~GameBoard();
 
     void printBoardToTerminal();
-    void printBoard();
+    void printBoard() { 
+        printBoardToTerminal(); 
+    };
     void drawBoard();
     void update();
     void setBoardColor(const std::string &mode); // "dark" or "light"
