@@ -142,7 +142,7 @@ void Controller::commandAuction(std::vector<std::shared_ptr<Player>> group, std:
 
     std::cout << "========== PROPERTY AUCTION ==========" << endl;
     std::cout << "Auctioning: " << prop << endl;
-    int cost;
+    int cost = 0;
     for (int i = 0; i < 28; i ++) {
         if (OWNABLE[i][0] == prop) {
             cost = std::stoi(OWNABLE[i][2]);
@@ -339,7 +339,6 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
 
     string sq = currActingPlayer->getSquareAtCurrPos();
     bool flag = false;
-    int cost;
 
     for (int i = 0; i < 28; i++) {
         if (sq == OWNABLE[i][0])
@@ -349,12 +348,6 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
         if (Transactions::isOwned(sq)) { 
             shared_ptr<Building> prop = Transactions::listProp(sq);
             shared_ptr<Player> owner = pointerOfPlayer(prop->getOwner());
-            
-            for (int i = 0; i < 28; i ++) {
-                if (prop->getName() == OWNABLE[i][0]) {
-                cost = std::stoi(OWNABLE[i][2]);
-                }
-            }
 
             int rollValue = 0;
 
@@ -365,7 +358,6 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                 if (isGym(prop->getName())) {
                     std::cout << "landed on the gym, you have to roll to see what rent you will have to pay" << endl;
                     auto gym = std::dynamic_pointer_cast<Gym>(prop);
-                    int roll = 0;
                     std::cout << "please type roll" << endl;
                     string command;
                     std::cin >> command;
@@ -409,7 +401,7 @@ void Controller::CommandRoll(std::vector<std::shared_ptr<Player>> group, std::sh
                         gym->setRoll(twoDices->getSum());
                     }
                 }
-                int rent;
+                int rent = 0;
                 if (isGym(prop->getName())) {
                     auto gym = std::dynamic_pointer_cast<Gym>(prop);
                     int gymsOwned = owner->countGymsOwned();
@@ -749,7 +741,6 @@ void Controller::letTheGameBegin(int argc, char **argv) {
         if(std::string(argv[1]) != "LOAD" && std::string(argv[1]) != "load") {
             std::cout << "Please input the number of player for this game" << endl;
             int num;
-            int count = 0;
             while(true) {
                 std::cin >> num;
                 if (std::cin.fail()) break;
@@ -762,7 +753,6 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             std::cout << "The number of player is " << num << endl;
             std::vector<char> arr = {'G', 'B', 'D', 'P', 'S', '$', 'L', 'T'};
             int i = 0;
-            char piece;
             while (i < num) {
                 std::cout << "Player " << i + 1 << " enter your name: ";
                 string name;
@@ -824,7 +814,6 @@ void Controller::letTheGameBegin(int argc, char **argv) {
         std::cout << "The number of players is " << num << endl;
         std::vector<char> arr = {'G', 'B', 'D', 'P', 'S', '$', 'L', 'T'};
         int i = 0;
-        char piece;
         while (i < num) {
             std::cout << "Player " << i + 1 << " enter your name: ";
             string name;
@@ -868,12 +857,21 @@ void Controller::letTheGameBegin(int argc, char **argv) {
     }
 
     std::cout << "++++++++++++  GAME START  ++++++++++++" << endl;
+
     int currIndex = 0;
     
     shared_ptr<Player> currActingPlayer = group[currIndex];
     int numberOfPlayer = group.size();
     auto dicee = make_shared<Dice>();
     bool hasRolled = false;
+    string c;
+    cout << "do you want light or dark mode (defaults to dark) ?" << endl;
+    cin >> c;
+    if (c == "light") {
+        b->setBoardColor("light");
+    } else {
+        b->setBoardColor("dark");
+    }
     b->drawBoard();
 
     while (true) {
@@ -896,7 +894,7 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             std::cout << " His Properties worth are: " << currActingPlayer->getAsset() << endl;
             break;
         }
-
+        b->printBoard();
         std::cout << "Your turn " << currActingPlayer->getSymbol() <<" " << currActingPlayer->getName() <<  endl;
         std::cout << "Available commands - [ROLL, NEXT, TRADE, IMPROVE, MORTGAGE, UNMORTGAGE, BANKRUPT, ASSETS, ALL, SAVE]" << endl;
         std::cin >> command;
@@ -1034,9 +1032,6 @@ void Controller::letTheGameBegin(int argc, char **argv) {
             currActingPlayer->setBankrupt(true);
             vector<shared_ptr<Building>> prop = currActingPlayer->getOwnedPropList();
             int size = prop.size();
-
-            // char piece = owner->getSymbol();
-
             if (numberOfPlayer == 1) {
                 std::cout << "Congratulations! The winner is " << group[0]->getName() << endl;
                 std::cout << "Their properties: " << group[0]->getAsset() << endl;

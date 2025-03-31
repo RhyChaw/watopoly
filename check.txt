@@ -1,18 +1,18 @@
 3
-manit S 1 100 0 
-vansh G 0 1000 0
+manit S 1 100 19
+vansh G 0 1000 2
 rhythm $ 0 1000 0
-AL vansh 0
-ML vansh 0
+AL vansh 4
+ML vansh 1
 ECH manit 0
 PAS BANK 0
 HH BANK 0
 RCH BANK 0
-DWE BANK 0
+DWE vansh 5
 CPH BANK 0
 LHI BANK 0
 BMH BANK 0
-OPT BANK 0
+OPT vansh 5
 EV1 BANK 0
 EV2 BANK 0
 EV3 BANK 0
@@ -20,7 +20,7 @@ PHYS BANK 0
 B1 BANK 0
 B2 BANK 0
 EIT BANK 0
-ESC BANK 0
+ESC vansh 5
 C2 BANK 0
 MC BANK 0
 DC BANK 0

@@ -20,29 +20,23 @@ public:
     GameBoard();
     ~GameBoard();
 
-    // Display control
     void printBoardToTerminal();
     void printBoard() { printBoardToTerminal(); }
     void drawBoard();
     void update();
-
-    // Player management
+    void setBoardColor(const std::string &mode); // "dark" or "light"
+    
     void addPlayer(char symbol);
     void removePlayer(char symbol);
     void movePlayer(char symbol, int absolutePosition);
     int getPlayerPosition(char symbol) const;
-
-    // Improvement management
+    
     void addImpr(const std::string& square, int count = 1);
     void removeImpr(const std::string& square);
     int getSquareImprovements(const std::string& square) const;
     int getTotalSteps(char symbol) const;
-    
-    // Game state
-    void loadGame(const std::string& filename);
-    void saveGame(const std::string& filename) const;
 
     std::shared_ptr<WatopolyDisplay> getDisplay() const;
 };
 
-#endif // GAMEBOARD_H
+#endif
