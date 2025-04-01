@@ -103,17 +103,17 @@ void GameBoard::printBoardToTerminal() {
     {19, {9, 1}},   // OPT
     
     // Bottom row (right to left, positions 20-30)
-    {20, {3, 1}},  // Goose Nesting (top left)
-    {21, {3, 9}}, // EV1
-    {22, {3, 17}}, // NEEDLES HALL
-    {23, {3, 25}}, // EV2
-    {24, {3, 33}}, // EV3
-    {25, {3, 41}}, // V1
-    {26, {3, 49}}, // PHYS
-    {27, {3, 57}}, // B1
-    {28, {3, 65}}, // CIF
-    {29, {3, 73}}, // B2
-    {30, {3, 81}}, // GO TO TIMS (top right)
+    {20, {4, 1}},  // Goose Nesting (top left)
+    {21, {4, 9}}, // EV1
+    {22, {4, 17}}, // NEEDLES HALL
+    {23, {4, 25}}, // EV2
+    {24, {4, 33}}, // EV3
+    {25, {4, 41}}, // V1
+    {26, {4, 49}}, // PHYS
+    {27, {4, 57}}, // B1
+    {28, {4, 65}}, // CIF
+    {29, {4, 73}}, // B2
+    {30, {4, 81}}, // GO TO TIMS (top right)
     
     // Left side (top to bottom, positions 31-39)
     {31, {9, 81}}, // EIT

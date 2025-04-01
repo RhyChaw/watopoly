@@ -1,6 +1,6 @@
 2
-manit S 1 1500 0
-vansh G 0 1500 0
+manit S 1 1500 21
+vansh G 0 1500 20
 AL manit 0
 ML BANK 0 
 MKV BANK 0 
@@ -17,7 +17,7 @@ BMH BANK 0
 OPT BANK 0
 EV1 BANK 0
 EV2 BANK 0
-EV3 BANK 0
+EV3 vansh 1
 V1 BANK 0
 PHYS BANK 0
 B1 BANK 0
